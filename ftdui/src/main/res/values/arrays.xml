@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="steps">
+        <item>拍脸</item>
+        <item>舌头</item>
+        <item>舌底</item>
+        <item>问诊</item>
+    </array>
+</resources>
