@@ -4,7 +4,9 @@
 
     <application>
 <!--        android:theme="@style/FtdUiTheme">-->
-        <activity android:name=".FtdActivity"/>
+<!--        <activity android:name=".FtdActivity"/>-->
+        <activity android:name=".FtdActivity1"
+            android:screenOrientation="portrait" />
     </application>
 
 

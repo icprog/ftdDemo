@@ -1,51 +1,71 @@
 package com.william.ftdui;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
+import android.graphics.Camera;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.laikang.jtcameraview.CameraStateListener;
 import com.laikang.jtcameraview.JTCameraView;
+import com.shuhart.stepview.StepView;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 
 public class CameraFragment extends Fragment implements CameraStateListener, View.OnClickListener {
+    private static final String TAG = "CameraFragment";
 
+    private static final String AUTO_PREVIEW = "autoPreview";
     private static final String KEY_DRAWABLE_ID = "drawableId";
     private static final String REQUEST_ID = "requestId";
 
-    private int drawableId;
-    private int requestId;
+    private boolean autoPreview;
+    private int drawableId = R.drawable.xuxian_mian;
+    private int requestId = Constant.STEP_FACE;
 
     private OnFragmentInteractionListener mListener;
 
+    private StepView mStepView;
     private JTCameraView mJTCameraView;
     private ImageButton btnCapture;
     private ImageView iv;
 
     private boolean canPreview;
 
-    private static final int REQUEST_CAMERA_PERMISSION = 100;
+    private Handler mBackgroundHandler;
+    private HandlerThread mBackgroundThread;
+
+    private Handler mMainThreadHandler = new mMainThreadHandler(this);
 
 
     public CameraFragment() {
         // Required empty public constructor
+        super();
     }
 
-    public static CameraFragment newInstance(@DrawableRes int drawableId, int requestId) {
+    public static CameraFragment newInstance(boolean autoPreview, @DrawableRes int drawableId, int requestId) {
         CameraFragment fragment = new CameraFragment();
         Bundle args = new Bundle();
+        args.putBoolean(AUTO_PREVIEW, autoPreview);
         args.putInt(KEY_DRAWABLE_ID, drawableId);
         args.putInt(REQUEST_ID, requestId);
         fragment.setArguments(args);
@@ -55,15 +75,25 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        canPreview = isVisibleToUser;
+        this.canPreview = isVisibleToUser;
+        if (mJTCameraView == null) {
+            return;
+        }
+        if (isVisibleToUser) {
+            startPreview();
+        } else {
+            stopPreview();
+        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            drawableId = getArguments().getInt(KEY_DRAWABLE_ID);
-            requestId = getArguments().getInt(REQUEST_ID);
+        Bundle args = getArguments();
+        if (args != null) {
+            this.autoPreview = args.getBoolean(AUTO_PREVIEW);
+            this.drawableId = args.getInt(KEY_DRAWABLE_ID);
+            this.requestId = args.getInt(REQUEST_ID);
         }
     }
 
@@ -77,32 +107,57 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         super.onViewCreated(view, savedInstanceState);
 
         View rootView = getView();
+        this.mStepView = rootView.findViewById(R.id.step);
         this.mJTCameraView = rootView.findViewById(R.id.jtcv);
         this.mJTCameraView.setListener(this);
+        this.mJTCameraView.autoPreview = canPreview;
         this.btnCapture = rootView.findViewById(R.id.btn_capture);
         this.btnCapture.setOnClickListener(this);
         this.iv = rootView.findViewById(R.id.iv_dashed);
         this.iv.setImageResource(this.drawableId);
+
+        rootView.findViewById(R.id.btn_next).setOnClickListener(this);
+    }
+
+    /**
+     * 切换参照图片
+     *
+     * @param drawableId
+     */
+    private void loadImage(int drawableId) {
+        int currentDrawable = Constant.steps.get(drawableId);
+        this.iv.setImageResource(currentDrawable);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
-        } else {
-            startPreview();
+        getBackgroundHandler();
+        if (!canPreview) {
+            return;
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults.length > 0) {
-            startPreview();
+    public void onPause() {
+        super.onPause();
+        if (!canPreview) {
+            return;
+        }
+        stopPreview();
+        if (mBackgroundThread == null) {
+            return;
+        }
+        mBackgroundThread.quitSafely();
+        try {
+            mBackgroundThread.join();
+            mBackgroundThread = null;
+            mBackgroundHandler = null;
+        } catch (InterruptedException e) {
+            Log.e(TAG, "close: 后台线程关闭失败：", e);
         }
     }
+
 
     @Override
     public void onAttach(Context context) {
@@ -141,9 +196,43 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
 
     }
 
+    private void showToast(String str) {
+        Toast.makeText(getContext(), str, Toast.LENGTH_SHORT);
+    }
+
+    private Handler getBackgroundHandler() {
+        if (mBackgroundHandler == null) {
+            mBackgroundThread = new HandlerThread("background");
+            mBackgroundThread.start();
+            mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
+        }
+        return mBackgroundHandler;
+    }
+
     @Override
-    public void onCupture(Bitmap bitmap) {
-        mListener.onCaptrueComplete(this.requestId);
+    public void onCupture(final Bitmap bitmap) {
+        showToast("获取拍照后的图像信息，需要自己保存");
+        mBackgroundHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                File file = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "picture.jpg");
+                try {
+                    OutputStream os = new FileOutputStream(file);
+                    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);//将图片压缩的流里面
+                    os.flush();
+                    os.close();
+                    bitmap.recycle();
+                    Message msg = mBackgroundHandler.obtainMessage();
+                    msg.arg1 = requestId;
+                    mMainThreadHandler.sendMessage(msg);
+                    mListener.onCaptrueComplete(requestId,file);
+                } catch (IOException e) {
+                    Log.w(TAG, "图像文件写入失败： " + file, e);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -151,24 +240,56 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
 
     }
 
+
     private void startPreview() {
-        if (canPreview) {
+        if (mJTCameraView != null) {
+
+//        if (canPreview) {
             mJTCameraView.startPreview();
-        } else {
-            stopPreview();
+//        }
         }
     }
 
     private void stopPreview() {
-        mJTCameraView.stopPreview();
+        if (mJTCameraView != null) {
+
+            mJTCameraView.stopPreview();
+        }
     }
 
     @Override
     public void onClick(View v) {
-        mJTCameraView.takePicture();
+
+        if (v.getId() == R.id.btn_next) {
+            mJTCameraView.setBackgroundResource(R.drawable.bg_wenzhen);
+        } else {
+            mJTCameraView.takePicture();
+        }
     }
 
     public interface OnFragmentInteractionListener {
-        void onCaptrueComplete(int requestId);
+        void onCaptrueComplete(int requestId,File file);
+    }
+
+    private static class mMainThreadHandler extends Handler {
+
+        private WeakReference<CameraFragment> weakFragment;
+
+        public mMainThreadHandler(CameraFragment cameraFragment) {
+            this.weakFragment = new WeakReference<CameraFragment>(cameraFragment);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            CameraFragment fragment = this.weakFragment.get();
+            if (fragment == null || fragment.getActivity() == null) {
+                return;
+            }
+            fragment.requestId = msg.arg1 + 1;
+            fragment.mStepView.go(fragment.requestId, true);
+            fragment.loadImage(fragment.requestId);
+
+        }
     }
 }

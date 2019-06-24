@@ -11,6 +11,7 @@ import android.hardware.Camera;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Size;
 import android.view.TextureView;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ import java.util.List;
 import static com.laikang.jtcameraview.Constants.CAMERA_FACING_BACK;
 import static com.laikang.jtcameraview.Constants.CAMERA_FACING_FRONT;
 
-public class JTCameraView extends TextureView implements TextureView.SurfaceTextureListener {
+public class JTCameraView extends TextureView {
 
     private static final String TAG = "FtdView";
     private boolean isCameraCanBeUse;
@@ -42,10 +43,13 @@ public class JTCameraView extends TextureView implements TextureView.SurfaceText
     private int mPictureOrientation;
     private int mPreviewOrientation;
     private Camera.Size mPreviewSize;
-    private static boolean isShowingPreview;
+    private boolean isShowingPreview;
 
-    private int mWidth;
-    private int mHeight;
+    public boolean isShowingPreview() {
+        return isShowingPreview;
+    }
+
+    private Size mSize;
 
     private CameraStateListener mListener;
 
@@ -76,19 +80,11 @@ public class JTCameraView extends TextureView implements TextureView.SurfaceText
             Log.i(TAG, "FtdView: 相机不可用，请检查设备是否故障，或是否有配备摄像头组件！");
             return;
         }
-        initTextureView();
         setupCameraInfo();
-        openCamera(mCameraId);
-        mDisplayOrientationDetector = new DisplayOrientationDetector(getContext()) {
-            @Override
-            public void onDisplayOrientationChanged(int displayOrientation) {
-                if (isShowingPreview) {
-                    mCamera.stopPreview();
-                }
-                setDisplayOrientation(displayOrientation);
-            }
-        };
+        initTextureView();
     }
+
+    public boolean autoPreview;
 
     /**
      * View初始化设置
@@ -97,7 +93,40 @@ public class JTCameraView extends TextureView implements TextureView.SurfaceText
         this.setFocusable(true);
         this.setFocusableInTouchMode(true);
         this.setKeepScreenOn(true);//保持屏幕长亮
-        this.setSurfaceTextureListener(this);
+        this.setSurfaceTextureListener(new SurfaceTextureListener() {
+            /**
+             * surface在创建的时候调用
+             */
+            @Override
+            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+                setupSizeCache(width, height);
+//                configureTransform();
+                startPreview();
+            }
+
+            /**
+             * surface尺寸发生改变的时候调用，如横竖屏切换。
+             **/
+            @Override
+            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+                setupSizeCache(width, height);
+//                configureTransform();
+                startPreview();
+            }
+
+            /**
+             * surface被销毁的时候调用，如退出游戏画面，一般在该方法中停止绘图线程。
+             */
+            @Override
+            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
+            }
+        });
     }
 
     /**
@@ -129,65 +158,27 @@ public class JTCameraView extends TextureView implements TextureView.SurfaceText
         }
         mCameraFacing = facing;
         openCamera(mCameraId);
-        adjustCameraParameters(mWidth, mHeight);
-        configureTransform(mWidth, mHeight);
-        if (isShowingPreview) {
-            startPreview();
-        }
+        adjustCameraParameters();
+        configureTransform();
+//        if (isShowingPreview) {
+//            startPreview();
+//        }
     }
 
     private void setupSizeCache(int width, int height) {
-        mWidth = width;
-        mHeight = height;
+        mSize = new Size(width, height);
     }
 
-    /**
-     * surface在创建的时候调用
-     */
-    @Override
-    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        setupSizeCache(width, height);
-        configureCameraEnv(surface, width, height);
-    }
-
-    /**
-     * surface尺寸发生改变的时候调用，如横竖屏切换。
-     **/
-    @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-        setupSizeCache(width, height);
-        configureCameraEnv(surface, width, height);
-    }
-
-    /**
-     * surface被销毁的时候调用，如退出游戏画面，一般在该方法中停止绘图线程。
-     */
-    @Override
-    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-        return false;
-    }
-
-    @Override
-    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
-    }
 
     /**
      * 配置相机整体环境
-     *
-     * @param surface
-     * @param width
-     * @param height
      */
-    private void configureCameraEnv(SurfaceTexture surface, int width, int height) {
-        if (isShowingPreview) {
-            mCamera.stopPreview();
-        }
-        adjustCameraParameters(width, height);
-        configureTransform(width, height);
-        if (isShowingPreview) {
-            startPreview(surface);
-        }
+    private void configureCameraEnv() {
+//        if (isShowingPreview) {
+//            mCamera.stopPreview();
+//        }
+        adjustCameraParameters();
+
     }
 
     /**
@@ -309,21 +300,21 @@ public class JTCameraView extends TextureView implements TextureView.SurfaceText
 
     /**
      * 预览图像（surface）处理
-     *
-     * @param surfaceWidth
-     * @param surfaceHeight
      */
-    private void configureTransform(int surfaceWidth, int surfaceHeight) {
-        if (mCameraParameters == null || mCameraInfo == null) {
+    private void configureTransform() {
+//        if (mCameraParameters == null || mCameraInfo == null) {
+//            return;
+//        }
+        if (mSize == null || mPreviewSize == null) {
             return;
         }
         Matrix matrix = getTransform(new Matrix());
 
-        float sWidth = (float) surfaceWidth;
-        float sHeight = (float) surfaceHeight;
+        float sWidth = (float) mSize.getWidth();
+        float sHeight = (float) mSize.getHeight();
 
         float pWidth, pHeight;
-        if (mPreviewOrientation % 180 == 0) {
+        if (isLandscape(mPreviewOrientation)){
             pWidth = (float) mPreviewSize.width;
             pHeight = (float) mPreviewSize.height;
         } else {
@@ -353,8 +344,8 @@ public class JTCameraView extends TextureView implements TextureView.SurfaceText
     /**
      * 调整相机参数
      */
-    private void adjustCameraParameters(int width, int height) {
-        this.mPreviewSize = chooseOptimalSize(mCameraParameters.getSupportedPreviewSizes(), width, height);
+    private void adjustCameraParameters() {
+        this.mPreviewSize = chooseOptimalSize(mCameraParameters.getSupportedPreviewSizes(), mSize.getWidth(), mSize.getHeight());
 //        Camera.Size pictureSize = chooseOptimalSize(mCameraParameters.getSupportedPictureSizes(), width, height);
         mCameraParameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
 //        mCameraParameters.setPictureSize(pictureSize.width, pictureSize.height);
@@ -394,9 +385,9 @@ public class JTCameraView extends TextureView implements TextureView.SurfaceText
             return;
         }
         if (isCameraOpened()) {
-            if (isShowingPreview) {
-                mCamera.stopPreview();
-            }
+//            if (isShowingPreview) {
+//                mCamera.stopPreview();
+//            }
             List<String> modes = mCameraParameters.getSupportedFlashModes();
             String mode = getFlashMode(flash);
             if (modes != null && modes.contains(mode)) {
@@ -408,9 +399,9 @@ public class JTCameraView extends TextureView implements TextureView.SurfaceText
                 mCameraParameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                 mFlash = Constants.FLASH_OFF;
             }
-            if (isShowingPreview) {
-                startPreview();
-            }
+//            if (isShowingPreview) {
+//                startPreview();
+//            }
         } else {
             mFlash = flash;
         }
@@ -438,6 +429,7 @@ public class JTCameraView extends TextureView implements TextureView.SurfaceText
      * @param width
      * @return
      */
+    @SuppressWarnings("SuspiciousNameCombination")
     private Camera.Size chooseOptimalSize(List<Camera.Size> sizeList, int width, int height) {
         if (sizeList == null || width <= 0) {
             return null;
@@ -481,12 +473,11 @@ public class JTCameraView extends TextureView implements TextureView.SurfaceText
      * 启动预览
      */
     public void startPreview() {
-        startPreview(getSurfaceTexture());
-    }
-
-    private void startPreview(SurfaceTexture surface) {
+        openCamera(mCameraId);
+        configureCameraEnv();
+        configureTransform();
         try {
-            mCamera.setPreviewTexture(surface);
+            mCamera.setPreviewTexture(getSurfaceTexture());
             mCamera.startPreview();
             isShowingPreview = true;
             if (mListener != null) {
@@ -501,11 +492,14 @@ public class JTCameraView extends TextureView implements TextureView.SurfaceText
      * 停止预览,画面会定格
      */
     public void stopPreview() {
-        mCamera.stopPreview();
+        if (mCamera != null) {
+            mCamera.stopPreview();
+        }
         isShowingPreview = false;
         if (mListener != null) {
             mListener.onPreviewStop();
         }
+        releaseCamera();
     }
 
     /**
@@ -554,21 +548,21 @@ public class JTCameraView extends TextureView implements TextureView.SurfaceText
         }
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        if (!isInEditMode()) {
-            mDisplayOrientationDetector.enable(ViewCompat.getDisplay(this));
-        }
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        if (!isInEditMode()) {
-            mDisplayOrientationDetector.disable();
-        }
-        super.onDetachedFromWindow();
-    }
+//    @Override
+//    protected void onAttachedToWindow() {
+//        super.onAttachedToWindow();
+//        if (!isInEditMode()) {
+//            mDisplayOrientationDetector.enable(ViewCompat.getDisplay(this));
+//        }
+//    }
+//
+//    @Override
+//    protected void onDetachedFromWindow() {
+//        if (!isInEditMode()) {
+//            mDisplayOrientationDetector.disable();
+//        }
+//        super.onDetachedFromWindow();
+//    }
 
     /**
      * 相机成像尺寸比较器

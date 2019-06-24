@@ -8,6 +8,8 @@ import android.os.Bundle;
 
 import com.shuhart.stepview.StepView;
 
+import java.io.File;
+
 public class FtdActivity extends AppCompatActivity
         implements ViewPager.OnPageChangeListener,
         CameraFragment.OnFragmentInteractionListener {
@@ -20,6 +22,8 @@ public class FtdActivity extends AppCompatActivity
     public static final int TONGUE_TOP = 1;
     public static final int TONGUE_BOTTOM = 2;
     public static final int ASK = 3;
+
+
 
     @IntDef(value = {FACE,TONGUE_TOP,TONGUE_BOTTOM,ASK})
     @interface Step {}
@@ -57,7 +61,7 @@ public class FtdActivity extends AppCompatActivity
     }
 
     @Override
-    public void onCaptrueComplete(int requestId) {
+    public void onCaptrueComplete(int requestId,File file) {
         switch (requestId){
             case FACE:
                 mViewPager.setCurrentItem(TONGUE_TOP);
