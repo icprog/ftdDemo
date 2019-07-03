@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".CameraFragment">
+    tools:context=".fragment.CameraFragment">
 
     <com.laikang.jtcameraview.JTCameraView
         android:id="@+id/jtcv"
@@ -54,6 +54,15 @@
         android:layout_height="60dp"
         android:scaleType="fitCenter"
         android:layout_gravity="bottom|end"
+        android:src="@drawable/btn_shutter_1"
+        android:contentDescription="@string/app_name" />
+
+    <ImageButton
+        android:id="@+id/btn_result"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:scaleType="fitCenter"
+        android:layout_gravity="bottom|start"
         android:src="@drawable/btn_shutter_1"
         android:contentDescription="@string/app_name" />
 

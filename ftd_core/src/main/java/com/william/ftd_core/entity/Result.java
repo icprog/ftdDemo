@@ -22,7 +22,7 @@ public class Result {
     private String updateTime;
     private int errCode;
     private String userCode;
-    private String errMsg = "未知错误";
+    private String errMsg;
     private int returnCode;
     private String equCode;
     private String imageUrl;

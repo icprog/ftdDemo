@@ -1,8 +1,8 @@
-package com.william.ftdui;
+package com.william.ftdui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Camera;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -23,6 +23,10 @@ import android.widget.Toast;
 import com.laikang.jtcameraview.CameraStateListener;
 import com.laikang.jtcameraview.JTCameraView;
 import com.shuhart.stepview.StepView;
+import com.william.ftdui.activity.ReportActivity;
+import com.william.ftdui.constant.Constant;
+import com.william.ftdui.activity.FileUploadActivity;
+import com.william.ftdui.R;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -36,17 +40,18 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
 
     private static final String AUTO_PREVIEW = "autoPreview";
     private static final String KEY_DRAWABLE_ID = "drawableId";
-    private static final String REQUEST_ID = "requestId";
+    private static final String REQUEST_ID = "stepId";
 
     private boolean autoPreview;
     private int drawableId = R.drawable.xuxian_mian;
-    private int requestId = Constant.STEP_FACE;
+    private int stepId = Constant.STEP_FACE;
 
     private OnFragmentInteractionListener mListener;
 
     private StepView mStepView;
     private JTCameraView mJTCameraView;
     private ImageButton btnCapture;
+    private ImageButton btnResult;
     private ImageView iv;
 
     private boolean canPreview;
@@ -55,7 +60,6 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
     private HandlerThread mBackgroundThread;
 
     private Handler mMainThreadHandler = new mMainThreadHandler(this);
-
 
     public CameraFragment() {
         // Required empty public constructor
@@ -93,7 +97,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         if (args != null) {
             this.autoPreview = args.getBoolean(AUTO_PREVIEW);
             this.drawableId = args.getInt(KEY_DRAWABLE_ID);
-            this.requestId = args.getInt(REQUEST_ID);
+            this.stepId = args.getInt(REQUEST_ID);
         }
     }
 
@@ -115,17 +119,29 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         this.btnCapture.setOnClickListener(this);
         this.iv = rootView.findViewById(R.id.iv_dashed);
         this.iv.setImageResource(this.drawableId);
+        this.btnResult = rootView.findViewById(R.id.btn_result);
+        this.btnResult.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Intent intent = new Intent(getContext(), FileUploadActivity.class);
+//                startActivity(intent);
+
+
+                Intent intent = new Intent(getContext(), ReportActivity.class);
+                startActivity(intent);
+
+                getActivity().finish();
+            }
+        });
 
         rootView.findViewById(R.id.btn_next).setOnClickListener(this);
     }
 
     /**
      * 切换参照图片
-     *
-     * @param drawableId
      */
-    private void loadImage(int drawableId) {
-        int currentDrawable = Constant.steps.get(drawableId);
+    private void loadImage(@Constant.StepId int stepId) {
+        int currentDrawable = Constant.steps.get(stepId).getDrawableId();
         this.iv.setImageResource(currentDrawable);
     }
 
@@ -215,24 +231,23 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         mBackgroundHandler.post(new Runnable() {
             @Override
             public void run() {
-                File file = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), "picture.jpg");
+                String fileName = Constant.steps.get(stepId).getFileName();
+                File file = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName + ".jpeg");
                 try {
                     OutputStream os = new FileOutputStream(file);
                     BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);//将图片压缩的流里面
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos);//将图片压缩到流里面
                     os.flush();
                     os.close();
                     bitmap.recycle();
                     Message msg = mBackgroundHandler.obtainMessage();
-                    msg.arg1 = requestId;
+                    msg.arg1 = stepId;
                     mMainThreadHandler.sendMessage(msg);
-                    mListener.onCaptrueComplete(requestId,file);
                 } catch (IOException e) {
                     Log.w(TAG, "图像文件写入失败： " + file, e);
                 }
             }
         });
-
     }
 
     @Override
@@ -265,10 +280,11 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         } else {
             mJTCameraView.takePicture();
         }
+
     }
 
     public interface OnFragmentInteractionListener {
-        void onCaptrueComplete(int requestId,File file);
+        void onCaptrueComplete(int requestId, File file);
     }
 
     private static class mMainThreadHandler extends Handler {
@@ -276,7 +292,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         private WeakReference<CameraFragment> weakFragment;
 
         public mMainThreadHandler(CameraFragment cameraFragment) {
-            this.weakFragment = new WeakReference<CameraFragment>(cameraFragment);
+            this.weakFragment = new WeakReference<>(cameraFragment);
         }
 
         @Override
@@ -286,10 +302,16 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
             if (fragment == null || fragment.getActivity() == null) {
                 return;
             }
-            fragment.requestId = msg.arg1 + 1;
-            fragment.mStepView.go(fragment.requestId, true);
-            fragment.loadImage(fragment.requestId);
-
+            int stepId = msg.arg1;
+            if (stepId < Constant.STEP_TONGUE_BOTTOM) {
+                fragment.stepId += 1;
+                fragment.mStepView.go(fragment.stepId, true);
+                fragment.loadImage(fragment.stepId);
+            } else {
+                Intent intent = new Intent(fragment.getContext(), FileUploadActivity.class);
+                fragment.startActivity(intent);
+                fragment.getActivity().finish();
+            }
         }
     }
 }

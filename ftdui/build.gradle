@@ -10,12 +10,18 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "android.support.onSuccess.runner.AndroidJUnitRunner"
 
     }
 
     buildTypes {
+        debug{
+            buildConfigField "String", "BRAIN_APP_KEY","\"cLH0hbqiR\""
+            buildConfigField "String", "BRAIN_APP_SECRET","\"78cb693c-8308-4674-88dd-6835ea6666ff\""
+        }
         release {
+            buildConfigField "String", "BRAIN_APP_KEY","\"sTYUBHGZg\""
+            buildConfigField "String", "BRAIN_APP_SECRET","\"4ab7de29-ddd7-4277-a934-629cf27878e1\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -31,8 +37,16 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'com.shuhart.stepview:stepview:1.5.0'
+
+    api 'com.shuhart.stepview:stepview:1.5.0'
+    api 'org.xclcharts:lib:2.4'//图标库
+
     //    implementation 'com.william:JTCameraView:1.0.1'
     implementation project(':JTCameraView')
     implementation project(':ftd_core')
+
+    compileOnly 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    compileOnly 'com.android.support:recyclerview-v7:28.0.0'
+    compileOnly 'com.google.code.gson:gson:2.8.5'
 }

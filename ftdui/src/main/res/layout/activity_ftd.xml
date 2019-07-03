@@ -7,7 +7,7 @@
     tools:context=".FtdActivity">
 
     <fragment
-        android:name="com.william.ftdui.CameraFragment"
+        android:name="com.william.ftdui.fragment.CameraFragment"
         android:id="@+id/vp"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

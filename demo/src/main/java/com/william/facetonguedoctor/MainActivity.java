@@ -3,7 +3,6 @@ package com.william.facetonguedoctor;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -12,10 +11,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.william.ftdui.CameraFragment;
-import com.william.ftdui.ConfirmationDialogFragment;
-import com.william.ftdui.FtdActivity;
-import com.william.ftdui.FtdActivity1;
+import com.william.ftdui.activity.ReportActivity;
+import com.william.ftdui.widget.ConfirmationDialogFragment;
+import com.william.ftdui.activity.FtdActivity;
 
 public class MainActivity extends AppCompatActivity  {
 
@@ -27,6 +25,7 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         start();
+
     }
 
     public void goToFTD(View v) { start(); }
@@ -34,8 +33,8 @@ public class MainActivity extends AppCompatActivity  {
 
     private void start() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            Intent intent = getIntent();
-            intent.setClass(this, FtdActivity1.class);
+            Intent intent = new Intent();
+            intent.setClass(this, FtdActivity.class);
             startActivity(intent);
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
             ConfirmationDialogFragment

@@ -1,48 +1,90 @@
 package com.william.ftd_core;
 
 import com.william.ftd_core.constant.ServiceApi;
+import com.william.ftd_core.entity.AskBean;
+import com.william.ftd_core.entity.ReportBean;
 import com.william.ftd_core.entity.Result;
+import com.william.ftd_core.entity.SubmitAnswerResult;
+import com.william.ftd_core.entity.UploadResult;
 import com.william.ftd_core.entity.User;
-
-import java.util.Map;
 
 import io.reactivex.Single;
 import okhttp3.RequestBody;
-import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
-import retrofit2.http.Multipart;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
-import retrofit2.http.PartMap;
 
 public interface FtdService {
 
-//    @GET(ServiceApi.GET_THIRD_TOKEN)
-//    Call<FtdResponse<String>> getToken();
-//
-//    @Headers({"Content-Type: application/json", "Accept: application/json"})
-//    @POST(ServiceApi.LOGIN)
-//    Call<FtdResponse<User>> login(@Body RequestBody body);
-
+    /**
+     * 获取令牌
+     * @return
+     */
     @GET(ServiceApi.GET_THIRD_TOKEN)
     Single<FtdResponse<String>> getToken();
 
+    /**
+     * 登录
+     * @param body
+     * @return
+     */
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @POST(ServiceApi.LOGIN)
     Single<FtdResponse<User>> login(@Body RequestBody body);
 
-    @Multipart
-    @POST(ServiceApi.PIC_UPLOAD)
-    Single<Result> picUpload(@PartMap Map<String, RequestBody> var2, @Part okhttp3.MultipartBody.Part var3);
-
     /**
-     * 上传图片，用永康的做法
+     * 上传图片
      * @param files
      * @return
      */
     @POST(ServiceApi.PIC_UPLOAD)
-    Single<Result> picUpload(@Body RequestBody files);
+    Single<Result> picUpload(
+            @Header("Authorization") String Authorization,
+            @Body RequestBody files);
+    @POST(ServiceApi.PIC_UPLOAD1)
+    Single<FtdResponse<UploadResult>> picUpload1(
+//            @Header("Authorization") String Authorization,
+            @Header(ServiceApi.LK_TOKEN) String lkToken,
+            @Body RequestBody files);
+
+    /**
+     * 获取题目
+     * @param lkToken
+     * @param body
+     * @return
+     */
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @POST(ServiceApi.GET_QUESTION)
+    Single<FtdResponse<AskBean>> getQuestion(
+            @Header(ServiceApi.LK_TOKEN) String lkToken,
+            @Body RequestBody body
+    );
+
+    /**
+     * 提交答案
+     * @param lkToken
+     * @param body
+     * @return
+     */
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @POST(ServiceApi.SUBMIT_ANSWER)
+    Single<FtdResponse<AskBean>> submitAnswer(
+            @Header(ServiceApi.LK_TOKEN) String lkToken,
+            @Body RequestBody body
+    );
+
+    /**
+     * 获取最后一次报告
+     * @param lkToken
+     * @param body
+     * @return
+     */
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @POST(ServiceApi.GET_LAST_REPORT)
+    Single<FtdResponse<ReportBean>> getLastReport(
+            @Header(ServiceApi.LK_TOKEN) String lkToken,
+            @Body RequestBody body
+    );
 }

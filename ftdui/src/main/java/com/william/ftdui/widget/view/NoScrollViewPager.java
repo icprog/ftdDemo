@@ -1,4 +1,4 @@
-package com.william.ftdui;
+package com.william.ftdui.widget.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

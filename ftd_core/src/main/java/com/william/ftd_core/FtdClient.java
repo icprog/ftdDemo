@@ -1,41 +1,57 @@
 package com.william.ftd_core;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.ArrayMap;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.william.ftd_core.callback.BaseCallback;
+import com.william.ftd_core.callback.FtdLastReportCallback;
+import com.william.ftd_core.callback.FtdLoginCallback;
+import com.william.ftd_core.callback.FtdPicUploadCallback;
+import com.william.ftd_core.callback.FtdQuestionListCallback;
+import com.william.ftd_core.callback.FtdSubmitCallback;
 import com.william.ftd_core.constant.ServiceApi;
+import com.william.ftd_core.entity.AskBean;
+import com.william.ftd_core.entity.Conclusion;
+import com.william.ftd_core.entity.LatestReport;
+import com.william.ftd_core.entity.QuestionBean;
+import com.william.ftd_core.entity.ReportBean;
 import com.william.ftd_core.entity.Result;
+import com.william.ftd_core.entity.SubmitAnswerResult;
+import com.william.ftd_core.entity.UploadResult;
 import com.william.ftd_core.entity.User;
+import com.william.ftd_core.exception.FtdException;
+import com.william.ftd_core.param.GetLastReportParam;
+import com.william.ftd_core.param.GetQuestionParam;
+import com.william.ftd_core.param.GetReportParam;
+import com.william.ftd_core.param.InitParam;
 import com.william.ftd_core.param.LoginParam;
+import com.william.ftd_core.param.SubmitAnswerParam;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
+import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.william.ftd_core.constant.ServiceApi.JSON_MEDIA;
-
-/**
- * todo 添加build模式
- */
 public class FtdClient {
 
     private static final String TAG = "FtdClient";
@@ -45,51 +61,56 @@ public class FtdClient {
 
     private Gson gson = new Gson();
 
-    private String companyCode;
+    private String appKey;
     private String appId;
+    private String appCode;
+    private String companyCode;
+    private String appSecret;
+    private String phrAppKey;
+    private String phrAppSecret;
 
     private User user;
 
-    public FtdClient(String companyCode, String appId) {
-        this.companyCode = companyCode;
-        this.appId = appId;
+    //        private String schemeId = "2581181533264a9389efb46fc5d2da16";
+    private String schemeId;
 
-        initRetrofit();
+    public static FtdClient getInstance() {
+        return SingletonInstance.INSTANCE;
     }
 
+    private static class SingletonInstance {
+        private static FtdClient INSTANCE = new FtdClient();
+    }
 
-    private void initRetrofit() {
-//        val builder = OkHttpClient.Builder()
-////                .addInterceptor(HeaderInterceptor())//设置Header
-////                .addNetworkInterceptor(CacheInterceptor())//设置缓存
-////                .addInterceptor(CacheInterceptor())
-////                .cache(cache)
-////                .connectTimeout(BuildConfig.DEFAULT_CONNECT_TIMEOUT, TimeUnit.SECONDS)//设置连接超时时间
-////                .readTimeout(BuildConfig.DEFAULT_READ_TIMEOUT, TimeUnit.SECONDS)//设置读取超时时间
-////                .writeTimeout(BuildConfig.DEFAULT_WRITE_TIMEOUT, TimeUnit.SECONDS)//设置写的超时时间
-////                .retryOnConnectionFailure(true)//错误重连
+    public void init(final InitParam param) {
 
-//        builder.addInterceptor { chain ->
-//                val originReq = chain.request()
-//            val req = originReq.newBuilder()
-//                    .header(TENANT_CODE,BuildConfig.TENANT_CODE)
-//                    .method(originReq.method(), originReq.body())
-//                    .build()
-//            chain.proceed(req)
-//        }
-////        调试模式打印Log日志
-//        if (BuildConfig.DEBUG) {
-//            builder.addInterceptor { chain ->
-//                    val originReq = chain.request()
-//                //---------请求之前------------
-//                Logger.t(tag).d("正在请求：${originReq.url()}\n请求头：${originReq.headers()}\n请求体：${originReq.body()}")
-//                //---------请求之后------------
-//                val response = chain.proceed(originReq)
-//                Logger.t(tag).d("获得响应：${response.body()}")
-//                response
-//            }
-//        }
+        this.appId = param.getAppId();
+        this.appKey = param.getAppKey();
+        this.appSecret = param.getAppSecret();
+        this.companyCode = param.getCompanyCode();
+
+        this.phrAppKey = param.getPhrAppKey();
+        this.phrAppSecret = param.getPhrAppSecret();
+
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
+        builder.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request originReq = chain.request();
+                Request req = originReq.newBuilder()
+                        .header(ServiceApi.APP_ID, appId)
+                        .header(ServiceApi.APP_CODE, param.getAppCode())
+                        .header(ServiceApi.PLACE_COMPANY_ID, param.getCompanyId())
+                        .header(ServiceApi.PLACE_COMPANY_P_ID, param.getCompanyPid())
+                        .header(ServiceApi.PLACE_COMPANY_P_ID, companyCode)
+                        .header(ServiceApi.App_KEY, appKey)
+                        .method(originReq.method(), originReq.body())
+                        .build();
+                return chain.proceed(req);
+            }
+        });
+
         if (BuildConfig.DEBUG) {//debug模式添加log
             builder.addInterceptor(new Interceptor() {
                 @Override
@@ -97,7 +118,7 @@ public class FtdClient {
                     okhttp3.Request originReq = chain.request();
                     Log.d(TAG, "正在请求：" + originReq.url() + "\n请求头：" + "originReq.headers()" + "\n请求体：" + originReq.body());
                     okhttp3.Response response = chain.proceed(originReq);
-                    Log.d(TAG, "获得响应：" + response.body());
+//                    Log.d(TAG, "获得响应：" + response.body());
                     return response;
                 }
             });
@@ -115,7 +136,7 @@ public class FtdClient {
      * 登录面舌诊
      */
     @SuppressLint("CheckResult")
-    public void login(final String phone) {
+    public void login(final String phone, final FtdLoginCallback callback) {
         service.getToken()
                 .subscribeOn(Schedulers.io())
                 .map(new Function<FtdResponse<String>, String>() {
@@ -132,7 +153,7 @@ public class FtdClient {
                     public SingleSource<FtdResponse<User>> apply(String token) throws Exception {
                         LoginParam param = new LoginParam(phone, companyCode, appId, token);
                         String json = gson.toJson(param);
-                        RequestBody requestBody = RequestBody.create(MediaType.parse(JSON_MEDIA), json);
+                        RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
                         return service.login(requestBody);
                     }
                 })
@@ -149,113 +170,26 @@ public class FtdClient {
                     @Override
                     public void accept(User user) throws Exception {
                         FtdClient.this.user = user;
+                        if (callback != null) {
+                            callback.onSuccess();
+                        }
                     }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        //todo 报错
-                    }
-                });
-
+                }, new ErrorConsumer(callback));
     }
 
-//    @SuppressLint("CheckResult")
-//    public void picUpload(File file,@ServiceApi.Type int type) {
-//        BitmapFactory.Options options = new BitmapFactory.Options();
-//        Bitmap bitmap = BitmapFactory.decodeFile(file.getPath(),options);
-//        int photoWidth = options.outWidth;
-//        int photoHeight = options.outHeight;
-//        bitmap.recycle();
-//
-//        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-//        builder.addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
-//        builder.addFormDataPart("username", user.getMoble());
-//        builder.addFormDataPart("userId", user.getPhrId());
-//        builder.addFormDataPart("faceTongueFlag", String.valueOf(type));
-//        builder.addFormDataPart("check_id", UUIDGenarator.getUUID());
-//        builder.addFormDataPart("photoWidth", String.valueOf(photoWidth));
-//        builder.addFormDataPart("photoHeight", String.valueOf(photoHeight));
-//        builder.addFormDataPart("scheme_flag", UUIDGenarator.getUUID());
-//        builder.addFormDataPart("equCode", ServiceApi.MAC);
-//        builder.addFormDataPart("mApi", "7");
-//        String rectX = "0";
-//        String rectY= "0";
-//        String rectWidth= "0";
-//        String rectHeight= "0";
-//        String takePhotoWidth= "0";
-//        String takePhotoHeight= "0";
-//        if (type != ServiceApi.FACE) {
-//            rectX = "764";
-//            rectY = "460";
-//            rectWidth = "400";
-//            rectHeight = "420";
-//            takePhotoWidth = "1920";
-//            takePhotoHeight = "1032";
-//        }
-//        builder.addFormDataPart("rectX", rectX);
-//        builder.addFormDataPart("rectY", rectY);
-//        builder.addFormDataPart("rectWidth", rectWidth);
-//        builder.addFormDataPart("rectHeight", rectHeight);
-//        builder.addFormDataPart("takePhotoWidth", takePhotoWidth);
-//        builder.addFormDataPart("takePhotoHeight", takePhotoHeight);
-//        service.picUpload(builder.build())
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<Result>() {
-//                    @Override
-//                    public void accept(Result result) throws Exception {
-//                        int i = 0;
-//                    }
-//                }, new Consumer<Throwable>() {
-//                    @Override
-//                    public void accept(Throwable throwable) throws Exception {
-//                        int i = 0;
-//                    }
-//                });
-//    }
-
     @SuppressLint("CheckResult")
-    public void picUpload(File file, @ServiceApi.Type int type) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        Bitmap bitmap = BitmapFactory.decodeFile(file.getPath(), options);
-        int photoWidth = options.outWidth;
-        int photoHeight = options.outHeight;
-        bitmap.recycle();
-
-        String rectX = "0";
-        String rectY = "0";
-        String rectWidth = "0";
-        String rectHeight = "0";
-        String takePhotoWidth = "0";
-        String takePhotoHeight = "0";
-        if (type != ServiceApi.FACE) {
-            rectX = "764";
-            rectY = "460";
-            rectWidth = "400";
-            rectHeight = "420";
-            takePhotoWidth = "1920";
-            takePhotoHeight = "1032";
-        }
-        RequestBody fileBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", file.getName(), fileBody);
-        ArrayMap<String,String> params = new ArrayMap();
-        params.put("username",user.getMoble());
-        params.put("userId",user.getPhrId());
-        params.put("faceTongueFlag",String.valueOf(type));
-        params.put("check_id",UUIDGenarator.getUUID());
-        params.put("photoWidth",String.valueOf(photoWidth));
-        params.put("photoHeight",String.valueOf(photoHeight));
-        params.put("scheme_flag",UUIDGenarator.getUUID());
-        params.put("equCode",ServiceApi.MAC);
-        params.put("mApi","7");
-        params.put("rectX",rectX);
-        params.put("rectY",rectY);
-        params.put("rectWidth",rectWidth);
-        params.put("rectHeight",rectHeight);
-        params.put("takePhotoWidth",takePhotoWidth);
-        params.put("takePhotoHeight",takePhotoHeight);
-        ArrayMap<String,RequestBody> paramMap = convertToRequestBody(params,fileBody);
-        service.picUpload(paramMap,filePart)
+//    public void pictureUpload(File file, @ServiceApi.Type int type) {
+    public void pictureUpload(File file, int type) {
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        builder.addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
+        builder.addFormDataPart("faceTongueFlag", String.valueOf(type));
+        builder.addFormDataPart("check_id", Util.getUUID());
+        builder.addFormDataPart("scheme_flag", schemeId);
+        builder.addFormDataPart("equCode", ServiceApi.MAC);
+        String authorization = Util.generateAuthorization(appKey, this.appSecret, "OvationHealth/FaceTongueCheckServlet");
+        service.picUpload(
+                authorization,
+                builder.build())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Result>() {
@@ -271,28 +205,191 @@ public class FtdClient {
                 });
     }
 
-    private ArrayMap<String,RequestBody> convertToRequestBody(ArrayMap<String,String> params,RequestBody fileBody){
-        ArrayMap<String,RequestBody> paramMap = new ArrayMap<>();
-        Set<Map.Entry<String,String>> entrySet = params.entrySet();
-        for (Map.Entry<String,String> entry : entrySet){
-            paramMap.put(entry.getKey(),RequestBody.create(MediaType.parse("text/plain"), entry.getValue()));
+    @SuppressLint("CheckResult")
+//    private Single<Result> picUpload(File file, @ServiceApi.Type int type) {
+    private Single<FtdResponse<UploadResult>> picUpload(File file, int type) {
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        builder.addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
+        builder.addFormDataPart("check_id", Util.getUUID());
+        builder.addFormDataPart("equCode", ServiceApi.MAC);
+        builder.addFormDataPart("faceTongueFlag", String.valueOf(type));
+        builder.addFormDataPart("faceTongueTag", String.valueOf(type));
+        builder.addFormDataPart("mApi", "7");
+        builder.addFormDataPart("scheme_flag", schemeId);
+
+
+        builder.addFormDataPart("userId", user.getPhrId());
+        builder.addFormDataPart("username", user.getMoble());
+        builder.addFormDataPart("userType", "1");
+//        builder.addFormDataPart("appkey", this.appKey);
+        return service.picUpload1(user.getUuid(), builder.build());
+    }
+
+    private Disposable disposable;
+
+    @SuppressLint("CheckResult")
+    public void picUpload(File file1, File file2, File file3, final FtdPicUploadCallback callback) {
+        if (TextUtils.isEmpty(schemeId)) {
+            schemeId = Util.getUUID();
+        } else {
+            return;
         }
-        paramMap.put("file",fileBody);
-        return paramMap;
-    }
+        disposable = Single.zip(picUpload(file1, ServiceApi.FACE), picUpload(file2, ServiceApi.TONGUE_TOP), picUpload(file3, ServiceApi.TONGUE_BOTTOM), new Function3<FtdResponse<UploadResult>, FtdResponse<UploadResult>, FtdResponse<UploadResult>, Conclusion>() {
+            @Override
+            public Conclusion apply(FtdResponse<UploadResult> faceResult, FtdResponse<UploadResult> tongueTopResult, FtdResponse<UploadResult> tongueBottomResult) throws Exception {
+                if (faceResult == null || faceResult == null || tongueBottomResult == null) {
 
-    public static FtdClient getInstance(String companyCode, String appId) {
-        return Singleton.getInstance(companyCode, appId);
-    }
+                }
+                if (faceResult.getCode() != 1000 || tongueTopResult.getCode() != 1000 || tongueBottomResult.getCode() != 1000) {
 
-    private static class Singleton {
-        private static FtdClient client;
-
-        private static FtdClient getInstance(String companyCode, String appId) {
-            if (client == null) {
-                client = new FtdClient(companyCode, appId);
+                }
+                Conclusion conclusion = new Conclusion();
+                conclusion.setFaceResult(faceResult.getData());
+                conclusion.setTongueTopResult(tongueTopResult.getData());
+                conclusion.setTongueBottomfaceResult(tongueBottomResult.getData());
+                return conclusion;
             }
-            return client;
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Conclusion>() {
+                    @Override
+                    public void accept(Conclusion result) throws Exception {
+                        if (callback != null) {
+                            callback.onSuccess();
+                        }
+                    }
+                }, new ErrorConsumer(callback));
+    }
+
+    /**
+     * 停止上传
+     */
+    public void stopUpload() {
+        if (disposable != null && !disposable.isDisposed()) {
+            this.disposable.dispose();
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    public void getQuestion(final FtdQuestionListCallback callback) {
+
+        GetQuestionParam param = new GetQuestionParam(user, this.schemeId);
+        String json = gson.toJson(param);
+        RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
+        service.getQuestion(
+                user.getUuid(),
+                requestBody
+        )
+                .subscribeOn(Schedulers.io())
+                .map(new Function<FtdResponse<AskBean>, AskBean>() {
+                    @Override
+                    public AskBean apply(FtdResponse<AskBean> response) throws Exception {
+                        if (response.getCode() != 1000 || response.getData() == null) {
+                            throw new Exception();
+                        }
+                        return response.getData();
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<AskBean>() {
+                    @Override
+                    public void accept(AskBean s) throws Exception {
+                        if (callback != null) {
+                            callback.onSuccess(s);
+                        }
+                    }
+                }, new ErrorConsumer(callback));
+    }
+
+    @SuppressLint("CheckResult")
+    public void submitAnswer(List<QuestionBean> questionList1, List<QuestionBean> questionList2, String traceId1, String traceId2, final FtdSubmitCallback callback) {
+        String westernMedicineInfo = gson.toJson(questionList1);
+        String constitutionWesternMedicineInfo = gson.toJson(questionList2);
+        SubmitAnswerParam param = new SubmitAnswerParam(
+                user.getPhrId(),
+                user.getMoble(),
+                this.schemeId,
+                traceId1,
+                westernMedicineInfo,
+                constitutionWesternMedicineInfo,
+                traceId2
+        );
+        String json = gson.toJson(param);
+        RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
+        service.submitAnswer(
+                user.getUuid(),
+                requestBody
+        )
+                .subscribeOn(Schedulers.io())
+                .map(new Function<FtdResponse<AskBean>, AskBean>() {
+                    @Override
+                    public AskBean apply(FtdResponse<AskBean> response) throws Exception {
+                        if (response == null || response.getCode() != 1000 || response.getData() == null) {
+                            throw new Exception();
+                        }
+                        return response.getData();
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<AskBean>() {
+                    @Override
+                    public void accept(AskBean response) throws Exception {
+                        if (callback != null) {
+                            callback.onSuccess(response);
+                        }
+                    }
+                }, new ErrorConsumer(callback));
+
+    }
+
+    /**
+     * 获取报告
+     */
+    @SuppressLint("CheckResult")
+    public void getLastRecord(long seqNo, final FtdLastReportCallback callback) {
+        GetReportParam param = new GetReportParam(user.getPhrId(), seqNo);
+//        GetReportParam param = new GetReportParam(user.getPhrId(), "2019062911221600264");
+        String json = gson.toJson(param);
+        RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
+        service.getLastReport(user.getUuid(), requestBody)
+                .subscribeOn(Schedulers.io())
+                .map(new Function<FtdResponse<ReportBean>, ReportBean>() {
+                    @Override
+                    public ReportBean apply(FtdResponse<ReportBean> response) throws Exception {
+                        if (response == null || response.getCode() != 1000 || response.getData() == null) {
+                            throw new Exception();
+                        }
+                        return response.getData();
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ReportBean>() {
+                    @Override
+                    public void accept(ReportBean response) throws Exception {
+                        if (callback != null) {
+                            callback.onSuccess(response);
+                        }
+                    }
+                }, new ErrorConsumer(callback));
+    }
+
+    private static class ErrorConsumer implements Consumer<Throwable> {
+        private BaseCallback callback;
+
+        public ErrorConsumer(BaseCallback callback) {
+            this.callback = callback;
+        }
+
+        @Override
+        public void accept(Throwable throwable) throws Exception {
+            if (callback != null) {
+                if (throwable instanceof FtdException) {
+                    callback.onError((FtdException) throwable);
+                } else {
+                    callback.onError(new FtdException(0));
+                }
+            }
         }
     }
 }

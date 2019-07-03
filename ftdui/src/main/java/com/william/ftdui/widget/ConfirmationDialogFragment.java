@@ -1,4 +1,4 @@
-package com.william.ftdui;
+package com.william.ftdui.widget;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
