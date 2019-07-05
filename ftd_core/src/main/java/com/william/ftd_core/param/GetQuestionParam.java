@@ -14,12 +14,12 @@ public class GetQuestionParam {
     private String deviceType = "MOBILE";
     private String deviceCode = "MOBILE";
     private String space = "FACE_TONGUE_LK";
-    private String constitutionSpace = "FACE_TONGUE_LK";
+    private String constitutionSpace = "PD";
 
     public GetQuestionParam(User user, String schemeId) {
         this.userId = user.getPhrId();
         this.schemeId = Util.getUUID();
-        this.userCode = user.getMoble();
+        this.userCode = user.getUserName();
         this.schemeId = schemeId;
     }
 

@@ -18,10 +18,12 @@ android {
         debug{
             buildConfigField "String", "BRAIN_APP_KEY","\"cLH0hbqiR\""
             buildConfigField "String", "BRAIN_APP_SECRET","\"78cb693c-8308-4674-88dd-6835ea6666ff\""
+            buildConfigField "String", "BRAIN_WEB","\"http://lk-m-questionnaire-qa.op.laikang.com/#/klgMulRaiseTemp/\""
         }
         release {
             buildConfigField "String", "BRAIN_APP_KEY","\"sTYUBHGZg\""
             buildConfigField "String", "BRAIN_APP_SECRET","\"4ab7de29-ddd7-4277-a934-629cf27878e1\""
+            buildConfigField "String", "BRAIN_WEB","\"https://lk-m-questionnaire-pro.op.laikang.com/#/klgMulRaiseTemp/\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -39,7 +41,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     api 'com.shuhart.stepview:stepview:1.5.0'
-    api 'org.xclcharts:lib:2.4'//图标库
+    api 'org.xclcharts:lib:2.4'//图表库
+    api 'com.william:zhibiaoview:1.0.0'
 
     //    implementation 'com.william:JTCameraView:1.0.1'
     implementation project(':JTCameraView')

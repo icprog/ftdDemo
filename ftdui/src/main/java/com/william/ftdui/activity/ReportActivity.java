@@ -1,8 +1,13 @@
 package com.william.ftdui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,13 +18,19 @@ import com.william.ftd_core.callback.FtdLastReportCallback;
 import com.william.ftd_core.entity.ReportBean;
 import com.william.ftd_core.entity.SixDiseaseBean;
 import com.william.ftd_core.exception.FtdException;
+import com.william.ftdui.BuildConfig;
 import com.william.ftdui.R;
+import com.william.ftdui.widget.adapter.AnalyzeAdapter;
+import com.william.ftdui.widget.adapter.decoration.GridDividerItemDecoration;
+import com.william.ftdui.widget.adapter.viewHolder.FiveAdapter;
 import com.william.ftdui.widget.view.BarChartView1;
 import com.william.ftdui.widget.view.ChartEightPrincipalView;
 
 import java.util.List;
 
-public class ReportActivity extends BaseActivity implements FtdLastReportCallback {
+public class ReportActivity extends BaseActivity
+        implements FtdLastReportCallback {
+//        , View.OnClickListener {
 
     private ReportBean bean;
 
@@ -82,7 +93,7 @@ public class ReportActivity extends BaseActivity implements FtdLastReportCallbac
     private void initTv100() {
         TextView tv = findViewById(R.id.tv_100);
         ReportBean.FaceDiagnoseBean fdb = bean.getFaceDiagnose();
-        String content = fdb.getFace() + "\n" + fdb.getTongue() + "\n" + fdb.getMoss();
+        String content = "●" + fdb.getFace() + "\n●" + fdb.getTongue() + "\n●" + fdb.getMoss();
         tv.setText(content);
     }
 
@@ -99,9 +110,35 @@ public class ReportActivity extends BaseActivity implements FtdLastReportCallbac
         tv.setText(content.toString());
     }
 
-    private void initBarChart(){
+    /**
+     * 初始化柱形图
+     */
+    private void initBarChart() {
         BarChartView1 bcv = findViewById(R.id.bv);
         bcv.setData(bean.getQuotaInfoList());
+    }
+
+    /**
+     * 初始化指数分解
+     */
+    private void initRv2() {
+        RecyclerView rv = findViewById(R.id.rv2);
+        rv.setAdapter(new AnalyzeAdapter(bean.getQuotaInfoList()));
+    }
+
+    /**
+     * 初始化五养
+     */
+    private void initFive() {
+        RecyclerView fiveList = findViewById(R.id.rv_five);
+        FiveAdapter adapter = new FiveAdapter("", new FiveAdapter.OnWuYangSelectListener() {
+            @Override
+            public void onWuYangSelect(String url) {
+                //todo 跳转五养
+                showToast(url);
+            }
+        });
+        fiveList.setAdapter(adapter);
     }
 
     @Override
@@ -115,7 +152,8 @@ public class ReportActivity extends BaseActivity implements FtdLastReportCallbac
         initTv100();
         initTv200();
         initBarChart();
-//        initBarChart1();
+        initRv2();
+        initFive();
     }
 
     @Override
