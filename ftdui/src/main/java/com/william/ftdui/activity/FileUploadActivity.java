@@ -7,11 +7,14 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.william.ftd_core.FtdClient;
+import com.william.ftd_core.callback.FtdMicroTipCallback;
 import com.william.ftd_core.callback.FtdPicUploadCallback;
+import com.william.ftd_core.entity.MicroTipBean;
 import com.william.ftd_core.exception.FtdException;
 import com.william.ftdui.constant.Constant;
 import com.william.ftdui.R;
@@ -21,6 +24,9 @@ import java.io.File;
 public class FileUploadActivity extends BaseActivity implements View.OnClickListener {
 
     private Button btnSubmit;
+    private TextView tvTitle;
+    private TextView tvContent;
+    private ImageView ivRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +40,11 @@ public class FileUploadActivity extends BaseActivity implements View.OnClickList
         btnSubmit = findViewById(R.id.submit);
         btnSubmit.setOnClickListener(this);
 
+        ivRefresh = findViewById(R.id.iv_refresh);
+        ivRefresh.setOnClickListener(this);
+        tvTitle = findViewById(R.id.tv_title);
+        tvContent = findViewById(R.id.tv_content);
+
         File FaceImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_FACE).getFileName() + ".jpeg");
         File TongueTopImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_TONGUE_TOP).getFileName() + ".jpeg");
         File TongueBottomImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_TONGUE_BOTTOM).getFileName() + ".jpeg");
@@ -42,20 +53,9 @@ public class FileUploadActivity extends BaseActivity implements View.OnClickList
         loadImg(ivTongueTop, TongueTopImg);
         loadImg(ivTongueBottom, TongueBottomImg);
 
-        FtdClient.getInstance().picUpload(FaceImg, TongueTopImg, TongueBottomImg, new FtdPicUploadCallback() {
-            @Override
-            public void onSuccess() {
-                Intent intent = getIntent();
-                intent.setClass(FileUploadActivity.this, QuestionListActivity.class);
-                startActivity(intent);
-                finish();
-            }
 
-            @Override
-            public void onError(FtdException e) {
-                showToast(e.getMsg());
-            }
-        });
+
+        getMicroTip();
     }
 
     private void loadImg(@NonNull ImageView iv, @NonNull File file) {
@@ -64,10 +64,14 @@ public class FileUploadActivity extends BaseActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        Intent intent = getIntent();
-        intent.setClass(this, QuestionListActivity.class);
-        startActivity(intent);
-        finish();
+        if (v.getId() == R.id.iv_refresh) {
+            getMicroTip();
+        } else {
+            Intent intent = getIntent();
+            intent.setClass(this, QuestionListActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     /**
@@ -77,5 +81,22 @@ public class FileUploadActivity extends BaseActivity implements View.OnClickList
     protected void onDestroy() {
         super.onDestroy();
         FtdClient.getInstance().stopUpload();
+    }
+
+
+    private void getMicroTip() {
+        FtdClient.getInstance().getMicroTip(new FtdMicroTipCallback() {
+            @Override
+            public void onSuccess(MicroTipBean bean) {
+                // TODO: 2019-07-06
+                tvTitle.setText(bean.getName());
+                tvContent.setText(bean.getAnalysis());
+            }
+
+            @Override
+            public void onError(FtdException e) {
+                showToast(e.getMsg());
+            }
+        });
     }
 }

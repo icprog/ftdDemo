@@ -14,7 +14,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.william.ftd_core.FtdClient;
+import com.william.ftd_core.callback.FtdGetAnaylzerCallback;
 import com.william.ftd_core.callback.FtdLastReportCallback;
+import com.william.ftd_core.entity.AnalyzeResultBean;
 import com.william.ftd_core.entity.ReportBean;
 import com.william.ftd_core.entity.SixDiseaseBean;
 import com.william.ftd_core.exception.FtdException;
@@ -29,8 +31,7 @@ import com.william.ftdui.widget.view.ChartEightPrincipalView;
 import java.util.List;
 
 public class ReportActivity extends BaseActivity
-        implements FtdLastReportCallback {
-//        , View.OnClickListener {
+        implements FtdLastReportCallback, FtdGetAnaylzerCallback {
 
     private ReportBean bean;
 
@@ -75,9 +76,13 @@ public class ReportActivity extends BaseActivity
         view.setData(diseaseBeans);
     }
 
-    private void initContent() {
+    /**
+     * 初始化专家点评
+     * @param bean
+     */
+    private void initContent(AnalyzeResultBean bean) {
         TextView tv = findViewById(R.id.tv_content);
-        tv.setText(bean.getEvaluate());
+        tv.setText(bean.getOpinion());
     }
 
     private void initImg() {
@@ -145,9 +150,11 @@ public class ReportActivity extends BaseActivity
     public void onSuccess(ReportBean bean) {
         this.bean = bean;
 
+        FtdClient.getInstance().getAnalyzer(bean.getUr(), this);
+
         initScore();
         initEightPrincipal();
-        initContent();
+
         initImg();
         initTv100();
         initTv200();
@@ -157,7 +164,14 @@ public class ReportActivity extends BaseActivity
     }
 
     @Override
+    public void onSuccess(AnalyzeResultBean bean) {
+        initContent(bean);
+    }
+
+    @Override
     public void onError(FtdException e) {
         showToast(e.getMsg());
     }
+
+
 }

@@ -6,15 +6,19 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.william.ftd_core.callback.BaseCallback;
+import com.william.ftd_core.callback.FtdGetAnaylzerCallback;
 import com.william.ftd_core.callback.FtdLastReportCallback;
 import com.william.ftd_core.callback.FtdLoginCallback;
+import com.william.ftd_core.callback.FtdMicroTipCallback;
 import com.william.ftd_core.callback.FtdPicUploadCallback;
 import com.william.ftd_core.callback.FtdQuestionListCallback;
 import com.william.ftd_core.callback.FtdSubmitCallback;
 import com.william.ftd_core.constant.ServiceApi;
+import com.william.ftd_core.entity.AnalyzeResultBean;
 import com.william.ftd_core.entity.AskBean;
 import com.william.ftd_core.entity.Conclusion;
 import com.william.ftd_core.entity.LatestReport;
+import com.william.ftd_core.entity.MicroTipBean;
 import com.william.ftd_core.entity.QuestionBean;
 import com.william.ftd_core.entity.ReportBean;
 import com.william.ftd_core.entity.Result;
@@ -22,6 +26,7 @@ import com.william.ftd_core.entity.SubmitAnswerResult;
 import com.william.ftd_core.entity.UploadResult;
 import com.william.ftd_core.entity.User;
 import com.william.ftd_core.exception.FtdException;
+import com.william.ftd_core.param.GetAnalyzerParam;
 import com.william.ftd_core.param.GetLastReportParam;
 import com.william.ftd_core.param.GetQuestionParam;
 import com.william.ftd_core.param.GetReportParam;
@@ -31,6 +36,7 @@ import com.william.ftd_core.param.SubmitAnswerParam;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Single;
@@ -71,8 +77,8 @@ public class FtdClient {
 
     private User user;
 
-    //        private String schemeId = "2581181533264a9389efb46fc5d2da16";
-    private String schemeId;
+    private String schemeId = "2581181533264a9389efb46fc5d2da16";
+//    private String schemeId;
 
     public static FtdClient getInstance() {
         return SingletonInstance.INSTANCE;
@@ -349,7 +355,6 @@ public class FtdClient {
     @SuppressLint("CheckResult")
     public void getLastRecord(long seqNo, final FtdLastReportCallback callback) {
         GetReportParam param = new GetReportParam(user.getPhrId(), seqNo);
-//        GetReportParam param = new GetReportParam(user.getPhrId(), "2019062911221600264");
         String json = gson.toJson(param);
         RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
         service.getLastReport(user.getUuid(), requestBody)
@@ -367,6 +372,68 @@ public class FtdClient {
                 .subscribe(new Consumer<ReportBean>() {
                     @Override
                     public void accept(ReportBean response) throws Exception {
+                        if (callback != null) {
+                            callback.onSuccess(response);
+                        }
+                    }
+                }, new ErrorConsumer(callback));
+    }
+
+    @SuppressLint("CheckResult")
+    public void getAnalyzer(List<ReportBean.UrBean> urList, final FtdGetAnaylzerCallback callback) {
+        StringBuffer diseaseIds = new StringBuffer();
+        int size = urList.size();
+        for (int i = 0; i < size; i++) {
+            diseaseIds.append(urList.get(i).getDiseaseId());
+            diseaseIds.append(",");
+        }
+        GetAnalyzerParam param = new GetAnalyzerParam(diseaseIds.toString());
+        String json = gson.toJson(param);
+        RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
+        service.getAnalyzer(user.getUuid(), requestBody)
+                .subscribeOn(Schedulers.io())
+                .map(new Function<FtdResponse<AnalyzeResultBean>, AnalyzeResultBean>() {
+                    @Override
+                    public AnalyzeResultBean apply(FtdResponse<AnalyzeResultBean> response) throws Exception {
+                        if (response == null || response.getCode() != 1000 || response.getData() == null) {
+                            throw new Exception();
+                        }
+                        return response.getData();
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<AnalyzeResultBean>() {
+                    @Override
+                    public void accept(AnalyzeResultBean response) throws Exception {
+                        if (callback != null) {
+                            callback.onSuccess(response);
+                        }
+                    }
+                }, new ErrorConsumer(callback));
+    }
+
+    /**
+     * 获取健康微语
+     *
+     * @return
+     */
+    @SuppressLint("CheckResult")
+    public void getMicroTip(final FtdMicroTipCallback callback) {
+        service.getMicroTip(user.getPhrId())
+                .subscribeOn(Schedulers.io())
+                .map(new Function<FtdResponse<MicroTipBean>, MicroTipBean>() {
+                    @Override
+                    public MicroTipBean apply(FtdResponse<MicroTipBean> response) throws Exception {
+                        if (response == null || response.getCode() != 1000 || response.getData() == null) {
+                            throw new Exception();
+                        }
+                        return response.getData();
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<MicroTipBean>() {
+                    @Override
+                    public void accept(MicroTipBean response) throws Exception {
                         if (callback != null) {
                             callback.onSuccess(response);
                         }

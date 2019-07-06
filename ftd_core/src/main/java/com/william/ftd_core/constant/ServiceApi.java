@@ -22,9 +22,11 @@ public interface ServiceApi {
     String SUBMIT_ANSWER = "api/testing/step/getAskIng";
     //    String GET_LAST_REPORT = "api/phr/getLatestReportData";
     String GET_LAST_REPORT = "api/phr/exame/getLatestRecordBySeqNo";
-    String GET_ARTICLE = "/api/ftdw/admin/getInfoListByTag";//好文
-    String RECIPE = "/api/knowledge/health/dietary";//食谱
-    String GET_RAISES = "/api/knowledge/health/getRaises";//四养
+    String GET_ARTICLE = "api/ftdw/admin/getInfoListByTag";//好文
+    String RECIPE = "api/knowledge/health/dietary";//食谱
+    String GET_RAISES = "api/knowledge/health/getRaises";//四养
+    String GET_TIP = "api/ftdw/knowledge/getTips";//健康微语
+    String GET_HEALTH_ANALYZER = "/api/ftdw/knowledge/getDiseaseByCode";//健康分析
 
     String LK_TOKEN = "LkToken";
 
@@ -39,4 +41,6 @@ public interface ServiceApi {
 //    }
 
     String MAC = "02:00:00:00:00:00";
+
+    String USER_ID = "userId";
 }

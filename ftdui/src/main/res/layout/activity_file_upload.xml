@@ -10,9 +10,9 @@
         android:id="@+id/tb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
         android:minHeight="?attr/actionBarSize"
         android:title="莫急，图片上传中.."
-        android:layout_marginBottom="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -53,8 +53,8 @@
         android:id="@+id/ll_tongue_top"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_margin="5dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/ll_face"
         app:layout_constraintEnd_toStartOf="@+id/ll_tongue_bottom"
         app:layout_constraintStart_toEndOf="@+id/ll_face"
@@ -85,8 +85,8 @@
         android:id="@+id/ll_tongue_bottom"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_margin="5dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/ll_tongue_top"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/ll_tongue_top"
@@ -121,32 +121,42 @@
         android:text="重新拍摄"
         app:layout_constraintTop_toBottomOf="@id/ll_face" />
 
-    <LinearLayout
-        android:id="@+id/ll_content"
+
+    <TextView
+        android:id="@+id/tv_title"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:text="若要不失眠，株洲加百联"
+        app:layout_constraintTop_toBottomOf="@id/submit"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/submit">
+        app:layout_constraintEnd_toStartOf="@+id/iv_refresh"
+        app:layout_constraintBottom_toTopOf="@id/tv_content"/>
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="18sp"
-            tools:text="若要不失眠，株洲加百联" />
+    <ImageView
+        android:id="@+id/iv_refresh"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/refresh"
+        android:scaleType="fitXY"
+        app:layout_constraintStart_toEndOf="@id/tv_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_title"
+        app:layout_constraintBottom_toBottomOf="@id/tv_title"
+        />
 
-        <TextView
-            android:id="@+id/tv_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp"
-            tools:text="这里的白莲子是指莲子，桂皮、肾、心经，有养心安神的作用，对虚烦惊悸、失眠不美等症状有起小。" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:textSize="16sp"
+        android:lineSpacingExtra="5dp"
+        tools:text="这里的白莲子是指莲子，桂皮、肾、心经，有养心安神的作用，对虚烦惊悸、失眠不美等症状有起小。"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </android.support.constraint.ConstraintLayout>
