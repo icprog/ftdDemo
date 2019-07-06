@@ -45,15 +45,15 @@ public class FileUploadActivity extends BaseActivity implements View.OnClickList
         tvTitle = findViewById(R.id.tv_title);
         tvContent = findViewById(R.id.tv_content);
 
-        File FaceImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_FACE).getFileName() + ".jpeg");
-        File TongueTopImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_TONGUE_TOP).getFileName() + ".jpeg");
-        File TongueBottomImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_TONGUE_BOTTOM).getFileName() + ".jpeg");
+        File faceImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_FACE).getFileName() + ".jpeg");
+        File tongueTopImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_TONGUE_TOP).getFileName() + ".jpeg");
+        File tongueBottomImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_TONGUE_BOTTOM).getFileName() + ".jpeg");
 
-        loadImg(ivFace, FaceImg);
-        loadImg(ivTongueTop, TongueTopImg);
-        loadImg(ivTongueBottom, TongueBottomImg);
+        loadImg(ivFace, faceImg);
+        loadImg(ivTongueTop, tongueTopImg);
+        loadImg(ivTongueBottom, tongueBottomImg);
 
-
+        upload(faceImg,tongueTopImg,tongueBottomImg);
 
         getMicroTip();
     }
@@ -81,6 +81,23 @@ public class FileUploadActivity extends BaseActivity implements View.OnClickList
     protected void onDestroy() {
         super.onDestroy();
         FtdClient.getInstance().stopUpload();
+    }
+
+    private void upload(File FaceImg,File TongueTopImg,File TongueBottomImg){
+        FtdClient.getInstance().picUpload(FaceImg, TongueTopImg, TongueBottomImg, new FtdPicUploadCallback() {
+            @Override
+            public void onSuccess() {
+                Intent intent = getIntent();
+                intent.setClass(FileUploadActivity.this, QuestionListActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onError(FtdException e) {
+                showToast(e.getMsg());
+            }
+        });
     }
 
 

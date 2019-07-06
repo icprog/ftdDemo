@@ -12,7 +12,18 @@ android {
     }
     buildTypes {
 
+        debug {
+            manifestPlaceholders = [
+                    APP_KEY   : "cLH0hbqiR",
+                    APP_SECRET: "78cb693c-8308-4674-88dd-6835ea6666ff"
+            ]
+        }
+
         release {
+            manifestPlaceholders = [
+                    APP_KEY   : "sTYUBHGZg",
+                    APP_SECRET: "4ab7de29-ddd7-4277-a934-629cf27878e1"
+            ]
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

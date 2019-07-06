@@ -1,4 +1,4 @@
-package com.william.ftd_core;
+package com.william.ftd_core.entity;
 
 public class FtdResponse<T> {
 

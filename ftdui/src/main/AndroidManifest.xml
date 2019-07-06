@@ -11,6 +11,9 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application>
+
+
+
         <activity android:name=".activity.ReportActivity"/>
         <activity android:name=".activity.QuestionListActivity" />
         <activity android:name=".activity.FileUploadActivity" />

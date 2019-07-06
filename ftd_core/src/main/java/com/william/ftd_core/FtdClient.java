@@ -17,17 +17,15 @@ import com.william.ftd_core.constant.ServiceApi;
 import com.william.ftd_core.entity.AnalyzeResultBean;
 import com.william.ftd_core.entity.AskBean;
 import com.william.ftd_core.entity.Conclusion;
-import com.william.ftd_core.entity.LatestReport;
+import com.william.ftd_core.entity.FtdResponse;
 import com.william.ftd_core.entity.MicroTipBean;
 import com.william.ftd_core.entity.QuestionBean;
 import com.william.ftd_core.entity.ReportBean;
 import com.william.ftd_core.entity.Result;
-import com.william.ftd_core.entity.SubmitAnswerResult;
 import com.william.ftd_core.entity.UploadResult;
 import com.william.ftd_core.entity.User;
 import com.william.ftd_core.exception.FtdException;
 import com.william.ftd_core.param.GetAnalyzerParam;
-import com.william.ftd_core.param.GetLastReportParam;
 import com.william.ftd_core.param.GetQuestionParam;
 import com.william.ftd_core.param.GetReportParam;
 import com.william.ftd_core.param.InitParam;
@@ -36,8 +34,8 @@ import com.william.ftd_core.param.SubmitAnswerParam;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
@@ -77,8 +75,8 @@ public class FtdClient {
 
     private User user;
 
-    private String schemeId = "2581181533264a9389efb46fc5d2da16";
-//    private String schemeId;
+    //    private String schemeId = "2581181533264a9389efb46fc5d2da16";
+    private String schemeId;
 
     public static FtdClient getInstance() {
         return SingletonInstance.INSTANCE;
@@ -98,7 +96,10 @@ public class FtdClient {
         this.phrAppKey = param.getPhrAppKey();
         this.phrAppSecret = param.getPhrAppSecret();
 
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(1, TimeUnit.MINUTES)
+                .writeTimeout(1, TimeUnit.MINUTES);
 
         builder.addInterceptor(new Interceptor() {
             @Override
@@ -212,7 +213,6 @@ public class FtdClient {
     }
 
     @SuppressLint("CheckResult")
-//    private Single<Result> picUpload(File file, @ServiceApi.Type int type) {
     private Single<FtdResponse<UploadResult>> picUpload(File file, int type) {
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         builder.addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));

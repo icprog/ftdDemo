@@ -3,16 +3,12 @@ package com.william.ftd_core;
 import com.william.ftd_core.constant.ServiceApi;
 import com.william.ftd_core.entity.AnalyzeResultBean;
 import com.william.ftd_core.entity.AskBean;
+import com.william.ftd_core.entity.FtdResponse;
 import com.william.ftd_core.entity.MicroTipBean;
 import com.william.ftd_core.entity.ReportBean;
 import com.william.ftd_core.entity.Result;
-import com.william.ftd_core.entity.SubmitAnswerResult;
 import com.william.ftd_core.entity.UploadResult;
 import com.william.ftd_core.entity.User;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.Single;
 import okhttp3.RequestBody;

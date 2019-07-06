@@ -237,7 +237,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
                 try {
                     OutputStream os = new FileOutputStream(file);
                     BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos);//将图片压缩到流里面
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);//将图片压缩到流里面
                     os.flush();
                     os.close();
                     bitmap.recycle();

@@ -12,6 +12,9 @@ public class InitParam {
     private String phrAppKey;
     private String phrAppSecret;
 
+    public InitParam() {
+    }
+
     public InitParam(String appId, String appCode, String appKey, String appSecret, String companyId, String companyPid, String companyCode, String phrAppKey, String phrAppSecret) {
         this.appId = appId;
         this.appCode = appCode;
