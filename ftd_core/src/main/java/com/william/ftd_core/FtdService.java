@@ -7,6 +7,7 @@ import com.william.ftd_core.entity.FtdResponse;
 import com.william.ftd_core.entity.MicroTipBean;
 import com.william.ftd_core.entity.ReportBean;
 import com.william.ftd_core.entity.Result;
+import com.william.ftd_core.entity.TendencyResult;
 import com.william.ftd_core.entity.UploadResult;
 import com.william.ftd_core.entity.User;
 
@@ -107,6 +108,13 @@ public interface FtdService {
     @Headers({"Content-Type: application/json", "Accept: application/json"})
     @POST(ServiceApi.GET_HEALTH_ANALYZER)
     Single<FtdResponse<AnalyzeResultBean>> getAnalyzer(
+            @Header(ServiceApi.LK_TOKEN) String lkToken,
+            @Body RequestBody body
+    );
+
+    @Headers({"Content-Type: application/json", "Accept: application/json"})
+    @POST(ServiceApi.GET_TENDENCY)
+    Single<FtdResponse<TendencyResult>> getTendency(
             @Header(ServiceApi.LK_TOKEN) String lkToken,
             @Body RequestBody body
     );

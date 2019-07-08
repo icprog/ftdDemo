@@ -16,9 +16,11 @@ import com.google.gson.Gson;
 import com.william.ftd_core.FtdClient;
 import com.william.ftd_core.callback.FtdGetAnaylzerCallback;
 import com.william.ftd_core.callback.FtdLastReportCallback;
+import com.william.ftd_core.callback.FtdTendencyCallback;
 import com.william.ftd_core.entity.AnalyzeResultBean;
 import com.william.ftd_core.entity.ReportBean;
 import com.william.ftd_core.entity.SixDiseaseBean;
+import com.william.ftd_core.entity.TendencyResult;
 import com.william.ftd_core.exception.FtdException;
 import com.william.ftdui.BuildConfig;
 import com.william.ftdui.R;
@@ -27,11 +29,12 @@ import com.william.ftdui.widget.adapter.decoration.GridDividerItemDecoration;
 import com.william.ftdui.widget.adapter.viewHolder.FiveAdapter;
 import com.william.ftdui.widget.view.BarChartView1;
 import com.william.ftdui.widget.view.ChartEightPrincipalView;
+import com.william.ftdui.widget.view.ChartLineView;
 
 import java.util.List;
 
 public class ReportActivity extends BaseActivity
-        implements FtdLastReportCallback, FtdGetAnaylzerCallback {
+        implements FtdLastReportCallback, FtdGetAnaylzerCallback, FtdTendencyCallback {
 
     private ReportBean bean;
 
@@ -45,6 +48,8 @@ public class ReportActivity extends BaseActivity
         long seqNo = 2019070319300000032L;
 
         FtdClient.getInstance().getLastRecord(seqNo, this);
+
+        FtdClient.getInstance().getTendency(this);
     }
 
     /**
@@ -78,6 +83,7 @@ public class ReportActivity extends BaseActivity
 
     /**
      * 初始化专家点评
+     *
      * @param bean
      */
     private void initContent(AnalyzeResultBean bean) {
@@ -146,6 +152,16 @@ public class ReportActivity extends BaseActivity
         fiveList.setAdapter(adapter);
     }
 
+    /**
+     * 初始化趋势图
+     *
+     * @param tendencyResult
+     */
+    private void initTendency(TendencyResult tendencyResult) {
+        ChartLineView clv = findViewById(R.id.chart_line);
+        clv.setData(tendencyResult);
+    }
+
     @Override
     public void onSuccess(ReportBean bean) {
         this.bean = bean;
@@ -161,17 +177,37 @@ public class ReportActivity extends BaseActivity
         initBarChart();
         initRv2();
         initFive();
+
+
+    }
+
+    /**
+     * 健康分析
+     * @param bean
+     */
+    private void initHealthy(AnalyzeResultBean bean) {
+        TextView tv = findViewById(R.id.tv_helthy_analyzer);
+        StringBuffer sb = new StringBuffer();
+        for (AnalyzeResultBean.Data data: bean.getDataList()) {
+            sb.append("●").append(data.getName()).append("\n\t").append(data.getIntro()).append("\n");
+        }
+        tv.setText(sb.toString());
     }
 
     @Override
     public void onSuccess(AnalyzeResultBean bean) {
         initContent(bean);
+        initHealthy(bean);
+    }
+
+    @Override
+    public void onSuccess(TendencyResult result) {
+        initTendency(result);
     }
 
     @Override
     public void onError(FtdException e) {
         showToast(e.getMsg());
     }
-
 
 }

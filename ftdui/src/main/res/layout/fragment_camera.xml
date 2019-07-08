@@ -9,7 +9,7 @@
     <com.laikang.jtcameraview.JTCameraView
         android:id="@+id/jtcv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
     <com.shuhart.stepview.StepView
         android:id="@+id/step"

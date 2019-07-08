@@ -1,6 +1,9 @@
 package com.william.ftd_core;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -13,6 +16,7 @@ import com.william.ftd_core.callback.FtdMicroTipCallback;
 import com.william.ftd_core.callback.FtdPicUploadCallback;
 import com.william.ftd_core.callback.FtdQuestionListCallback;
 import com.william.ftd_core.callback.FtdSubmitCallback;
+import com.william.ftd_core.callback.FtdTendencyCallback;
 import com.william.ftd_core.constant.ServiceApi;
 import com.william.ftd_core.entity.AnalyzeResultBean;
 import com.william.ftd_core.entity.AskBean;
@@ -22,12 +26,14 @@ import com.william.ftd_core.entity.MicroTipBean;
 import com.william.ftd_core.entity.QuestionBean;
 import com.william.ftd_core.entity.ReportBean;
 import com.william.ftd_core.entity.Result;
+import com.william.ftd_core.entity.TendencyResult;
 import com.william.ftd_core.entity.UploadResult;
 import com.william.ftd_core.entity.User;
 import com.william.ftd_core.exception.FtdException;
 import com.william.ftd_core.param.GetAnalyzerParam;
 import com.william.ftd_core.param.GetQuestionParam;
 import com.william.ftd_core.param.GetReportParam;
+import com.william.ftd_core.param.GetTendencyParam;
 import com.william.ftd_core.param.InitParam;
 import com.william.ftd_core.param.LoginParam;
 import com.william.ftd_core.param.SubmitAnswerParam;
@@ -86,15 +92,47 @@ public class FtdClient {
         private static FtdClient INSTANCE = new FtdClient();
     }
 
-    public void init(final InitParam param) {
+    //    public void init(Context context, final InitParam param) {
+    public void init(Context context) {
 
-        this.appId = param.getAppId();
-        this.appKey = param.getAppKey();
-        this.appSecret = param.getAppSecret();
-        this.companyCode = param.getCompanyCode();
+        ApplicationInfo appInfo = null;
+        try {
+            appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(TAG, "init: ", e);
+            return;
+        }
 
-        this.phrAppKey = param.getPhrAppKey();
-        this.phrAppSecret = param.getPhrAppSecret();
+        final String appId = String.valueOf(appInfo.metaData.getInt("laiKang.appId"));
+        final String appCode = String.valueOf(appInfo.metaData.getInt("laiKang.appCode"));
+        final String appKey = appInfo.metaData.getString("laiKang.appKey");
+        final String appSecret = appInfo.metaData.getString("laiKang.appSecret");
+        final String companyId = String.valueOf(appInfo.metaData.getInt("laiKang.companyId"));
+        final String companyPid = String.valueOf(appInfo.metaData.getInt("laiKang.companyPid"));
+        final String companyCode = appInfo.metaData.getString("laiKang.companyCode");
+        final String phrAppKey = appInfo.metaData.getString("laiKang.phrAppKey");
+        final String phrAppSecret = appInfo.metaData.getString("laiKang.phrAppSecret");
+
+
+//        InitParam param = new InitParam(
+//                appId,
+//                appCode,
+//                appKey,
+//                appSecret,
+//                companyId,
+//                companyPid,
+//                companyCode,
+//                phrAppKey,
+//                phrAppSecret
+//        );
+
+//        this.appId = param.getAppId();
+//        this.appKey = param.getAppKey();
+//        this.appSecret = param.getAppSecret();
+//        this.companyCode = param.getCompanyCode();
+//
+//        this.phrAppKey = param.getPhrAppKey();
+//        this.phrAppSecret = param.getPhrAppSecret();
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(1, TimeUnit.MINUTES)
@@ -107,10 +145,10 @@ public class FtdClient {
                 Request originReq = chain.request();
                 Request req = originReq.newBuilder()
                         .header(ServiceApi.APP_ID, appId)
-                        .header(ServiceApi.APP_CODE, param.getAppCode())
-                        .header(ServiceApi.PLACE_COMPANY_ID, param.getCompanyId())
-                        .header(ServiceApi.PLACE_COMPANY_P_ID, param.getCompanyPid())
-                        .header(ServiceApi.PLACE_COMPANY_P_ID, companyCode)
+                        .header(ServiceApi.APP_CODE, appCode)
+                        .header(ServiceApi.PLACE_COMPANY_ID, companyId)
+                        .header(ServiceApi.PLACE_COMPANY_P_ID, companyId)
+                        .header(ServiceApi.COMPANY_CODE, companyCode)
                         .header(ServiceApi.App_KEY, appKey)
                         .method(originReq.method(), originReq.body())
                         .build();
@@ -410,6 +448,37 @@ public class FtdClient {
                         }
                     }
                 }, new ErrorConsumer(callback));
+    }
+
+    /**
+     * 获取趋势分析
+     * @param callback
+     * @return
+     */
+    public Disposable getTendency(final FtdTendencyCallback callback) {
+        GetTendencyParam param = new GetTendencyParam();
+        String json = gson.toJson(param);
+        RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
+        return service.getTendency(user.getUuid(),requestBody)
+                .subscribeOn(Schedulers.io())
+                .map(new Function<FtdResponse<TendencyResult>, TendencyResult>() {
+                    @Override
+                    public TendencyResult apply(FtdResponse<TendencyResult> response) throws Exception {
+                        if (response == null || response.getCode() != 1000 || response.getData() == null) {
+                            throw new Exception();
+                        }
+                        return response.getData();
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<TendencyResult>() {
+                    @Override
+                    public void accept(TendencyResult response) throws Exception {
+                        if (callback != null) {
+                            callback.onSuccess(response);
+                        }
+                    }
+                },new ErrorConsumer(callback));
     }
 
     /**

@@ -61,11 +61,6 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
 
     private Handler mMainThreadHandler = new mMainThreadHandler(this);
 
-//    public CameraFragment() throws Exception {
-//        // Required empty public constructor
-////        super();
-//        throw new Exception("CameraFragment：请调用newInstance()来实力化！");
-//    }
 
     public static CameraFragment newInstance(boolean autoPreview, @DrawableRes int drawableId, int requestId) {
         CameraFragment fragment = new CameraFragment();

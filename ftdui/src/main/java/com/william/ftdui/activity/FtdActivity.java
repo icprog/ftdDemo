@@ -39,37 +39,37 @@ public class FtdActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ftd);
 
-        String appId = "1561015389";
-        String appCode = "9000037";
-        String appKey = BuildConfig.BRAIN_APP_KEY;
-        String appSecret = BuildConfig.BRAIN_APP_SECRET;
-        String companyId = "1";
-        String companyPid = "1";
-
-
-        //盼盼版
-//        String companyCode = "LK6663b8aa1ef246d0";
-//        String phrAppKey = "0f8d616cc71dc3e8";
-//        String phrAppSecret = "f68f0b290f8d616cc71dc3e85ddd02c5";
-        //冰冰版
-        String companyCode = "LKde25dbbdacb442a3";
-        String phrAppKey = "5c93d6f90b635ebd ";
-        String phrAppSecret = "ddcba9615c93d6f90b635ebdfd59ce48";
-
-        InitParam param = new InitParam(
-                appId,
-                appCode,
-                appKey,
-                appSecret,
-                companyId,
-                companyPid,
-                companyCode,
-                phrAppKey,
-                phrAppSecret
-        );
+//        String appId = "1561015389";
+//        String appCode = "9000037";
+//        String appKey = BuildConfig.BRAIN_APP_KEY;
+//        String appSecret = BuildConfig.BRAIN_APP_SECRET;
+//        String companyId = "1";
+//        String companyPid = "1";
+//
+//
+//        //盼盼版
+////        String companyCode = "LK6663b8aa1ef246d0";
+////        String phrAppKey = "0f8d616cc71dc3e8";
+////        String phrAppSecret = "f68f0b290f8d616cc71dc3e85ddd02c5";
+//        //冰冰版
+//        String companyCode = "LKde25dbbdacb442a3";
+//        String phrAppKey = "5c93d6f90b635ebd ";
+//        String phrAppSecret = "ddcba9615c93d6f90b635ebdfd59ce48";
+//
+//        InitParam param = new InitParam(
+//                appId,
+//                appCode,
+//                appKey,
+//                appSecret,
+//                companyId,
+//                companyPid,
+//                companyCode,
+//                phrAppKey,
+//                phrAppSecret
+//        );
 
         mClient = FtdClient.getInstance();
-        mClient.init(param);
+        mClient.init(this);
 
 //        String mobile = "17326971126";
         String mobile = "17736703905";

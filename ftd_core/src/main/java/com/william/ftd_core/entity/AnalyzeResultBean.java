@@ -27,7 +27,7 @@ public class AnalyzeResultBean {
         this.list = dataList;
     }
 
-    private static class Data {
+    public static class Data {
         /**
          * code : ZYX120
          * intro : 指体内血液运行不畅所表现的证候。常表现为面色晦暗，口唇暗淡，易起褐斑，身体局部刺痛等。
