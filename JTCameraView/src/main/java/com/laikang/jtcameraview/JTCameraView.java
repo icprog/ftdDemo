@@ -317,27 +317,17 @@ public class JTCameraView extends TextureView {
         float widthDiffer = sWidth - pWidth;
         float heightDiffer = sHeight - pHeight;
 
+        if (widthDiffer > 0 && heightDiffer > 0) {
+
+        }
+
         if (widthDiffer > heightDiffer) {
             hScale = sWidth * previewRatio / sHeight;
         } else {
             wScale = sHeight / previewRatio / sWidth;
         }
 
-        float currentWidth = sWidth * wScale;
-        float currentHeight = sHeight * hScale;
-
-        float widthDiffer1 = sWidth - currentWidth;
-        float heightDiffer1 = sHeight - currentHeight;
-
-        float finalScale;
-        if (widthDiffer1 > heightDiffer1) {
-            finalScale = sWidth / currentWidth;
-        } else {
-            finalScale = sHeight / currentHeight;
-        }
-
-        //按照摄像头预览的长宽比，对surface进行缩放，保证图像不被拉伸的基础上让surface不留白边
-        matrix.postScale(wScale * finalScale, hScale * finalScale, sWidth / 2, sHeight / 2);
+        matrix.postScale(wScale, hScale, sWidth / 2, sHeight / 2);
         setTransform(matrix);
     }
 
