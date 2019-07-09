@@ -314,18 +314,20 @@ public class JTCameraView extends TextureView {
         float wScale = 1f;
         float hScale = 1f;
 
-        float widthDiffer = sWidth - pWidth;
-        float heightDiffer = sHeight - pHeight;
+//        float widthDiffer = sWidth - pWidth;
+//        float heightDiffer = sHeight - pHeight;
 
-        if (widthDiffer > 0 && heightDiffer > 0) {
-
-        }
-
-        if (widthDiffer > heightDiffer) {
-            hScale = sWidth * previewRatio / sHeight;
-        } else {
-            wScale = sHeight / previewRatio / sWidth;
-        }
+//        if (widthDiffer > 0 && heightDiffer < 0) {
+//            hScale = sWidth * previewRatio / sHeight;
+//        } else if (widthDiffer < 0 && heightDiffer > 0) {
+//            wScale = sHeight / previewRatio / sWidth;
+//        } else {
+            if (sHeight / sWidth > pHeight / pWidth) {
+                wScale = sHeight / previewRatio / sWidth;
+            } else {
+                hScale = sWidth * previewRatio / sHeight;
+            }
+//        }
 
         matrix.postScale(wScale, hScale, sWidth / 2, sHeight / 2);
         setTransform(matrix);
@@ -502,11 +504,17 @@ public class JTCameraView extends TextureView {
                     mListener.onShutter();
                 }
             }
-        }, null, new Camera.PictureCallback() {
+        }, null, null, new Camera.PictureCallback() {
             @Override
             public void onPictureTaken(final byte[] data, Camera camera) {
+                if (mListener != null) {
+//                    mListener.onCupture(data);
+                }
+
+
                 Bitmap rawBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                 Bitmap bitmap;
+//
                 if (mCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                     bitmap = BitmapUtils.mirror(rawBitmap);
                 } else {
@@ -516,7 +524,6 @@ public class JTCameraView extends TextureView {
                 if (mListener != null) {
                     mListener.onCupture(bitmap);
                 }
-//                camera.cancelAutoFocus();
                 camera.startPreview();
             }
         });
@@ -524,9 +531,16 @@ public class JTCameraView extends TextureView {
 
     private static class BitmapUtils {
         public static Bitmap mirror(Bitmap bitmap) {
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
             Matrix matrix = new Matrix();
+            if (width > height) {
+                matrix.setRotate(-90f);
+            }
             matrix.postScale(-1f, 1f);
-            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+
+            return Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
         }
 
         public static Bitmap rotate(Bitmap bitmap, Float degree) {

@@ -247,6 +247,36 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
     }
 
     @Override
+    public void onCupture(final byte[] data) {
+        mBackgroundHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                String fileName = Constant.steps.get(stepId).getFileName();
+                File file = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName + ".jpeg");
+                OutputStream os = null;
+                try {
+                    os = new FileOutputStream(file);
+                    os.write(data);
+                    os.close();
+                    Message msg = mBackgroundHandler.obtainMessage();
+                    msg.arg1 = stepId;
+                    mMainThreadHandler.sendMessage(msg);
+                } catch (IOException e) {
+                    Log.w(TAG, "Cannot write to " + file, e);
+                } finally {
+                    if (os != null) {
+                        try {
+                            os.close();
+                        } catch (IOException e) {
+                            // Ignore
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    @Override
     public void onCameraClosed() {
 
     }
