@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.william.ftd_core.entity.DataBean;
 import com.william.ftd_core.entity.QuotaInfoListBean;
+import com.william.ftdui.R;
 
 import org.xclcharts.chart.BarChart;
 import org.xclcharts.chart.BarData;
@@ -58,16 +59,18 @@ public class BarChartView1 extends DemoView{
         for (DataBean bean : list) {
             chartLabels.add(bean.getQuotaName());
             dataSeriesA.add(bean.getNormalScore());
-            dataColorA.add(Color.GRAY);
+            dataColorA.add(R.color.colorAccent1);
             dataSeriesB.add(bean.getScore());
-            dataColorB.add(bean.getScore() < bean.getNormalScore() ? Color.RED : Color.GREEN);
+//            dataColorB.add(bean.getScore() < bean.getNormalScore() ? R.color.colorPrimaryDark1 : R.color.colorPrimary1);
+
+            dataColorB.add(bean.getScore() < bean.getNormalScore() ? getResources().getColor(R.color.colorPrimaryDark1) : getResources().getColor(R.color.colorPrimary1));
         }
 
         chartDataA.clear();
-        chartDataA.add(new BarData("不知道啊", dataSeriesA, dataColorA, Color.GRAY));
+        chartDataA.add(new BarData("", dataSeriesA, dataColorA, R.color.colorAccent1));
 
         chartDataB.clear();
-        chartDataB.add(new BarData("我知道啊", dataSeriesB, dataColorB, Color.RED));
+        chartDataB.add(new BarData("", dataSeriesB, dataColorB, R.color.colorPrimaryDark1));
 
         chartRenderA();
         chartRenderB();

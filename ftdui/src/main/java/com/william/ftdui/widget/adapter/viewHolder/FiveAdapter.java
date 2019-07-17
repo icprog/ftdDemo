@@ -1,6 +1,5 @@
 package com.william.ftdui.widget.adapter.viewHolder;
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
@@ -9,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.william.ftd_core.FtdClient;
 import com.william.ftdui.BuildConfig;
 import com.william.ftdui.R;
 
@@ -33,12 +33,6 @@ public class FiveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         array.append(R.drawable.five_sport, "actionRaiseTemp");
         array.append(R.drawable.five_mood, "heartRaiseTemp");
         array.append(R.drawable.five_live, "liveRaiseTemp");
-
-//        array.append(R.drawable.five_food2, "foodRaiseTemp");
-//        array.append(R.drawable.five_food2_1, "kungfuRaiseTemp");
-//        array.append(R.drawable.five_food2_2, "actionRaiseTemp");
-//        array.append(R.drawable.five_food2_3, "heartRaiseTemp");
-//        array.append(R.drawable.five_food2_4, "liveRaiseTemp");
     }
 
     @NonNull
@@ -57,7 +51,8 @@ public class FiveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             @Override
             public void onClick(View v) {
                 if (listener != null) {
-                    String url = String.format(reg, BuildConfig.BRAIN_WEB, path, diseaseId, BuildConfig.BRAIN_APP_KEY);
+//                    String url = String.format(reg, BuildConfig.BRAIN_WEB, path, diseaseId, BuildConfig.BRAIN_APP_KEY);
+                    String url = String.format(reg, BuildConfig.BRAIN_WEB, path, diseaseId, FtdClient.getInstance().getAppKey());
                     listener.onWuYangSelect(url);
                 }
             }
@@ -71,11 +66,5 @@ public class FiveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface OnWuYangSelectListener {
         void onWuYangSelect(String url);
-    }
-
-    static class VH extends RecyclerView.ViewHolder {
-        public VH(@NonNull View itemView) {
-            super(itemView);
-        }
     }
 }

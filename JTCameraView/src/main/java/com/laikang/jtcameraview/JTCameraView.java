@@ -13,6 +13,7 @@ import android.util.Log;
 import android.util.Size;
 import android.view.TextureView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,6 +43,7 @@ public class JTCameraView extends TextureView {
     private int mPictureOrientation;
     private int mPreviewOrientation;
     private Camera.Size mPreviewSize;
+    private Camera.Size mPictureSize;
     private boolean isShowingPreview;
 
     public boolean isShowingPreview() {
@@ -163,15 +165,6 @@ public class JTCameraView extends TextureView {
         mSize = new Size(width, height);
     }
 
-
-    /**
-     * 配置相机整体环境
-     */
-    private void configureCameraEnv() {
-        adjustCameraParameters();
-
-    }
-
     /**
      * 设置方向
      *
@@ -291,7 +284,11 @@ public class JTCameraView extends TextureView {
     /**
      * 预览图像（surface）处理
      */
+    private boolean inited;
     private void configureTransform() {
+        if (inited){
+            return;
+        }
         if (mSize == null || mPreviewSize == null) {
             return;
         }
@@ -322,15 +319,17 @@ public class JTCameraView extends TextureView {
 //        } else if (widthDiffer < 0 && heightDiffer > 0) {
 //            wScale = sHeight / previewRatio / sWidth;
 //        } else {
-            if (sHeight / sWidth > pHeight / pWidth) {
-                wScale = sHeight / previewRatio / sWidth;
-            } else {
-                hScale = sWidth * previewRatio / sHeight;
-            }
+
+        if (sHeight / sWidth > pHeight / pWidth) {
+            wScale = sHeight / previewRatio / sWidth;
+        } else {
+            hScale = sWidth * previewRatio / sHeight;
+        }
 //        }
 
         matrix.postScale(wScale, hScale, sWidth / 2, sHeight / 2);
         setTransform(matrix);
+        inited= true;
     }
 
 
@@ -339,7 +338,9 @@ public class JTCameraView extends TextureView {
      */
     private void adjustCameraParameters() {
         this.mPreviewSize = chooseOptimalSize(mCameraParameters.getSupportedPreviewSizes(), mSize.getWidth(), mSize.getHeight());
+        this.mPictureSize = chooseOptimalSize(mCameraParameters.getSupportedPictureSizes(), mSize.getWidth(), mSize.getHeight());
         mCameraParameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
+        mCameraParameters.setPictureSize(mPictureSize.width, mPictureSize.height);
         mCameraParameters.setRotation(calcCameraRotation(mDisplayOrientation));
         setAutoFocus(isAutoFocus);
         setFlashInternal(mFlash);
@@ -464,7 +465,7 @@ public class JTCameraView extends TextureView {
      */
     public void startPreview() {
         openCamera(mCameraId);
-        configureCameraEnv();
+        adjustCameraParameters();
         configureTransform();
         try {
             mCamera.setPreviewTexture(getSurfaceTexture());
@@ -513,8 +514,10 @@ public class JTCameraView extends TextureView {
 
 
                 Bitmap rawBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                rawBitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
                 Bitmap bitmap;
-//
+
                 if (mCameraFacing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                     bitmap = BitmapUtils.mirror(rawBitmap);
                 } else {

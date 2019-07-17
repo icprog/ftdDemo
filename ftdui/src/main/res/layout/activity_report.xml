@@ -7,17 +7,10 @@
     android:orientation="vertical"
     tools:context=".activity.ReportActivity">
 
-    <Toolbar
-        android:id="@+id/tb"
+    <include layout="@layout/tool_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="体质报告"
-            android:gravity="center"/>
-    </Toolbar>
+        android:layout_gravity="top"/>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -80,7 +73,8 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toStartOf="@id/iv_tongue_top"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_content" />
+                app:layout_constraintTop_toBottomOf="@id/tv_content"
+                android:layout_marginTop="10dp"/>
 
             <ImageView
                 android:id="@+id/iv_tongue_top"
@@ -89,7 +83,8 @@
                 app:layout_constraintBottom_toBottomOf="@id/iv_face"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/iv_face"
-                app:layout_constraintTop_toTopOf="@id/iv_face" />
+                app:layout_constraintTop_toTopOf="@id/iv_face"
+                android:layout_marginStart="10dp"/>
 
             <!-- 柱形图-->
             <com.william.ftdui.widget.view.BarChartView1
@@ -103,6 +98,7 @@
                 android:id="@+id/tv_100"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:lineSpacingExtra="10dp"
                 app:layout_constraintTop_toBottomOf="@id/bv"
                 tools:text="面色红黄隐隐，明软含蓄什么的\n面色红黄隐隐，明软含蓄什么的\n面色红黄隐隐，明软含蓄什么的" />
 
@@ -111,13 +107,15 @@
                 android:id="@+id/chart_line"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                app:layout_constraintTop_toBottomOf="@id/tv_100" />
+                app:layout_constraintTop_toBottomOf="@id/tv_100"
+                android:background="#f00"/>
 
             <!--健康分析 -->
             <TextView
                 android:id="@+id/tv_helthy_analyzer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:lineSpacingExtra="10dp"
                 app:layout_constraintTop_toBottomOf="@+id/chart_line"/>
 
             <!--指标分析 -->
@@ -127,7 +125,8 @@
                 android:layout_height="wrap_content"
                 android:text="指标分析"
                 android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/chart_line" />
+                android:lineSpacingExtra="10dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_helthy_analyzer" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv2"
@@ -143,6 +142,8 @@
                 app:layoutManager="android.support.v7.widget.GridLayoutManager"
                 app:layout_constraintTop_toBottomOf="@id/rv2"
                 app:spanCount="2" />
+
+            <include layout="@layout/pb"/>
 
         </android.support.constraint.ConstraintLayout>
     </android.support.v4.widget.NestedScrollView>

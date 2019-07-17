@@ -1,6 +1,5 @@
 package com.william.ftdui.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -16,17 +15,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.laikang.jtcameraview.CameraStateListener;
 import com.laikang.jtcameraview.JTCameraView;
 import com.shuhart.stepview.StepView;
-import com.william.ftdui.activity.ReportActivity;
-import com.william.ftdui.constant.Constant;
-import com.william.ftdui.activity.FileUploadActivity;
 import com.william.ftdui.R;
+import com.william.ftdui.activity.FileUploadActivity;
+import com.william.ftdui.constant.Constant;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -46,12 +43,10 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
     private int drawableId = R.drawable.xuxian_mian;
     private int stepId = Constant.STEP_FACE;
 
-    private OnFragmentInteractionListener mListener;
 
     private StepView mStepView;
     private JTCameraView mJTCameraView;
-    private ImageButton btnCapture;
-    private ImageButton btnResult;
+    private ImageView btnCapture;
     private ImageView iv;
 
     private boolean canPreview;
@@ -115,22 +110,6 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         this.btnCapture.setOnClickListener(this);
         this.iv = rootView.findViewById(R.id.iv_dashed);
         this.iv.setImageResource(this.drawableId);
-        this.btnResult = rootView.findViewById(R.id.btn_result);
-        this.btnResult.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Intent intent = new Intent(getContext(), FileUploadActivity.class);
-//                startActivity(intent);
-
-
-                Intent intent = new Intent(getContext(), ReportActivity.class);
-                startActivity(intent);
-
-                getActivity().finish();
-            }
-        });
-
-        rootView.findViewById(R.id.btn_next).setOnClickListener(this);
     }
 
     /**
@@ -168,24 +147,6 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         } catch (InterruptedException e) {
             Log.e(TAG, "close: 后台线程关闭失败：", e);
         }
-    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     @Override
@@ -252,9 +213,10 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
             @Override
             public void run() {
                 String fileName = Constant.steps.get(stepId).getFileName();
-                File file = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName + ".jpeg");
+                File file;
                 OutputStream os = null;
                 try {
+                    file = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName + ".jpeg");
                     os = new FileOutputStream(file);
                     os.write(data);
                     os.close();
@@ -262,7 +224,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
                     msg.arg1 = stepId;
                     mMainThreadHandler.sendMessage(msg);
                 } catch (IOException e) {
-                    Log.w(TAG, "Cannot write to " + file, e);
+                    Log.w(TAG, "Cannot write to " + fileName + ".jpeg", e);
                 } finally {
                     if (os != null) {
                         try {
@@ -284,10 +246,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
 
     private void startPreview() {
         if (mJTCameraView != null) {
-
-//        if (canPreview) {
             mJTCameraView.startPreview();
-//        }
         }
     }
 
@@ -301,18 +260,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
     @Override
     public void onClick(View v) {
 
-        if (v.getId() == R.id.btn_next) {
-            Intent intent = new Intent(getContext(),FileUploadActivity.class);
-            startActivity(intent);
-            getActivity().finish();
-        } else {
-            mJTCameraView.takePicture();
-        }
-
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onCaptrueComplete(int requestId, File file);
+        mJTCameraView.takePicture();
     }
 
     private static class mMainThreadHandler extends Handler {

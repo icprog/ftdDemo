@@ -6,4 +6,6 @@
     android:layout_height="wrap_content"
     android:scaleType="fitXY"
     android:src="@drawable/five_live"
-    android:adjustViewBounds="true"/>
+    android:adjustViewBounds="true"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="10dp"/>

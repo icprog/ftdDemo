@@ -33,7 +33,7 @@ public class QuestionVH extends RecyclerView.ViewHolder implements CompoundButto
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (this.listener != null) {
-            listener.onItemCheckedChanged(this.trace,this.bean);
+            listener.onItemCheckedChanged(this.trace, this.bean, isChecked);
         }
     }
 }

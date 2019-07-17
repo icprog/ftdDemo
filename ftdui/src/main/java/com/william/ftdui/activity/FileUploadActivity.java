@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -14,36 +17,55 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.william.ftd_core.FtdClient;
 import com.william.ftd_core.callback.FtdMicroTipCallback;
 import com.william.ftd_core.callback.FtdPicUploadCallback;
+import com.william.ftd_core.entity.Conclusion;
 import com.william.ftd_core.entity.MicroTipBean;
+import com.william.ftd_core.entity.UploadResult;
 import com.william.ftd_core.exception.FtdException;
 import com.william.ftdui.constant.Constant;
 import com.william.ftdui.R;
 
 import java.io.File;
 
-public class FileUploadActivity extends BaseActivity implements View.OnClickListener {
+import io.reactivex.disposables.Disposable;
+
+public class FileUploadActivity extends BaseActivity {
 
     private Button btnSubmit;
     private TextView tvTitle;
     private TextView tvContent;
     private ImageView ivRefresh;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_file_upload);
+    private TextView tvFaceUploadResult;
+    private TextView tvTongueTopUploadResult;
+    private TextView tvTongueBottomUploadResult;
 
+    private NestedScrollView nsv;
+
+    private ProgressBar pbSub;
+
+    @Override
+    protected void onCreated(@Nullable Bundle savedInstanceState) {
         ImageView ivFace = findViewById(R.id.iv_face);
         ImageView ivTongueTop = findViewById(R.id.iv_tongue_top);
         ImageView ivTongueBottom = findViewById(R.id.iv_tongue_bottom);
 
         btnSubmit = findViewById(R.id.submit);
-        btnSubmit.setOnClickListener(this);
 
         ivRefresh = findViewById(R.id.iv_refresh);
-        ivRefresh.setOnClickListener(this);
+        ivRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getMicroTip();
+            }
+        });
         tvTitle = findViewById(R.id.tv_title);
         tvContent = findViewById(R.id.tv_content);
+
+        tvFaceUploadResult = findViewById(R.id.tv_result_face);
+        tvTongueTopUploadResult = findViewById(R.id.tv_result_tongue_top);
+        tvTongueBottomUploadResult = findViewById(R.id.tv_result_tongue_bottom);
+
+        nsv = findViewById(R.id.nsv);
 
         File faceImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_FACE).getFileName() + ".jpeg");
         File tongueTopImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_TONGUE_TOP).getFileName() + ".jpeg");
@@ -53,67 +75,120 @@ public class FileUploadActivity extends BaseActivity implements View.OnClickList
         loadImg(ivTongueTop, tongueTopImg);
         loadImg(ivTongueBottom, tongueBottomImg);
 
-        upload(faceImg,tongueTopImg,tongueBottomImg);
+        pbSub = findViewById(R.id.pb_sub);
+
+        upload(faceImg, tongueTopImg, tongueBottomImg);
 
         getMicroTip();
+    }
+
+    @Override
+    protected int setContentViewResId() {
+        return R.layout.activity_file_upload1;
     }
 
     private void loadImg(@NonNull ImageView iv, @NonNull File file) {
         Glide.with(iv).load(file).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into(iv);
     }
 
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.iv_refresh) {
-            getMicroTip();
-        } else {
-            Intent intent = getIntent();
-            intent.setClass(this, QuestionListActivity.class);
-            startActivity(intent);
-            finish();
-        }
-    }
-
     /**
-     * 图片在上传过程中关闭页面，容易引发内存泄露，我们提供了stopUpload()方法，可在onDestroy()中调用
+     * 上传图片去分析
+     *
+     * @param FaceImg
+     * @param TongueTopImg
+     * @param TongueBottomImg
      */
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        FtdClient.getInstance().stopUpload();
+    private void upload(File FaceImg, File TongueTopImg, File TongueBottomImg) {
+        Disposable fileUploadDisposable = FtdClient.getInstance().picUpload(FaceImg, TongueTopImg, TongueBottomImg, new FtdPicUploadCallback() {
+            @Override
+            public void onSuccess(Conclusion result) {
+                dismissProgress();
+                UploadResult faceUploadResult = result.getFaceResult();
+                UploadResult tongueUploadResult = result.getTongueTopResult();
+                UploadResult tongueBottomResult = result.getTongueBottomResult();
+
+                boolean faceSuccess = changeTvDescState(tvFaceUploadResult, faceUploadResult);
+                boolean tongueTopSuccess = changeTvDescState(tvTongueTopUploadResult, tongueUploadResult);
+                boolean tongueBottomSuccess = changeTvDescState(tvTongueBottomUploadResult, tongueBottomResult);
+
+                changeBtnSubmitState(faceSuccess && tongueTopSuccess && tongueBottomSuccess);
+            }
+
+            @Override
+            public void onError(FtdException e) {
+                dismissProgress();
+                showToast(e.getMsg());
+            }
+        });
+        addDisposable(fileUploadDisposable);
     }
 
-    private void upload(File FaceImg,File TongueTopImg,File TongueBottomImg){
-        FtdClient.getInstance().picUpload(FaceImg, TongueTopImg, TongueBottomImg, new FtdPicUploadCallback() {
+    private Boolean changeTvDescState(TextView tv, UploadResult result) {
+        int drawableRes = R.drawable.close3;
+        String content = "分析失败";
+        boolean b = false;
+        if (result != null) {
+            b = result.getErrCode() == 0;
+            if (b) {
+                drawableRes = R.drawable.correct1;
+                content = "分析成功";
+            }
+        }
+        tv.setCompoundDrawablesWithIntrinsicBounds(drawableRes, 0, 0, 0);
+        tv.setText(content);
+        return b;
+    }
+
+    private void changeBtnSubmitState(final boolean b) {
+        String content;
+        int bjRes;
+        if (b) {
+            content = "去问诊";
+            bjRes = R.drawable.selector_btn_submit;
+        } else {
+            content = "返回重拍";
+            bjRes = R.drawable.selector_btn_submit1;
+        }
+        btnSubmit.setText(content);
+        btnSubmit.setBackgroundResource(bjRes);
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess() {
-                Intent intent = getIntent();
-                intent.setClass(FileUploadActivity.this, QuestionListActivity.class);
+            public void onClick(View v) {
+                Class clazz;
+                if (b) {
+                    clazz = QuestionListActivity.class;
+                } else {
+                    clazz = FtdActivity.class;
+                }
+                Intent intent = new Intent();
+                intent.setClass(FileUploadActivity.this, clazz);
                 startActivity(intent);
                 finish();
             }
-
-            @Override
-            public void onError(FtdException e) {
-                showToast(e.getMsg());
-            }
         });
+        btnSubmit.setEnabled(true);
     }
 
-
+    /**
+     * 获取健康微语
+     */
     private void getMicroTip() {
-        FtdClient.getInstance().getMicroTip(new FtdMicroTipCallback() {
+        pbSub.setVisibility(View.VISIBLE);
+        nsv.setScrollY(0);
+        Disposable tipDisposable = FtdClient.getInstance().getMicroTip(new FtdMicroTipCallback() {
             @Override
             public void onSuccess(MicroTipBean bean) {
-                // TODO: 2019-07-06
                 tvTitle.setText(bean.getName());
                 tvContent.setText(bean.getAnalysis());
+                pbSub.setVisibility(View.GONE);
             }
 
             @Override
             public void onError(FtdException e) {
-                showToast(e.getMsg());
+                pbSub.setVisibility(View.GONE);
+                tvContent.setText(e.getMsg());
             }
         });
+        addDisposable(tipDisposable);
     }
 }

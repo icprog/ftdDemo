@@ -11,6 +11,7 @@ import com.william.ftd_core.entity.TendencyResult;
 import com.william.ftd_core.entity.UploadResult;
 import com.william.ftd_core.entity.User;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;

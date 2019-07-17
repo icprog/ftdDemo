@@ -4,7 +4,7 @@ public class Conclusion {
 
     private UploadResult faceResult;
     private UploadResult tongueTopResult;
-    private UploadResult tongueBottomfaceResult;
+    private UploadResult tongueBottomResult;
 
     public UploadResult getFaceResult() {
         return faceResult;
@@ -22,11 +22,11 @@ public class Conclusion {
         this.tongueTopResult = tongueTopResult;
     }
 
-    public UploadResult getTongueBottomfaceResult() {
-        return tongueBottomfaceResult;
+    public UploadResult getTongueBottomResult() {
+        return tongueBottomResult;
     }
 
-    public void setTongueBottomfaceResult(UploadResult tongueBottomfaceResult) {
-        this.tongueBottomfaceResult = tongueBottomfaceResult;
+    public void setTongueBottomResult(UploadResult tongueBottomResult) {
+        this.tongueBottomResult = tongueBottomResult;
     }
 }

@@ -55,6 +55,6 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionVH> {
     }
 
     public interface OnItemCheckedChangeListener{
-        void onItemCheckedChanged(@Constant.Trace int trace, QuestionBean question);
+        void onItemCheckedChanged(@Constant.Trace int trace, QuestionBean question,boolean isChecked);
     }
 }

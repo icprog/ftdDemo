@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.william.ftd_core.entity.SixDiseaseBean;
 import com.william.ftd_core.entity.SixDiseaseListBean;
 import com.william.ftd_core.entity.SixDiseaseResultBean;
+import com.william.ftdui.R;
 
 import org.xclcharts.chart.RadarChart;
 import org.xclcharts.chart.RadarData;
@@ -98,7 +99,9 @@ public class ChartEightPrincipalView extends DemoView {
 
             chart.getDataAxis().hide();
 
-			chart.getLinePaint().setColor(Color.rgb(133, 194, 2));
+//			chart.getLinePaint().setColor(Color.rgb(133, 194, 2));
+            chart.getLinePaint().setColor(getResources().getColor(R.color.colorPrimary1));
+
             chart.getLabelPaint().setFakeBoldText(true);
             chart.getLabelPaint().setTextSize(40f);
 
@@ -123,8 +126,10 @@ public class ChartEightPrincipalView extends DemoView {
         for (SixDiseaseBean disease : diseaseBeans) {
             dataSeries.add(disease.getScore());
         }
+//        RadarData lineData = new RadarData(null, dataSeries,
+//                Color.rgb(234, 83, 71), XEnum.DataAreaStyle.FILL);
         RadarData lineData = new RadarData(null, dataSeries,
-                Color.rgb(234, 83, 71), XEnum.DataAreaStyle.FILL);
+                getResources().getColor(R.color.colorPrimaryDark1), XEnum.DataAreaStyle.FILL);
         lineData.setLineStyle(XEnum.LineStyle.DASH);
         lineData.getPlotLine().setDotStyle(XEnum.DotStyle.DOT);
 

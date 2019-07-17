@@ -48,7 +48,7 @@ public class ChartLineView extends DemoView {
         List<TendencyResult.ResultBean> list = tendencyResult.getResult();
         LinkedList<Double> dataSeries = new LinkedList<Double>();
         int size = list.size();
-        for (int i = size - 1; i > 0; i--) {
+        for (int i = size - 1; i > -1; i--) {
             labels.add(dateFormate(list.get(i).getDate()));
             dataSeries.add(list.get(i).getScore());
         }
@@ -58,14 +58,16 @@ public class ChartLineView extends DemoView {
         lineData.getDotLabelPaint().setColor(Color.BLUE);
         lineData.getDotLabelPaint().setTextSize(22);
         lineData.getDotLabelPaint().setTextAlign(Paint.Align.LEFT);
-
         lineData.setItemLabelRotateAngle(45.f);
-
+        lineData.setGradientDirection(XEnum.Direction.VERTICAL);
         lineData.getLabelOptions().setLabelBoxStyle(XEnum.LabelBoxStyle.TEXT);
+        lineData.getLabelOptions().setMargin(0);//todo
         chartData.add(lineData);
 
         chartRender();
         invalidate();
+
+        this.bindTouch(this, chart);
     }
 
     private String dateFormate(String date) {
@@ -123,7 +125,7 @@ public class ChartLineView extends DemoView {
             chart.setTitle("趋势分析");
             chart.setTitleAlign(XEnum.HorizontalAlign.LEFT);
 
-            chart.getAxisTitle().setLowerTitle("(年份)");
+//            chart.getAxisTitle().setLowerTitle("(年份)");
 
             //激活点击监听
             chart.ActiveListenItemClick();
@@ -141,7 +143,7 @@ public class ChartLineView extends DemoView {
             chart.setCategoryAxisLocation(XEnum.AxisLocation.BOTTOM);
 
             //收缩绘图区右边分割的范围，让绘图区的线不显示出来
-            chart.getClipExt().setExtRight(0.f);
+//            chart.getClipExt().setExtRight(0.f);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             Log.e(TAG, e.toString());
@@ -159,7 +161,6 @@ public class ChartLineView extends DemoView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        // TODO Auto-generated method stub
 
         if (event.getAction() == MotionEvent.ACTION_UP) {
             triggerClick(event.getX(), event.getY());
@@ -218,8 +219,5 @@ public class ChartLineView extends DemoView {
             }
             this.invalidate();
         }
-
-
     }
-
 }

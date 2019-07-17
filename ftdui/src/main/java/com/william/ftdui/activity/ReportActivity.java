@@ -2,12 +2,10 @@ package com.william.ftdui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,10 +20,8 @@ import com.william.ftd_core.entity.ReportBean;
 import com.william.ftd_core.entity.SixDiseaseBean;
 import com.william.ftd_core.entity.TendencyResult;
 import com.william.ftd_core.exception.FtdException;
-import com.william.ftdui.BuildConfig;
 import com.william.ftdui.R;
 import com.william.ftdui.widget.adapter.AnalyzeAdapter;
-import com.william.ftdui.widget.adapter.decoration.GridDividerItemDecoration;
 import com.william.ftdui.widget.adapter.viewHolder.FiveAdapter;
 import com.william.ftdui.widget.view.BarChartView1;
 import com.william.ftdui.widget.view.ChartEightPrincipalView;
@@ -33,40 +29,44 @@ import com.william.ftdui.widget.view.ChartLineView;
 
 import java.util.List;
 
+import io.reactivex.disposables.Disposable;
+
 public class ReportActivity extends BaseActivity
         implements FtdLastReportCallback, FtdGetAnaylzerCallback, FtdTendencyCallback {
 
     private ReportBean bean;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_report);
+    protected void onCreated(@Nullable Bundle savedInstanceState) {
 
-//        Intent intent = getIntent();
+        Intent intent = getIntent();
 //        long seqNo = intent.getLongExtra("seqNo", 0);
         long seqNo = 2019070319300000032L;
 
-        FtdClient.getInstance().getLastRecord(seqNo, this);
+        Disposable disposable1 = FtdClient.getInstance().getLastRecord(seqNo, this);
+        addDisposable(disposable1);
+        Disposable disposable2 = FtdClient.getInstance().getTendency(this);
+        addDisposable(disposable2);
+    }
 
-        FtdClient.getInstance().getTendency(this);
+    @Override
+    protected int setContentViewResId() {
+        return R.layout.activity_report;
     }
 
     /**
      * 初始化分数和描述
      */
     private void initScore() {
-        int score = (int) bean.getEight().getTotalScore();
+        if (bean.getEight() == null) {
+            return;
+        }
+        double score = bean.getScore();
         TextView tvScore = findViewById(R.id.tv_score);
         SpannableString ss = new SpannableString(String.valueOf(score) + "分");
         RelativeSizeSpan sizeSpan = new RelativeSizeSpan(0.8f);
         ss.setSpan(sizeSpan, ss.length() - 1, ss.length(), SpannableString.SPAN_INCLUSIVE_EXCLUSIVE);
         tvScore.setText(ss);
-
-        TextView tvScoreDes = findViewById(R.id.tv_score_des);
-//        tvScoreDes.setText(bean.getCardInfo().getEvaluate());
-
-
     }
 
     /**
@@ -74,11 +74,12 @@ public class ReportActivity extends BaseActivity
      */
     private void initEightPrincipal() {
         ChartEightPrincipalView view = findViewById(R.id.epv);
-
-        String sixDiseaseStr = bean.getEight().getSixDiseaseList();
-        Gson gson = new Gson();
-        SixDiseaseBean[] diseaseBeans = gson.fromJson(sixDiseaseStr, SixDiseaseBean[].class);
-        view.setData(diseaseBeans);
+        if (bean.getEight() != null && bean.getEight().getSixDiseaseList() != null) {
+            String sixDiseaseStr = bean.getEight().getSixDiseaseList();
+            Gson gson = new Gson();
+            SixDiseaseBean[] diseaseBeans = gson.fromJson(sixDiseaseStr, SixDiseaseBean[].class);
+            view.setData(diseaseBeans);
+        }
     }
 
     /**
@@ -103,6 +104,9 @@ public class ReportActivity extends BaseActivity
      */
     private void initTv100() {
         TextView tv = findViewById(R.id.tv_100);
+        if (bean == null || bean.getFaceDiagnose() == null){
+            return;
+        }
         ReportBean.FaceDiagnoseBean fdb = bean.getFaceDiagnose();
         String content = "●" + fdb.getFace() + "\n●" + fdb.getTongue() + "\n●" + fdb.getMoss();
         tv.setText(content);
@@ -116,7 +120,12 @@ public class ReportActivity extends BaseActivity
         List<ReportBean.QmBean> qm = bean.getQm();
         StringBuffer content = new StringBuffer();
         for (ReportBean.QmBean qmBean : qm) {
-            content.append(qmBean.getName()).append("-").append(qmBean.getText()).append(":").append(qmBean.getCauseList().get(0).getCause()).append("。\n");
+            String cause = "";
+            List<ReportBean.QmBean.CauseListBean> list = qmBean.getCauseList();
+            if (list != null && list.size() > 0) {
+                cause = list.get(0).getCause();
+            }
+            content.append(qmBean.getName()).append("-").append(qmBean.getText()).append(":").append(cause).append("。\n");
         }
         tv.setText(content.toString());
     }
@@ -141,12 +150,14 @@ public class ReportActivity extends BaseActivity
      * 初始化五养
      */
     private void initFive() {
+        String diseaseId = bean.getUr().get(0).getDiseaseId();
         RecyclerView fiveList = findViewById(R.id.rv_five);
-        FiveAdapter adapter = new FiveAdapter("", new FiveAdapter.OnWuYangSelectListener() {
+        FiveAdapter adapter = new FiveAdapter(diseaseId, new FiveAdapter.OnWuYangSelectListener() {
             @Override
             public void onWuYangSelect(String url) {
-                //todo 跳转五养
-                showToast(url);
+                Intent intent = new Intent(ReportActivity.this, WebActivity.class);
+                intent.putExtra("url", url);
+                startActivity(intent);
             }
         });
         fiveList.setAdapter(adapter);
@@ -183,12 +194,13 @@ public class ReportActivity extends BaseActivity
 
     /**
      * 健康分析
+     *
      * @param bean
      */
     private void initHealthy(AnalyzeResultBean bean) {
         TextView tv = findViewById(R.id.tv_helthy_analyzer);
         StringBuffer sb = new StringBuffer();
-        for (AnalyzeResultBean.Data data: bean.getDataList()) {
+        for (AnalyzeResultBean.Data data : bean.getDataList()) {
             sb.append("●").append(data.getName()).append("\n\t").append(data.getIntro()).append("\n");
         }
         tv.setText(sb.toString());
@@ -196,17 +208,20 @@ public class ReportActivity extends BaseActivity
 
     @Override
     public void onSuccess(AnalyzeResultBean bean) {
+        hideProgress();
         initContent(bean);
         initHealthy(bean);
     }
 
     @Override
     public void onSuccess(TendencyResult result) {
+        hideProgress();
         initTendency(result);
     }
 
     @Override
     public void onError(FtdException e) {
+        hideProgress();
         showToast(e.getMsg());
     }
 

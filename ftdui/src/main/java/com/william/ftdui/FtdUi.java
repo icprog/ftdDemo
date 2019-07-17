@@ -18,6 +18,7 @@ public class FtdUi {
 
     /**
      * 初始化面舌诊环境
+     *
      * @param context
      */
     public static void init(Context context) {
@@ -57,13 +58,17 @@ public class FtdUi {
 
     /**
      * 登录面舌诊，成功后自动启动拍照页面
+     *
      * @param phone
      * @param context
      */
-    public static void login(final String phone, final Context context) {
+    public static void login(final String phone, final Context context, final FtdUILoginCallback callback) {
         FtdClient.getInstance().login(phone, new FtdLoginCallback() {
             @Override
             public void onSuccess() {
+                if (callback != null) {
+                    callback.onSuccess();
+                }
                 Intent intent = new Intent();
                 intent.setClass(context, FtdActivity.class);
                 context.startActivity(intent);
@@ -72,6 +77,9 @@ public class FtdUi {
             @Override
             public void onError(FtdException e) {
                 Log.e(TAG, "onError:登录面舌诊服务失败： ", e);
+                if (callback != null) {
+                    callback.onError( e);
+                }
             }
         });
     }

@@ -10,8 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.william.ftd_core.exception.FtdException;
+import com.william.ftdui.FtdUILoginCallback;
 import com.william.ftdui.FtdUi;
 import com.william.ftdui.widget.ConfirmationDialogFragment;
 
@@ -20,17 +23,22 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CAMERA_PERMISSION = 100;
     private static final String FRAGMENT_DIALOG = "dialog";
 
+    private ProgressBar pb;
+    private String mobile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.pb = findViewById(R.id.pb);
 
         FtdUi.init(getApplicationContext());
     }
 
     public void goToFTD(View v) {
         EditText et = findViewById(R.id.et);
-        String mobile = et.getText().toString();
+        mobile = et.getText().toString();
         if (TextUtils.isEmpty(mobile)) {
             Toast.makeText(this, "请出入手机号！", Toast.LENGTH_SHORT).show();
         } else {
@@ -40,8 +48,23 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void start(String mobile) {
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            FtdUi.login(mobile, this);
+            pb.setVisibility(View.VISIBLE);
+            pb.setEnabled(false);
+            FtdUi.login(mobile, this, new FtdUILoginCallback() {
+                @Override
+                public void onSuccess() {
+                    pb.setEnabled(true);
+                    pb.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onError(FtdException e) {
+                    pb.setEnabled(true);
+                    Toast.makeText(MainActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
+                }
+            });
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
             ConfirmationDialogFragment
                     .newInstance(com.william.ftdui.R.string.camera_permission_confirmation,
@@ -58,10 +81,13 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (permissions.length != 1 || grantResults.length != 1) {
-            throw new RuntimeException("请求权限失败。");
+            Toast.makeText(this, "请求权限失败。", Toast.LENGTH_SHORT).show();
+            return;
         }
         if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, "用户没有赋予相应权限。", Toast.LENGTH_SHORT).show();
+            return;
         }
+        start(mobile);
     }
 }

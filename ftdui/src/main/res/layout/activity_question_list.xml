@@ -7,74 +7,107 @@
     android:orientation="vertical"
     tools:context=".activity.QuestionListActivity">
 
-    <Toolbar
-        android:id="@+id/tb"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tool_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="top"
         android:minHeight="?attr/actionBarSize"
-        android:title="答题吧，骚年.."
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:navigationIcon="@drawable/shutdown"
+        app:titleTextColor="@android:color/white"
+        android:background="@color/colorFloat">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+        <TextView
+            android:id="@+id/btn_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="提交"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:layout_gravity="end"/>
+        </FrameLayout>
+    </android.support.v7.widget.Toolbar>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp">
 
-        <!--<TextView-->
-            <!--android:id="@+id/tv1"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="体质"-->
-            <!--android:textSize="18sp"-->
-            <!--android:textStyle="bold"-->
-            <!--app:layout_constraintEnd_toEndOf="parent"-->
-            <!--app:layout_constraintStart_toStartOf="parent"-->
-            <!--app:layout_constraintTop_toTopOf="parent" />-->
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv1"
+        <TextView
+            android:id="@+id/tv1"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@+id/btn_submit"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="体质（最多选择4项）"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="@drawable/border_full"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/border_full"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv1" />
 
         <TextView
             android:id="@+id/tv2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="体证"
+            android:padding="10dp"
+            android:text="体证（最多选择4项）"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:background="@drawable/border_full"
             app:layout_constraintBottom_toTopOf="@id/rv2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rv1"
-            android:visibility="gone"/>
+            app:layout_constraintTop_toBottomOf="@id/guideline" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv2"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@drawable/border_full"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_submit"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv2"
-            android:visibility="gone"/>
-
-        <Button
-            android:id="@+id/btn_submit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="提交"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv2" />
+        <!--app:layout_constraintBottom_toTopOf="@+id/btn_submit"-->
+
+        <!--<Button-->
+            <!--android:id="@+id/btn_submit"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@drawable/selector_btn_submit"-->
+            <!--android:text="提交"-->
+            <!--android:textColor="@android:color/white"-->
+            <!--android:textSize="24sp"-->
+            <!--android:textStyle="bold"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintStart_toStartOf="parent" />-->
+
+        <include layout="@layout/pb" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.5" />
     </android.support.constraint.ConstraintLayout>
 
 </LinearLayout>

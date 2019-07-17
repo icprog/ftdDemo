@@ -1,6 +1,5 @@
 package com.william.ftd_core;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -43,6 +42,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -76,6 +76,8 @@ public class FtdClient {
     private String appCode;
     private String companyCode;
     private String appSecret;
+    private String companyId;
+    private String companyPid;
     private String phrAppKey;
     private String phrAppSecret;
 
@@ -92,7 +94,30 @@ public class FtdClient {
         private static FtdClient INSTANCE = new FtdClient();
     }
 
-    //    public void init(Context context, final InitParam param) {
+    /**
+     * 初始化方法一（不推荐）
+     *
+     * @param param
+     */
+    public void init(final InitParam param) {
+
+        this.appId = param.getAppId();
+        this.appKey = param.getAppKey();
+        this.appSecret = param.getAppSecret();
+        this.companyCode = param.getCompanyCode();
+        this.companyId = param.getCompanyId();
+        this.companyPid = param.getCompanyPid();
+        this.phrAppKey = param.getPhrAppKey();
+        this.phrAppSecret = param.getPhrAppSecret();
+
+        initWebService();
+    }
+
+    /**
+     * 初始化方法二（推荐）
+     *
+     * @param context
+     */
     public void init(Context context) {
 
         ApplicationInfo appInfo = null;
@@ -103,37 +128,20 @@ public class FtdClient {
             return;
         }
 
-        final String appId = String.valueOf(appInfo.metaData.getInt("laiKang.appId"));
-        final String appCode = String.valueOf(appInfo.metaData.getInt("laiKang.appCode"));
-        final String appKey = appInfo.metaData.getString("laiKang.appKey");
-        final String appSecret = appInfo.metaData.getString("laiKang.appSecret");
-        final String companyId = String.valueOf(appInfo.metaData.getInt("laiKang.companyId"));
-        final String companyPid = String.valueOf(appInfo.metaData.getInt("laiKang.companyPid"));
-        final String companyCode = appInfo.metaData.getString("laiKang.companyCode");
-        final String phrAppKey = appInfo.metaData.getString("laiKang.phrAppKey");
-        final String phrAppSecret = appInfo.metaData.getString("laiKang.phrAppSecret");
+        appId = String.valueOf(appInfo.metaData.getInt("laiKang.appId"));
+        appCode = String.valueOf(appInfo.metaData.getInt("laiKang.appCode"));
+        appKey = appInfo.metaData.getString("laiKang.appKey");
+        appSecret = appInfo.metaData.getString("laiKang.appSecret");
+        companyId = String.valueOf(appInfo.metaData.getInt("laiKang.companyId"));
+        companyPid = String.valueOf(appInfo.metaData.getInt("laiKang.companyPid"));
+        companyCode = appInfo.metaData.getString("laiKang.companyCode");
+        phrAppKey = appInfo.metaData.getString("laiKang.phrAppKey");
+        phrAppSecret = appInfo.metaData.getString("laiKang.phrAppSecret");
 
+        initWebService();
+    }
 
-//        InitParam param = new InitParam(
-//                appId,
-//                appCode,
-//                appKey,
-//                appSecret,
-//                companyId,
-//                companyPid,
-//                companyCode,
-//                phrAppKey,
-//                phrAppSecret
-//        );
-
-//        this.appId = param.getAppId();
-//        this.appKey = param.getAppKey();
-//        this.appSecret = param.getAppSecret();
-//        this.companyCode = param.getCompanyCode();
-//
-//        this.phrAppKey = param.getPhrAppKey();
-//        this.phrAppSecret = param.getPhrAppSecret();
-
+    private void initWebService() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(1, TimeUnit.MINUTES)
                 .readTimeout(1, TimeUnit.MINUTES)
@@ -180,9 +188,8 @@ public class FtdClient {
     /**
      * 登录面舌诊
      */
-    @SuppressLint("CheckResult")
-    public void login(final String phone, final FtdLoginCallback callback) {
-        service.getToken()
+    public Disposable login(final String phone, final FtdLoginCallback callback) {
+        return service.getToken()
                 .subscribeOn(Schedulers.io())
                 .map(new Function<FtdResponse<String>, String>() {
                     @Override
@@ -211,6 +218,7 @@ public class FtdClient {
                         return userFtdResponse.getData();
                     }
                 })
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<User>() {
                     @Override
                     public void accept(User user) throws Exception {
@@ -222,9 +230,8 @@ public class FtdClient {
                 }, new ErrorConsumer(callback));
     }
 
-    @SuppressLint("CheckResult")
-//    public void pictureUpload(File file, @ServiceApi.Type int type) {
-    public void pictureUpload(File file, int type) {
+
+    public Disposable pictureUpload(File file, int type) {
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         builder.addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
         builder.addFormDataPart("faceTongueFlag", String.valueOf(type));
@@ -232,7 +239,7 @@ public class FtdClient {
         builder.addFormDataPart("scheme_flag", schemeId);
         builder.addFormDataPart("equCode", ServiceApi.MAC);
         String authorization = Util.generateAuthorization(appKey, this.appSecret, "OvationHealth/FaceTongueCheckServlet");
-        service.picUpload(
+        return service.picUpload(
                 authorization,
                 builder.build())
                 .subscribeOn(Schedulers.io())
@@ -250,7 +257,7 @@ public class FtdClient {
                 });
     }
 
-    @SuppressLint("CheckResult")
+
     private Single<FtdResponse<UploadResult>> picUpload(File file, int type) {
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         builder.addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
@@ -260,25 +267,16 @@ public class FtdClient {
         builder.addFormDataPart("faceTongueTag", String.valueOf(type));
         builder.addFormDataPart("mApi", "7");
         builder.addFormDataPart("scheme_flag", schemeId);
-
-
         builder.addFormDataPart("userId", user.getPhrId());
         builder.addFormDataPart("username", user.getMoble());
         builder.addFormDataPart("userType", "1");
-//        builder.addFormDataPart("appkey", this.appKey);
         return service.picUpload1(user.getUuid(), builder.build());
     }
 
-    private Disposable disposable;
 
-    @SuppressLint("CheckResult")
-    public void picUpload(File file1, File file2, File file3, final FtdPicUploadCallback callback) {
-        if (TextUtils.isEmpty(schemeId)) {
-            schemeId = Util.getUUID();
-        } else {
-            return;
-        }
-        disposable = Single.zip(picUpload(file1, ServiceApi.FACE), picUpload(file2, ServiceApi.TONGUE_TOP), picUpload(file3, ServiceApi.TONGUE_BOTTOM), new Function3<FtdResponse<UploadResult>, FtdResponse<UploadResult>, FtdResponse<UploadResult>, Conclusion>() {
+    public Disposable picUpload(File file1, File file2, File file3, final FtdPicUploadCallback callback) {
+        schemeId = Util.getUUID();
+        return Single.zip(picUpload(file1, ServiceApi.FACE), picUpload(file2, ServiceApi.TONGUE_TOP), picUpload(file3, ServiceApi.TONGUE_BOTTOM), new Function3<FtdResponse<UploadResult>, FtdResponse<UploadResult>, FtdResponse<UploadResult>, Conclusion>() {
             @Override
             public Conclusion apply(FtdResponse<UploadResult> faceResult, FtdResponse<UploadResult> tongueTopResult, FtdResponse<UploadResult> tongueBottomResult) throws Exception {
                 if (faceResult == null || faceResult == null || tongueBottomResult == null) {
@@ -290,7 +288,7 @@ public class FtdClient {
                 Conclusion conclusion = new Conclusion();
                 conclusion.setFaceResult(faceResult.getData());
                 conclusion.setTongueTopResult(tongueTopResult.getData());
-                conclusion.setTongueBottomfaceResult(tongueBottomResult.getData());
+                conclusion.setTongueBottomResult(tongueBottomResult.getData());
                 return conclusion;
             }
         })
@@ -300,28 +298,23 @@ public class FtdClient {
                     @Override
                     public void accept(Conclusion result) throws Exception {
                         if (callback != null) {
-                            callback.onSuccess();
+                            callback.onSuccess(result);
                         }
                     }
                 }, new ErrorConsumer(callback));
     }
 
     /**
-     * 停止上传
+     * 获取问诊题目
+     *
+     * @param callback
      */
-    public void stopUpload() {
-        if (disposable != null && !disposable.isDisposed()) {
-            this.disposable.dispose();
-        }
-    }
-
-    @SuppressLint("CheckResult")
-    public void getQuestion(final FtdQuestionListCallback callback) {
+    public Disposable getQuestion(final FtdQuestionListCallback callback) {
 
         GetQuestionParam param = new GetQuestionParam(user, this.schemeId);
         String json = gson.toJson(param);
         RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
-        service.getQuestion(
+        return service.getQuestion(
                 user.getUuid(),
                 requestBody
         )
@@ -346,8 +339,16 @@ public class FtdClient {
                 }, new ErrorConsumer(callback));
     }
 
-    @SuppressLint("CheckResult")
-    public void submitAnswer(List<QuestionBean> questionList1, List<QuestionBean> questionList2, String traceId1, String traceId2, final FtdSubmitCallback callback) {
+    /**
+     * 提交问诊答案
+     *
+     * @param questionList1
+     * @param questionList2
+     * @param traceId1
+     * @param traceId2
+     * @param callback
+     */
+    public Disposable submitAnswer(List<QuestionBean> questionList1, List<QuestionBean> questionList2, String traceId1, String traceId2, final FtdSubmitCallback callback) {
         String westernMedicineInfo = gson.toJson(questionList1);
         String constitutionWesternMedicineInfo = gson.toJson(questionList2);
         SubmitAnswerParam param = new SubmitAnswerParam(
@@ -361,7 +362,7 @@ public class FtdClient {
         );
         String json = gson.toJson(param);
         RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
-        service.submitAnswer(
+        return service.submitAnswer(
                 user.getUuid(),
                 requestBody
         )
@@ -390,12 +391,11 @@ public class FtdClient {
     /**
      * 获取报告
      */
-    @SuppressLint("CheckResult")
-    public void getLastRecord(long seqNo, final FtdLastReportCallback callback) {
+    public Disposable getLastRecord(long seqNo, final FtdLastReportCallback callback) {
         GetReportParam param = new GetReportParam(user.getPhrId(), seqNo);
         String json = gson.toJson(param);
         RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
-        service.getLastReport(user.getUuid(), requestBody)
+        return service.getLastReport(user.getUuid(), requestBody)
                 .subscribeOn(Schedulers.io())
                 .map(new Function<FtdResponse<ReportBean>, ReportBean>() {
                     @Override
@@ -417,8 +417,17 @@ public class FtdClient {
                 }, new ErrorConsumer(callback));
     }
 
-    @SuppressLint("CheckResult")
-    public void getAnalyzer(List<ReportBean.UrBean> urList, final FtdGetAnaylzerCallback callback) {
+    /**
+     * 获取分析结果
+     *
+     * @param urList
+     * @param callback
+     */
+
+    public Disposable getAnalyzer(List<ReportBean.UrBean> urList, final FtdGetAnaylzerCallback callback) {
+        if (urList == null) {
+            return null;
+        }
         StringBuffer diseaseIds = new StringBuffer();
         int size = urList.size();
         for (int i = 0; i < size; i++) {
@@ -428,7 +437,7 @@ public class FtdClient {
         GetAnalyzerParam param = new GetAnalyzerParam(diseaseIds.toString());
         String json = gson.toJson(param);
         RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
-        service.getAnalyzer(user.getUuid(), requestBody)
+        return service.getAnalyzer(user.getUuid(), requestBody)
                 .subscribeOn(Schedulers.io())
                 .map(new Function<FtdResponse<AnalyzeResultBean>, AnalyzeResultBean>() {
                     @Override
@@ -452,6 +461,7 @@ public class FtdClient {
 
     /**
      * 获取趋势分析
+     *
      * @param callback
      * @return
      */
@@ -459,7 +469,7 @@ public class FtdClient {
         GetTendencyParam param = new GetTendencyParam();
         String json = gson.toJson(param);
         RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
-        return service.getTendency(user.getUuid(),requestBody)
+        return service.getTendency(user.getUuid(), requestBody)
                 .subscribeOn(Schedulers.io())
                 .map(new Function<FtdResponse<TendencyResult>, TendencyResult>() {
                     @Override
@@ -478,7 +488,7 @@ public class FtdClient {
                             callback.onSuccess(response);
                         }
                     }
-                },new ErrorConsumer(callback));
+                }, new ErrorConsumer(callback));
     }
 
     /**
@@ -486,9 +496,9 @@ public class FtdClient {
      *
      * @return
      */
-    @SuppressLint("CheckResult")
-    public void getMicroTip(final FtdMicroTipCallback callback) {
-        service.getMicroTip(user.getPhrId())
+
+    public Disposable getMicroTip(final FtdMicroTipCallback callback) {
+        return service.getMicroTip(user.getPhrId())
                 .subscribeOn(Schedulers.io())
                 .map(new Function<FtdResponse<MicroTipBean>, MicroTipBean>() {
                     @Override
@@ -527,5 +537,42 @@ public class FtdClient {
                 }
             }
         }
+    }
+
+
+    public String getAppKey() {
+        return appKey;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public String getAppCode() {
+        return appCode;
+    }
+
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
+    public String getAppSecret() {
+        return appSecret;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public String getCompanyPid() {
+        return companyPid;
+    }
+
+    public String getPhrAppKey() {
+        return phrAppKey;
+    }
+
+    public String getPhrAppSecret() {
+        return phrAppSecret;
     }
 }
