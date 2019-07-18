@@ -26,7 +26,9 @@ import com.william.ftdui.widget.adapter.viewHolder.FiveAdapter;
 import com.william.ftdui.widget.view.BarChartView1;
 import com.william.ftdui.widget.view.ChartEightPrincipalView;
 import com.william.ftdui.widget.view.ChartLineView;
+import com.william.zhibiaoview.ZheXianView;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import io.reactivex.disposables.Disposable;
@@ -40,8 +42,8 @@ public class ReportActivity extends BaseActivity
     protected void onCreated(@Nullable Bundle savedInstanceState) {
 
         Intent intent = getIntent();
-//        long seqNo = intent.getLongExtra("seqNo", 0);
-        long seqNo = 2019070319300000032L;
+        long seqNo = intent.getLongExtra("seqNo", 0);
+//        long seqNo = 2019070319300000032L;
 
         Disposable disposable1 = FtdClient.getInstance().getLastRecord(seqNo, this);
         addDisposable(disposable1);
@@ -104,7 +106,7 @@ public class ReportActivity extends BaseActivity
      */
     private void initTv100() {
         TextView tv = findViewById(R.id.tv_100);
-        if (bean == null || bean.getFaceDiagnose() == null){
+        if (bean == null || bean.getFaceDiagnose() == null) {
             return;
         }
         ReportBean.FaceDiagnoseBean fdb = bean.getFaceDiagnose();
@@ -116,6 +118,9 @@ public class ReportActivity extends BaseActivity
      * 初始化指标分解
      */
     private void initTv200() {
+        if (bean == null || bean.getQm() == null) {
+            return;
+        }
         TextView tv = findViewById(R.id.tv_200);
         List<ReportBean.QmBean> qm = bean.getQm();
         StringBuffer content = new StringBuffer();
@@ -134,6 +139,9 @@ public class ReportActivity extends BaseActivity
      * 初始化柱形图
      */
     private void initBarChart() {
+        if (bean == null || bean.getQuotaInfoList() == null) {
+            return;
+        }
         BarChartView1 bcv = findViewById(R.id.bv);
         bcv.setData(bean.getQuotaInfoList());
     }
@@ -142,6 +150,9 @@ public class ReportActivity extends BaseActivity
      * 初始化指数分解
      */
     private void initRv2() {
+        if (bean == null || bean.getQuotaInfoList() == null) {
+            return;
+        }
         RecyclerView rv = findViewById(R.id.rv2);
         rv.setAdapter(new AnalyzeAdapter(bean.getQuotaInfoList()));
     }
@@ -150,6 +161,9 @@ public class ReportActivity extends BaseActivity
      * 初始化五养
      */
     private void initFive() {
+        if (bean == null || bean.getUr() == null) {
+            return;
+        }
         String diseaseId = bean.getUr().get(0).getDiseaseId();
         RecyclerView fiveList = findViewById(R.id.rv_five);
         FiveAdapter adapter = new FiveAdapter(diseaseId, new FiveAdapter.OnWuYangSelectListener() {
@@ -169,8 +183,26 @@ public class ReportActivity extends BaseActivity
      * @param tendencyResult
      */
     private void initTendency(TendencyResult tendencyResult) {
-        ChartLineView clv = findViewById(R.id.chart_line);
-        clv.setData(tendencyResult);
+//        ChartLineView clv = findViewById(R.id.chart_line);
+//        clv.setData(tendencyResult);
+
+        ZheXianView zheXianView = findViewById(R.id.zhexian);
+
+        List<TendencyResult.ResultBean> list = tendencyResult.getResult();
+        LinkedList<ZheXianView.Data> dataSeries = new LinkedList<>();
+        int size = list.size();
+        for (int i = size - 1; i >= 0; i--) {
+            dataSeries.add(new ZheXianView.Data(dateFormate(list.get(i).getDate()), (float) list.get(i).getScore()));
+        }
+        zheXianView.initData(dataSeries);
+    }
+
+    private String dateFormate(String date) {
+        String[] strs = date.split("-");
+        StringBuilder sb = new StringBuilder(strs[1]);
+        sb.append(".");
+        sb.append(strs[2]);
+        return sb.toString();
     }
 
     @Override
@@ -188,8 +220,6 @@ public class ReportActivity extends BaseActivity
         initBarChart();
         initRv2();
         initFive();
-
-
     }
 
     /**
