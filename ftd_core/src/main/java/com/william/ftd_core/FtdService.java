@@ -10,7 +10,12 @@ import com.william.ftd_core.entity.Result;
 import com.william.ftd_core.entity.TendencyResult;
 import com.william.ftd_core.entity.UploadResult;
 import com.william.ftd_core.entity.User;
+import com.william.ftd_core.param.GetAnalyzerParam;
+import com.william.ftd_core.param.GetQuestionParam;
+import com.william.ftd_core.param.GetReportParam;
+import com.william.ftd_core.param.GetTendencyParam;
 import com.william.ftd_core.param.LoginParam;
+import com.william.ftd_core.param.SubmitAnswerParam;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -47,77 +52,67 @@ public interface FtdService {
      * @param files
      * @return
      */
-    @POST(ServiceApi.PIC_UPLOAD)
-    Single<Result> picUpload(
-            @Header("Authorization") String Authorization,
-            @Body RequestBody files);
-
     @POST(ServiceApi.PIC_UPLOAD1)
-    Single<FtdResponse<UploadResult>> picUpload1(
-//            @Header("Authorization") String Authorization,
-            @Header(ServiceApi.LK_TOKEN) String lkToken,
+    Single<FtdResponse<UploadResult>> picUpload(
+//            @Header(ServiceApi.LK_TOKEN) String lkToken,
             @Body RequestBody files);
 
     /**
      * 获取题目
      *
      * @param lkToken
-     * @param body
      * @return
      */
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
+//    @Headers({"Content-Type: application/json", "Accept: application/json"})
     @POST(ServiceApi.GET_QUESTION)
     Single<FtdResponse<AskBean>> getQuestion(
-            @Header(ServiceApi.LK_TOKEN) String lkToken,
-            @Body RequestBody body
-    );
+//            @Header(ServiceApi.LK_TOKEN) String lkToken,
+            @Body GetQuestionParam param
+            );
 
     /**
      * 提交答案
      *
      * @param lkToken
-     * @param body
      * @return
      */
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
+//    @Headers({"Content-Type: application/json", "Accept: application/json"})
     @POST(ServiceApi.SUBMIT_ANSWER)
     Single<FtdResponse<AskBean>> submitAnswer(
-            @Header(ServiceApi.LK_TOKEN) String lkToken,
-            @Body RequestBody body
+//            @Header(ServiceApi.LK_TOKEN) String lkToken,
+            @Body SubmitAnswerParam param
     );
 
     /**
      * 获取最后一次报告
      *
      * @param lkToken
-     * @param body
      * @return
      */
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
+//    @Headers({"Content-Type: application/json", "Accept: application/json"})
     @POST(ServiceApi.GET_LAST_REPORT)
     Single<FtdResponse<ReportBean>> getLastReport(
-            @Header(ServiceApi.LK_TOKEN) String lkToken,
-            @Body RequestBody body
+//            @Header(ServiceApi.LK_TOKEN) String lkToken,
+            @Body GetReportParam param
     );
 
     /**
      * 获取分析结果
      * @param lkToken
-     * @param body
      * @return
      */
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
+//    @Headers({"Content-Type: application/json", "Accept: application/json"})
     @POST(ServiceApi.GET_HEALTH_ANALYZER)
     Single<FtdResponse<AnalyzeResultBean>> getAnalyzer(
-            @Header(ServiceApi.LK_TOKEN) String lkToken,
-            @Body RequestBody body
+//            @Header(ServiceApi.LK_TOKEN) String lkToken,
+            @Body GetAnalyzerParam param
     );
 
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
+//    @Headers({"Content-Type: application/json", "Accept: application/json"})
     @POST(ServiceApi.GET_TENDENCY)
     Single<FtdResponse<TendencyResult>> getTendency(
-            @Header(ServiceApi.LK_TOKEN) String lkToken,
-            @Body RequestBody body
+//            @Header(ServiceApi.LK_TOKEN) String lkToken,
+            @Body GetTendencyParam param
     );
 
     /**

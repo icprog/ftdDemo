@@ -3,7 +3,6 @@ package com.william.ftd_core;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -24,7 +23,6 @@ import com.william.ftd_core.entity.FtdResponse;
 import com.william.ftd_core.entity.MicroTipBean;
 import com.william.ftd_core.entity.QuestionBean;
 import com.william.ftd_core.entity.ReportBean;
-import com.william.ftd_core.entity.Result;
 import com.william.ftd_core.entity.TendencyResult;
 import com.william.ftd_core.entity.UploadResult;
 import com.william.ftd_core.entity.User;
@@ -42,7 +40,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -85,6 +82,8 @@ public class FtdClient {
 
     //    private String schemeId = "2581181533264a9389efb46fc5d2da16";
     private String schemeId;
+
+    private String lkToken = "";
 
     public static FtdClient getInstance() {
         return SingletonInstance.INSTANCE;
@@ -158,6 +157,7 @@ public class FtdClient {
                         .header(ServiceApi.PLACE_COMPANY_P_ID, companyId)
                         .header(ServiceApi.COMPANY_CODE, companyCode)
                         .header(ServiceApi.App_KEY, appKey)
+                        .header(ServiceApi.LK_TOKEN, lkToken)
                         .method(originReq.method(), originReq.body())
                         .build();
                 return chain.proceed(req);
@@ -221,38 +221,12 @@ public class FtdClient {
                     @Override
                     public void accept(User user) throws Exception {
                         FtdClient.this.user = user;
+                        lkToken = user.getUuid();
                         if (callback != null) {
                             callback.onSuccess();
                         }
                     }
                 }, new ErrorConsumer(callback));
-    }
-
-
-    public Disposable pictureUpload(File file, int type) {
-        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-        builder.addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
-        builder.addFormDataPart("faceTongueFlag", String.valueOf(type));
-        builder.addFormDataPart("check_id", Util.getUUID());
-        builder.addFormDataPart("scheme_flag", schemeId);
-        builder.addFormDataPart("equCode", ServiceApi.MAC);
-        String authorization = Util.generateAuthorization(appKey, this.appSecret, "OvationHealth/FaceTongueCheckServlet");
-        return service.picUpload(
-                authorization,
-                builder.build())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Result>() {
-                    @Override
-                    public void accept(Result result) throws Exception {
-                        int i = 0;
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        int i = 0;
-                    }
-                });
     }
 
 
@@ -268,7 +242,9 @@ public class FtdClient {
         builder.addFormDataPart("userId", user.getPhrId());
         builder.addFormDataPart("username", user.getMoble());
         builder.addFormDataPart("userType", "1");
-        return service.picUpload1(user.getUuid(), builder.build());
+        return service.picUpload(
+//                user.getUuid(),
+                builder.build());
     }
 
 
@@ -310,11 +286,9 @@ public class FtdClient {
     public Disposable getQuestion(final FtdQuestionListCallback callback) {
 
         GetQuestionParam param = new GetQuestionParam(user, this.schemeId);
-        String json = gson.toJson(param);
-        RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
         return service.getQuestion(
-                user.getUuid(),
-                requestBody
+//                user.getUuid(),
+                param
         )
                 .subscribeOn(Schedulers.io())
                 .map(new Function<FtdResponse<AskBean>, AskBean>() {
@@ -358,11 +332,11 @@ public class FtdClient {
                 constitutionWesternMedicineInfo,
                 traceId2
         );
-        String json = gson.toJson(param);
-        RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
+//        String json = gson.toJson(param);
+//        RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
         return service.submitAnswer(
-                user.getUuid(),
-                requestBody
+//                user.getUuid(),
+                param
         )
                 .subscribeOn(Schedulers.io())
                 .map(new Function<FtdResponse<AskBean>, AskBean>() {
@@ -391,9 +365,9 @@ public class FtdClient {
      */
     public Disposable getRecordBySeqNo(long seqNo, final FtdLastReportCallback callback) {
         GetReportParam param = new GetReportParam(user.getPhrId(), seqNo);
-        String json = gson.toJson(param);
-        RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
-        return service.getLastReport(user.getUuid(), requestBody)
+        return service.getLastReport(
+//                user.getUuid(),
+                param)
                 .subscribeOn(Schedulers.io())
                 .map(new Function<FtdResponse<ReportBean>, ReportBean>() {
                     @Override
@@ -433,9 +407,11 @@ public class FtdClient {
             diseaseIds.append(",");
         }
         GetAnalyzerParam param = new GetAnalyzerParam(diseaseIds.toString());
-        String json = gson.toJson(param);
-        RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
-        return service.getAnalyzer(user.getUuid(), requestBody)
+//        String json = gson.toJson(param);
+//        RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
+        return service.getAnalyzer(
+//                user.getUuid(),
+                param)
                 .subscribeOn(Schedulers.io())
                 .map(new Function<FtdResponse<AnalyzeResultBean>, AnalyzeResultBean>() {
                     @Override
@@ -465,9 +441,11 @@ public class FtdClient {
      */
     public Disposable getTendency(final FtdTendencyCallback callback) {
         GetTendencyParam param = new GetTendencyParam();
-        String json = gson.toJson(param);
-        RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
-        return service.getTendency(user.getUuid(), requestBody)
+//        String json = gson.toJson(param);
+//        RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
+        return service.getTendency(
+//                user.getUuid(),
+                param)
                 .subscribeOn(Schedulers.io())
                 .map(new Function<FtdResponse<TendencyResult>, TendencyResult>() {
                     @Override

@@ -128,7 +128,7 @@ public class ReportActivity extends BaseActivity
             if (list != null && list.size() > 0) {
                 cause = list.get(0).getCause();
             }
-            content.append(qmBean.getName()).append("-").append(qmBean.getText()).append(":").append(cause).append("。\n");
+            content.append(qmBean.getName()).append("-").append(qmBean.getText()).append(":").append(cause).append("\n");
         }
         tv.setText(content.toString());
     }
