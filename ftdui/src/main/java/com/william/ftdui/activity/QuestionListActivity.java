@@ -62,7 +62,8 @@ public class QuestionListActivity extends BaseActivity implements
                     return;
                 }
                 showProgress();
-                FtdClient.getInstance().submitAnswer(questionList1, questionList2, traceId1, traceId2, QuestionListActivity.this);
+                Disposable disposable = FtdClient.getInstance().submitAnswer(questionList1, questionList2, traceId1, traceId2, QuestionListActivity.this);
+                addDisposable(disposable);
             }
         });
 

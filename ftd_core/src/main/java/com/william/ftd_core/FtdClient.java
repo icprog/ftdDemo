@@ -204,9 +204,7 @@ public class FtdClient {
                     @Override
                     public SingleSource<FtdResponse<User>> apply(String token) throws Exception {
                         LoginParam param = new LoginParam(phone, companyCode, appId, token);
-                        String json = gson.toJson(param);
-                        RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
-                        return service.login(requestBody);
+                        return service.login(param);
                     }
                 })
                 .map(new Function<FtdResponse<User>, User>() {
@@ -391,7 +389,7 @@ public class FtdClient {
     /**
      * 获取报告
      */
-    public Disposable getLastRecord(long seqNo, final FtdLastReportCallback callback) {
+    public Disposable getRecordBySeqNo(long seqNo, final FtdLastReportCallback callback) {
         GetReportParam param = new GetReportParam(user.getPhrId(), seqNo);
         String json = gson.toJson(param);
         RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);

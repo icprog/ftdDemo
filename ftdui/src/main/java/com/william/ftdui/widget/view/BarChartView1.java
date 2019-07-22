@@ -59,18 +59,19 @@ public class BarChartView1 extends DemoView{
         for (DataBean bean : list) {
             chartLabels.add(bean.getQuotaName());
             dataSeriesA.add(bean.getNormalScore());
-            dataColorA.add(R.color.colorAccent1);
+//            dataColorA.add(R.color.colorAccent1);
+            dataColorA.add(R.color.colorGrey);
             dataSeriesB.add(bean.getScore());
 //            dataColorB.add(bean.getScore() < bean.getNormalScore() ? R.color.colorPrimaryDark1 : R.color.colorPrimary1);
 
-            dataColorB.add(bean.getScore() < bean.getNormalScore() ? getResources().getColor(R.color.colorPrimaryDark1) : getResources().getColor(R.color.colorPrimary1));
+            dataColorB.add(bean.getScore() < bean.getNormalScore() ? getResources().getColor(R.color.colorWrong) : getResources().getColor(R.color.colorCorrect));
         }
 
         chartDataA.clear();
-        chartDataA.add(new BarData("", dataSeriesA, dataColorA, R.color.colorAccent1));
+        chartDataA.add(new BarData("", dataSeriesA, dataColorA, R.color.colorGrey));
 
         chartDataB.clear();
-        chartDataB.add(new BarData("", dataSeriesB, dataColorB, R.color.colorPrimaryDark1));
+        chartDataB.add(new BarData("", dataSeriesB, dataColorB, R.color.colorWrong));
 
         chartRenderA();
         chartRenderB();

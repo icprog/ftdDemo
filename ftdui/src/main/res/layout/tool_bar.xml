@@ -5,6 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="?attr/actionBarSize"
-    app:navigationIcon="@drawable/shutdown"
+    app:navigationIcon="@drawable/close"
     app:titleTextColor="@android:color/white"
     android:background="@color/colorFloat"/>

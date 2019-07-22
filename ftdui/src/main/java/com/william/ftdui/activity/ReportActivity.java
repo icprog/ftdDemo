@@ -25,7 +25,6 @@ import com.william.ftdui.widget.adapter.AnalyzeAdapter;
 import com.william.ftdui.widget.adapter.viewHolder.FiveAdapter;
 import com.william.ftdui.widget.view.BarChartView1;
 import com.william.ftdui.widget.view.ChartEightPrincipalView;
-import com.william.ftdui.widget.view.ChartLineView;
 import com.william.zhibiaoview.ZheXianView;
 
 import java.util.LinkedList;
@@ -42,10 +41,9 @@ public class ReportActivity extends BaseActivity
     protected void onCreated(@Nullable Bundle savedInstanceState) {
 
         Intent intent = getIntent();
-        long seqNo = intent.getLongExtra("seqNo", 0);
-//        long seqNo = 2019070319300000032L;
+        long seqNo = intent.getLongExtra("seqNo", 2019070319300000032L);
 
-        Disposable disposable1 = FtdClient.getInstance().getLastRecord(seqNo, this);
+        Disposable disposable1 = FtdClient.getInstance().getRecordBySeqNo(seqNo, this);
         addDisposable(disposable1);
         Disposable disposable2 = FtdClient.getInstance().getTendency(this);
         addDisposable(disposable2);
@@ -164,13 +162,14 @@ public class ReportActivity extends BaseActivity
         if (bean == null || bean.getUr() == null) {
             return;
         }
-        String diseaseId = bean.getUr().get(0).getDiseaseId();
+        final String diseaseId = bean.getUr().get(0).getDiseaseId();
         RecyclerView fiveList = findViewById(R.id.rv_five);
-        FiveAdapter adapter = new FiveAdapter(diseaseId, new FiveAdapter.OnWuYangSelectListener() {
+        FiveAdapter adapter = new FiveAdapter(new FiveAdapter.OnWuYangSelectListener() {
             @Override
-            public void onWuYangSelect(String url) {
+            public void onWuYangSelect(FiveAdapter.Five fiveBean) {
                 Intent intent = new Intent(ReportActivity.this, WebActivity.class);
-                intent.putExtra("url", url);
+                intent.putExtra("title", fiveBean.getTitle());
+                intent.putExtra("url", fiveBean.getUrl(diseaseId, FtdClient.getInstance().getAppKey()));
                 startActivity(intent);
             }
         });
@@ -183,9 +182,6 @@ public class ReportActivity extends BaseActivity
      * @param tendencyResult
      */
     private void initTendency(TendencyResult tendencyResult) {
-//        ChartLineView clv = findViewById(R.id.chart_line);
-//        clv.setData(tendencyResult);
-
         ZheXianView zheXianView = findViewById(R.id.zhexian);
 
         List<TendencyResult.ResultBean> list = tendencyResult.getResult();

@@ -5,13 +5,15 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 
 import com.william.ftdui.R;
 
-public class WebActivity extends BaseActivity {
+public class WebActivity extends BaseActivity implements View.OnClickListener {
 
     private WebView wv;
 
@@ -21,8 +23,14 @@ public class WebActivity extends BaseActivity {
         setupWebView(wv);
 
         Intent intent = getIntent();
+        String title = intent.getStringExtra("title");
         String url = intent.getStringExtra("url");
         this.wv.loadUrl(url);
+
+
+        findViewById(R.id.btn_back).setOnClickListener(this);
+        TextView tvTitle = findViewById(R.id.tv_title);
+        tvTitle.setText(title);
     }
 
     @Override
@@ -63,32 +71,15 @@ public class WebActivity extends BaseActivity {
         });
     }
 
-//    private static class MyWebChromeClient extends WebChromeClient {
-//
-//        private WebActivity mainActivity;
-//
-//        static final String[] REQUIRED_PERMISSIONS = {Manifest.permission.CAMERA,Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-//        static final int CAMERA_PERMISSION_REQUEST_CODE = 123;
-//
-//        MyWebChromeClient(WebActivity activity) {
-//            this.mainActivity = activity;
-//        }
-//
-//        @Override
-//        public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams
-//                fileChooserParams) {
-//            mainActivity.setUploadMessageAboveL(filePathCallback);
-//
-//            for (String requiredPermission : REQUIRED_PERMISSIONS) {
-//                if (ContextCompat.checkSelfPermission(mainActivity, requiredPermission) != PackageManager.PERMISSION_GRANTED){
-//                    ActivityCompat.requestPermissions(mainActivity, REQUIRED_PERMISSIONS, CAMERA_PERMISSION_REQUEST_CODE);
-//                    filePathCallback.onReceiveValue(null);
-//                    return true;
-//                }
-//            }
-//            //打开相机
-//            this.mainActivity.getPicFromCamera();
-//            return true;
-//        }
-//    }
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.btn_back) {
+            if (wv.canGoBack()){
+                wv.goBack();
+                return;
+            } else {
+                finish();
+            }
+        }
+    }
 }

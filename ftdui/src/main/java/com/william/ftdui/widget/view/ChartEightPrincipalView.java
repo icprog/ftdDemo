@@ -100,7 +100,7 @@ public class ChartEightPrincipalView extends DemoView {
             chart.getDataAxis().hide();
 
 //			chart.getLinePaint().setColor(Color.rgb(133, 194, 2));
-            chart.getLinePaint().setColor(getResources().getColor(R.color.colorPrimary1));
+            chart.getLinePaint().setColor(getResources().getColor(R.color.colorCorrect));
 
             chart.getLabelPaint().setFakeBoldText(true);
             chart.getLabelPaint().setTextSize(40f);
@@ -129,7 +129,7 @@ public class ChartEightPrincipalView extends DemoView {
 //        RadarData lineData = new RadarData(null, dataSeries,
 //                Color.rgb(234, 83, 71), XEnum.DataAreaStyle.FILL);
         RadarData lineData = new RadarData(null, dataSeries,
-                getResources().getColor(R.color.colorPrimaryDark1), XEnum.DataAreaStyle.FILL);
+                getResources().getColor(R.color.colorWrong), XEnum.DataAreaStyle.FILL);
         lineData.setLineStyle(XEnum.LineStyle.DASH);
         lineData.getPlotLine().setDotStyle(XEnum.DotStyle.DOT);
 

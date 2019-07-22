@@ -10,6 +10,7 @@ import com.william.ftd_core.entity.Result;
 import com.william.ftd_core.entity.TendencyResult;
 import com.william.ftd_core.entity.UploadResult;
 import com.william.ftd_core.entity.User;
+import com.william.ftd_core.param.LoginParam;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -34,12 +35,11 @@ public interface FtdService {
     /**
      * 登录
      *
-     * @param body
+     * @param param
      * @return
      */
-    @Headers({"Content-Type: application/json", "Accept: application/json"})
     @POST(ServiceApi.LOGIN)
-    Single<FtdResponse<User>> login(@Body RequestBody body);
+    Single<FtdResponse<User>> login(@Body LoginParam param);
 
     /**
      * 上传图片

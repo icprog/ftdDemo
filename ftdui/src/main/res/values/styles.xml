@@ -3,9 +3,9 @@
     <!-- Base application theme. -->
     <style name="FtdUiTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary1</item>
-        <item name="colorPrimaryDark">@color/colorPrimary1</item>
-        <item name="colorAccent">@color/colorAccent1</item>
+        <item name="colorPrimary">@color/colorCorrect</item>
+        <item name="colorPrimaryDark">@color/colorCorrect</item>
+        <item name="colorAccent">@color/colorCorrect</item>
 
 
     </style>

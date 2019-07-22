@@ -2,7 +2,7 @@
 <!-- shape如果不声明形状则默认为正方形 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <solid android:color="@color/colorPrimary1" />
+    <solid android:color="@color/colorCorrect" />
 
     <!--<stroke-->
         <!--android:width="1px"-->
