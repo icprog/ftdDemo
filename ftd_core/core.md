@@ -260,7 +260,7 @@ success	|true|	|boolean|	返回结果是否正常
 |  score	|true|	double|	K值分值
 |  createTime	|true|	string|	诊断时间
 |  evaluate	|true|	string|	医生建议
-|  qm	|true|	array[object]|	异常指标列表
+|  qm	|true|	array\[object\]|	异常指标列表
 |    code	|true|	string|	指标编码
 |    value	|true|	string|	指标值
 |    normal	|true|	int|	是否正常，0:正常;1:异常
@@ -276,12 +276,12 @@ success	|true|	|boolean|	返回结果是否正常
 |    causeList	|true|	object|	原因列表
 |      expression	|true|	string|	原因表达式
 |      cause	|true|	string|	原因
-|  ur	|true|	array[object]|	检测结果列表
+|  ur	|true|	array\[object\]|	检测结果列表
 |    diseaseId	|true|	string|	疾病编码
 |    diseaseName	|true|	string|	疾病名称
 |    medical	|true|	int|	疾病类型，1:中医;2:西医
-|  uwr	|true|	array[object]|	用户结果预警，目前未使用
-|  uqe	|true|	array[object]|	用户所选问题列表
+|  uwr	|true|	array\[object\]|	用户结果预警，目前未使用
+|  uqe	|true|	array\[object\]|	用户所选问题列表
 |    id	|true|	string	|记录ID
 |    userHistorySeqNo	|true|	string	|个人档案诊断编号，即PHR提供的此次诊断的唯一标识
 |    userId	|true|	string	|用户ID
@@ -290,9 +290,9 @@ success	|true|	|boolean|	返回结果是否正常
 |    flag	|true|	int|	标志，暂时未发现作用
 |    updated	|true|	string|	更新时间
 |    created	|true|	string|	创建时间
-|  signUqo	|true|	array[object]	|未知，暂时未发现作用
-|  otherUqo	|true|	array[object]	|未知，暂时未发现作用
-|  face	|true|	array[object]	|面
+|  signUqo	|true|	array\[object\]	|未知，暂时未发现作用
+|  otherUqo	|true|	array\[object\]	|未知，暂时未发现作用
+|  face	|true|	array\[object\]	|面
 |    id	|true|	string	|记录ID
 |    medical	|true|	string	|指标类型，1:中医;2:西医
 |    userHistorySeqNo	|true|	string	|个人档案诊断编号，即PHR提供的此次诊断的唯一标识
@@ -318,7 +318,7 @@ success	|true|	|boolean|	返回结果是否正常
 |    deviceSn	|true|	string	|暂时未发现作用
 |    deviceNo	|true|	string	|暂时未发现作用
 |    dataSource	|true|	string	|暂时未发现作用
-|  tongue	|true|	array[object]	|舌质
+|  tongue	|true|	array\[object\]	|舌质
 |    id	|true|	string	|记录ID
 |    medical	|true|	string	|指标类型，1:中医;2:西医
 |    userHistorySeqNo	|true|	string	|个人档案诊断编号，即PHR提供的此次诊断的唯一标识
@@ -344,7 +344,7 @@ success	|true|	|boolean|	返回结果是否正常
 |    deviceSn	|true|	string	|暂时未发现作用
 |    deviceNo	|true|	string	|暂时未发现作用
 |    dataSource	|true|	string	|暂时未发现作用
-|  moss	|true|	array[object]	|舌苔
+|  moss	|true|	array\[object\]	|舌苔
 |    id	|true|	string	|记录ID
 |    medical	|true|	string	|指标类型，1:中医;2:西医
 |    userHistorySeqNo	|true|	string	|个人档案诊断编号，即PHR提供的此次诊断的唯一标识
@@ -375,7 +375,7 @@ success	|true|	|boolean|	返回结果是否正常
 |    tongue	|true|	string	|舌质分析描述
 |    moss	|true|	string	|舌苔分析描述
 |    pulse	|true|	string	|暂时未发现作用
-|  quotaInfoList	|true|	array[object]	|指标信息列表
+|  quotaInfoList	|true|	array\[object\]	|指标信息列表
 |  faceImg	|true|	string	|面诊图片地址
 |  tongueImg	|true|	string	|舌诊图片地址
 |  eight	|true|	object	|八纲图信息
