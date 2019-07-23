@@ -552,4 +552,4 @@ settings.setAllowUniversalAccessFromFileURLs(true);
 
 3. 不想自己写UI?
 
-    面舌诊SDK提供了一套现成的、简洁的UI框架[FTD-UI](https://www.baidu.com),可供开发者快速集成面舌诊服务。
+    面舌诊SDK提供了一套现成的、简洁的UI框架[FTD-UI](../ftdui/UI.md),可供开发者快速集成面舌诊服务。
