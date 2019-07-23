@@ -15,6 +15,7 @@ import android.view.TextureView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -285,8 +286,9 @@ public class JTCameraView extends TextureView {
      * 预览图像（surface）处理
      */
     private boolean inited;
+
     private void configureTransform() {
-        if (inited){
+        if (inited) {
             return;
         }
         if (mSize == null || mPreviewSize == null) {
@@ -329,7 +331,7 @@ public class JTCameraView extends TextureView {
 
         matrix.postScale(wScale, hScale, sWidth / 2, sHeight / 2);
         setTransform(matrix);
-        inited= true;
+        inited = true;
     }
 
 
@@ -420,6 +422,13 @@ public class JTCameraView extends TextureView {
         if (sizeList == null || width <= 0) {
             return null;
         }
+        ArrayList<Camera.Size> list = new ArrayList<>(10);
+        //去除长款相等的尺寸，这种尺寸容易引起图片倒伏
+        for (Camera.Size size : sizeList) {
+            if (size.height != size.width){
+                list.add(size);
+            }
+        }
         int displayWidth = width;
         int displayHeight = height;
         if (mPreviewOrientation - mDisplayOrientation > 0) {
@@ -434,7 +443,7 @@ public class JTCameraView extends TextureView {
             sb.append(size.height).append("*").append(size.width).append("\n");
         }
         Log.d(TAG, "chooseOptimalSize: \n" + sb.toString());
-        return Collections.max(sizeList, comparator);
+        return Collections.max(list, comparator);
     }
 
     /**
@@ -537,7 +546,7 @@ public class JTCameraView extends TextureView {
             int width = bitmap.getWidth();
             int height = bitmap.getHeight();
             Matrix matrix = new Matrix();
-            if (width > height) {
+            if (width >= height) {
                 matrix.setRotate(-90f);
             }
             matrix.postScale(-1f, 1f);
@@ -575,20 +584,61 @@ public class JTCameraView extends TextureView {
     private class CameraSizeComparator implements Comparator<Camera.Size> {
         private float mWdith;
         private float mHeight;
+        private float mRatio;
+        private float mArea;
 
         public CameraSizeComparator(int width, int height) {
             mWdith = (float) width;
             mHeight = (float) height;
+            mRatio = mWdith / mHeight;
+            mArea = mWdith * mHeight;
         }
 
         @Override
         public int compare(Camera.Size o1, Camera.Size o2) {
 
+//            float heightDiffer1 = Math.abs(mHeight - o1.height);
+//            float heightDiffer2 = Math.abs(mHeight - o2.height);
+//            float widthDiffer1 = Math.abs(mWdith - o1.width);
+//            float widthDiffer2 = Math.abs(mWdith - o2.width);
+//            if (heightDiffer1 < heightDiffer2 && widthDiffer1 < widthDiffer2) {
+//                return 1;
+//            } else {
+//                return -1;
+//            }
+            float width1 = (float) o1.width;
+            float height1 = (float) o1.height;
+            float width2 = (float) o2.width;
+            float height2 = (float) o2.height;
+
             float heightDiffer1 = Math.abs(mHeight - o1.height);
             float heightDiffer2 = Math.abs(mHeight - o2.height);
             float widthDiffer1 = Math.abs(mWdith - o1.width);
             float widthDiffer2 = Math.abs(mWdith - o2.width);
-            if (heightDiffer1 < heightDiffer2 && widthDiffer1 < widthDiffer2) {
+
+            float ratio1 = width1 / height1;
+            float ratio2 = width2 / height2;
+
+
+            float area1 = o1.width * o1.height;
+            float area2 = o2.width * o2.height;
+
+//            if (Math.abs(ratio1 - mRatio) < Math.abs(ratio2 - mRatio)) {
+//                return 1;
+//            } else if (Math.abs(ratio1 - mRatio) > Math.abs(ratio2 - mRatio)) {
+//                return -1;
+//            } else {
+//                if (heightDiffer1 < heightDiffer2 && widthDiffer1 < widthDiffer2) {
+//                    return 1;
+//                } else {
+//                    return -1;
+//                }
+//            }
+            if (width1 == height1) {
+                return -1;
+            }
+//            if (Math.abs(ratio1 - mRatio) < Math.abs(ratio2 - mRatio) && Math.abs(area1 - mArea)< Math.abs(area2 - mArea)){
+            if (Math.abs(area1 - mArea) < Math.abs(area2 - mArea)) {
                 return 1;
             } else {
                 return -1;

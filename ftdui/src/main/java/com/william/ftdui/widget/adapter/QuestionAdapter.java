@@ -41,12 +41,12 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionVH> {
     @Override
     public QuestionVH onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_question,viewGroup,false);
-        return new QuestionVH(view,this.trace,this.listener);
+        return new QuestionVH(view,this.trace);
     }
 
     @Override
     public void onBindViewHolder(@NonNull QuestionVH questionVH, int i) {
-        questionVH.bind(questionList.get(i));
+        questionVH.bind(questionList.get(i),this.listener);
     }
 
     @Override

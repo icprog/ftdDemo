@@ -56,13 +56,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="专家点评"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 app:layout_constraintTop_toBottomOf="@+id/epv" />
 
             <TextView
                 android:id="@+id/tv_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:lineSpacingExtra="5dp"
                 app:layout_constraintTop_toBottomOf="@id/tv1"
                 tools:text="第四点是在解决依赖冲突方面Gradle的实现机制更加明确。使用Maven和Gradle进行依赖管理时都采用的是传递性依赖；而如果多个依赖项指向同一个依赖项的不同版本时就会引起依赖冲突。而Maven处理这种依赖关系往往是噩梦一般的存在。而Gradle在解决依赖冲突方面相对来说比较明确。在Chapter 23. Dependency Management
 中的23.2.3章节详细解读了gradle是如何处理版本冲突的。" />
@@ -90,7 +91,7 @@
             <com.william.ftdui.widget.view.BarChartView1
                 android:id="@+id/bv"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="300dp"
                 app:layout_constraintTop_toBottomOf="@id/iv_face" />
 
             <!-- 指标结果-->
@@ -123,7 +124,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="指标分析"
-                android:textStyle="bold"
                 android:lineSpacingExtra="10dp"
                 app:layout_constraintTop_toBottomOf="@id/tv_helthy_analyzer" />
 

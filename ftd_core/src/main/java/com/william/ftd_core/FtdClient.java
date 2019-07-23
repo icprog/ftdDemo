@@ -441,10 +441,7 @@ public class FtdClient {
      */
     public Disposable getTendency(final FtdTendencyCallback callback) {
         GetTendencyParam param = new GetTendencyParam();
-//        String json = gson.toJson(param);
-//        RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
         return service.getTendency(
-//                user.getUuid(),
                 param)
                 .subscribeOn(Schedulers.io())
                 .map(new Function<FtdResponse<TendencyResult>, TendencyResult>() {

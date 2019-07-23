@@ -13,27 +13,39 @@ import com.william.ftdui.widget.adapter.QuestionAdapter;
 public class QuestionVH extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener {
 
     CheckBox cb;
-    QuestionAdapter.OnItemCheckedChangeListener listener;
+    //    QuestionAdapter.OnItemCheckedChangeListener listener;
     QuestionBean bean;
     private int trace;
 
-    public QuestionVH(@NonNull View itemView, @Constant.Trace int trace, QuestionAdapter.OnItemCheckedChangeListener listener) {
+    //    public QuestionVH(@NonNull View itemView, @Constant.Trace int trace, QuestionAdapter.OnItemCheckedChangeListener listener) {
+//        super(itemView);
+//        this.trace = trace;
+//        cb = (CheckBox) itemView;
+//        this.listener = listener;
+//        cb.setOnCheckedChangeListener(this);
+//    }
+    public QuestionVH(@NonNull View itemView, @Constant.Trace int trace) {
         super(itemView);
         this.trace = trace;
         cb = (CheckBox) itemView;
-        this.listener = listener;
-        cb.setOnCheckedChangeListener(this);
+//        cb.setOnCheckedChangeListener(this);
     }
 
-    public void bind(QuestionBean bean) {
+    public void bind(final QuestionBean bean,final QuestionAdapter.OnItemCheckedChangeListener listener) {
         this.bean = bean;
         cb.setText(bean.getContent());
+        cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                listener.onItemCheckedChanged(trace, bean, isChecked);
+            }
+        });
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (this.listener != null) {
-            listener.onItemCheckedChanged(this.trace, this.bean, isChecked);
-        }
+//        if (this.listener != null) {
+//            listener.onItemCheckedChanged(this.trace, this.bean, isChecked);
+//        }
     }
 }
