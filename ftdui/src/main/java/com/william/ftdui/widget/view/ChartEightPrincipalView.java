@@ -2,15 +2,12 @@ package com.william.ftdui.widget.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.william.ftd_core.entity.SixDiseaseBean;
-import com.william.ftd_core.entity.SixDiseaseListBean;
-import com.william.ftd_core.entity.SixDiseaseResultBean;
 import com.william.ftdui.R;
 
 import org.xclcharts.chart.RadarChart;
@@ -18,7 +15,6 @@ import org.xclcharts.chart.RadarData;
 import org.xclcharts.event.click.PointPosition;
 import org.xclcharts.renderer.XEnum;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -116,6 +112,7 @@ public class ChartEightPrincipalView extends DemoView {
     }
 
     private void chartDataSet() {
+        labels.clear();
         labels.add("实");
         labels.add("热");
         labels.add("里");
@@ -126,13 +123,11 @@ public class ChartEightPrincipalView extends DemoView {
         for (SixDiseaseBean disease : diseaseBeans) {
             dataSeries.add(disease.getScore());
         }
-//        RadarData lineData = new RadarData(null, dataSeries,
-//                Color.rgb(234, 83, 71), XEnum.DataAreaStyle.FILL);
         RadarData lineData = new RadarData(null, dataSeries,
                 getResources().getColor(R.color.colorWrong), XEnum.DataAreaStyle.FILL);
         lineData.setLineStyle(XEnum.LineStyle.DASH);
         lineData.getPlotLine().setDotStyle(XEnum.DotStyle.DOT);
-
+        chartData.clear();
         chartData.add(lineData);
     }
 

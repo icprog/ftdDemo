@@ -1,5 +1,6 @@
 package com.william.ftdui.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -56,6 +57,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
 
     private Handler mMainThreadHandler = new mMainThreadHandler(this);
 
+    private OnCaptureCompleteListener listener;
 
     public static CameraFragment newInstance(boolean autoPreview, @DrawableRes int drawableId, int requestId) {
         CameraFragment fragment = new CameraFragment();
@@ -284,10 +286,27 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
                 fragment.mStepView.go(fragment.stepId, true);
                 fragment.loadImage(fragment.stepId);
             } else {
-                Intent intent = new Intent(fragment.getContext(), FileUploadActivity.class);
-                fragment.startActivity(intent);
-                fragment.getActivity().finish();
+                if (fragment.listener != null){
+                    fragment.listener.onCaptureComplete();
+                }
             }
         }
+    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnCaptureCompleteListener) {
+            this.listener = (OnCaptureCompleteListener) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        this.listener = null;
+    }
+
+    public interface OnCaptureCompleteListener {
+        void onCaptureComplete();
     }
 }

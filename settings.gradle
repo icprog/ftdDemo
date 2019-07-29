@@ -1,1 +1,1 @@
-include ':demo', ':ftdui', ':ftd_core' , ':JTCameraView'
+include ':demo', ':ftdui', ':ftd_core', ':ftd_hybrid' , ':JTCameraView'

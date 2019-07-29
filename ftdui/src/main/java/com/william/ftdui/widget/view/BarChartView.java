@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class BarChartView1 extends DemoView{
+public class BarChartView extends DemoView{
 
     private String TAG = "BarChart12View";
     private BarChart chartA = new BarChart();
@@ -33,15 +33,15 @@ public class BarChartView1 extends DemoView{
     private BarChart chart2 = new BarChart();
     private List<BarData> chartDataB = new LinkedList<BarData>();
 
-    public BarChartView1(Context context) {
+    public BarChartView(Context context) {
         this(context,null);
     }
 
-    public BarChartView1(Context context, AttributeSet attrs){
+    public BarChartView(Context context, AttributeSet attrs){
         this(context, attrs,0);
     }
 
-    public BarChartView1(Context context, AttributeSet attrs, int defStyle) {
+    public BarChartView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
@@ -56,14 +56,16 @@ public class BarChartView1 extends DemoView{
         List<Integer> dataColorA = new LinkedList<Integer>();
         List<Double> dataSeriesB = new LinkedList<Double>();
         List<Integer> dataColorB = new LinkedList<Integer>();
+        chartLabels.clear();
+        dataSeriesA.clear();
+        dataColorA.clear();
+        dataSeriesB.clear();
+        dataColorB.clear();
         for (DataBean bean : list) {
             chartLabels.add(bean.getQuotaName());
             dataSeriesA.add(bean.getNormalScore());
-//            dataColorA.add(R.color.colorAccent1);
             dataColorA.add(R.color.colorGrey);
             dataSeriesB.add(bean.getScore());
-//            dataColorB.add(bean.getScore() < bean.getNormalScore() ? R.color.colorPrimaryDark1 : R.color.colorPrimary1);
-
             dataColorB.add(bean.getScore() < bean.getNormalScore() ? getResources().getColor(R.color.colorWrong) : getResources().getColor(R.color.colorCorrect));
         }
 

@@ -597,52 +597,31 @@ public class JTCameraView extends TextureView {
         @Override
         public int compare(Camera.Size o1, Camera.Size o2) {
 
-//            float heightDiffer1 = Math.abs(mHeight - o1.height);
-//            float heightDiffer2 = Math.abs(mHeight - o2.height);
-//            float widthDiffer1 = Math.abs(mWdith - o1.width);
-//            float widthDiffer2 = Math.abs(mWdith - o2.width);
-//            if (heightDiffer1 < heightDiffer2 && widthDiffer1 < widthDiffer2) {
-//                return 1;
-//            } else {
-//                return -1;
-//            }
-            float width1 = (float) o1.width;
-            float height1 = (float) o1.height;
-            float width2 = (float) o2.width;
-            float height2 = (float) o2.height;
-
             float heightDiffer1 = Math.abs(mHeight - o1.height);
             float heightDiffer2 = Math.abs(mHeight - o2.height);
             float widthDiffer1 = Math.abs(mWdith - o1.width);
             float widthDiffer2 = Math.abs(mWdith - o2.width);
-
-            float ratio1 = width1 / height1;
-            float ratio2 = width2 / height2;
-
-
-            float area1 = o1.width * o1.height;
-            float area2 = o2.width * o2.height;
-
-//            if (Math.abs(ratio1 - mRatio) < Math.abs(ratio2 - mRatio)) {
-//                return 1;
-//            } else if (Math.abs(ratio1 - mRatio) > Math.abs(ratio2 - mRatio)) {
-//                return -1;
-//            } else {
-//                if (heightDiffer1 < heightDiffer2 && widthDiffer1 < widthDiffer2) {
-//                    return 1;
-//                } else {
-//                    return -1;
-//                }
-//            }
-            if (width1 == height1) {
-                return -1;
-            }
-//            if (Math.abs(ratio1 - mRatio) < Math.abs(ratio2 - mRatio) && Math.abs(area1 - mArea)< Math.abs(area2 - mArea)){
-            if (Math.abs(area1 - mArea) < Math.abs(area2 - mArea)) {
+            if (heightDiffer1 < heightDiffer2 && widthDiffer1 < widthDiffer2) {
                 return 1;
             } else {
                 return -1;
             }
+
+//            float width1 = (float) o1.width;
+//            float height1 = (float) o1.height;
+//            float width2 = (float) o2.width;
+//            float height2 = (float) o2.height;
+//
+//            float area1 = o1.width * o1.height;
+//            float area2 = o2.width * o2.height;
+//            if (width1 == height1) {
+//                return -1;
+//            }
+//            if (Math.abs(area1 - mArea) < Math.abs(area2 - mArea)) {
+//                return 1;
+//            } else {
+//                return -1;
+//            }
         }
     }
 }

@@ -4,11 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.william.ftd_core.FtdClient;
 import com.william.ftd_core.callback.FtdQuestionListCallback;
@@ -17,9 +14,9 @@ import com.william.ftd_core.entity.AskBean;
 import com.william.ftd_core.entity.CardInfoBean;
 import com.william.ftd_core.entity.QuestionBean;
 import com.william.ftd_core.exception.FtdException;
-import com.william.ftdui.constant.Constant;
 import com.william.ftdui.R;
-import com.william.ftdui.widget.adapter.QuestionAdapter;
+import com.william.ftdui.constant.Constant;
+import com.william.ftdui.widget.aboutRV.adapter.QuestionAdapter;
 
 import java.util.LinkedList;
 
@@ -49,24 +46,6 @@ public class QuestionListActivity extends BaseActivity implements
         this.rv2 = findViewById(R.id.rv2);
         this.rv2.setAdapter(adapter2);
 
-        this.btnSubmit = findViewById(R.id.btn_submit);
-        this.btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (questionList1.size() > 4) {
-                    showToast("体质最多只能选择4项哦！");
-                    return;
-                }
-                if (questionList2.size() > 4) {
-                    showToast("体证最多只能选择4项哦！");
-                    return;
-                }
-                showProgress();
-                Disposable disposable = FtdClient.getInstance().submitAnswer(questionList1, questionList2, traceId1, traceId2, QuestionListActivity.this);
-                addDisposable(disposable);
-            }
-        });
-
         Disposable disposable = FtdClient.getInstance().getQuestion(new FtdQuestionListCallback() {
             @Override
             public void onSuccess(AskBean bean) {
@@ -86,6 +65,32 @@ public class QuestionListActivity extends BaseActivity implements
             }
         });
         addDisposable(disposable);
+    }
+
+    @Override
+    protected void setEndTv(TextView tv) {
+        tv.setText("提交");
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (questionList1.size() > 4) {
+                    showToast("体质最多只能选择4项哦！");
+                    return;
+                }
+                if (questionList2.size() > 4) {
+                    showToast("体证最多只能选择4项哦！");
+                    return;
+                }
+                showProgress();
+                Disposable disposable = FtdClient.getInstance().submitAnswer(questionList1, questionList2, traceId1, traceId2, QuestionListActivity.this);
+                addDisposable(disposable);
+            }
+        });
+    }
+
+    @Override
+    protected String setTitle() {
+        return "评估问诊";
     }
 
     @Override

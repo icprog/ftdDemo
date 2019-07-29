@@ -1,4 +1,4 @@
-package com.william.ftdui.widget.adapter.viewHolder;
+package com.william.ftdui.widget.aboutRV.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.william.ftd_core.FtdClient;
 import com.william.ftdui.BuildConfig;
 import com.william.ftdui.R;
 
@@ -18,11 +17,13 @@ public class FiveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private ArrayList<Five> array = new ArrayList<>();
 
-
-    private OnWuYangSelectListener listener;
-
-    public FiveAdapter(OnWuYangSelectListener listener) {
+    public void setListener(ReportAdapter.OnWuYangSelectListener listener) {
         this.listener = listener;
+    }
+
+    private ReportAdapter.OnWuYangSelectListener listener;
+
+    public FiveAdapter() {
         array.add(new Five("食养", R.drawable.five_food, "foodRaiseTemp"));
         array.add(new Five("术养", R.drawable.five_massage, "kungfuRaiseTemp"));
         array.add(new Five("动养", R.drawable.five_sport, "actionRaiseTemp"));
@@ -57,10 +58,6 @@ public class FiveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public int getItemCount() {
         return array.size();
-    }
-
-    public interface OnWuYangSelectListener {
-        void onWuYangSelect(Five fiveBean);
     }
 
     public static class Five {

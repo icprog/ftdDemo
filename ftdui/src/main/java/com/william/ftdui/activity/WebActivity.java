@@ -16,21 +16,20 @@ import com.william.ftdui.R;
 public class WebActivity extends BaseActivity implements View.OnClickListener {
 
     private WebView wv;
-
     @Override
     protected void onCreated(@Nullable Bundle savedInstanceState) {
         this.wv = findViewById(R.id.wv);
         setupWebView(wv);
 
         Intent intent = getIntent();
-        String title = intent.getStringExtra("title");
+//        String title = intent.getStringExtra("title");
         String url = intent.getStringExtra("url");
         this.wv.loadUrl(url);
+    }
 
-
-        findViewById(R.id.btn_back).setOnClickListener(this);
-        TextView tvTitle = findViewById(R.id.tv_title);
-        tvTitle.setText(title);
+    @Override
+    protected String setTitle() {
+        return getIntent().getStringExtra("title");
     }
 
     @Override
@@ -73,13 +72,13 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btn_back) {
-            if (wv.canGoBack()){
-                wv.goBack();
-                return;
-            } else {
-                finish();
-            }
-        }
+//        if (v.getId() == R.id.btn_back) {
+//            if (wv.canGoBack()){
+//                wv.goBack();
+//                return;
+//            } else {
+//                finish();
+//            }
+//        }
     }
 }

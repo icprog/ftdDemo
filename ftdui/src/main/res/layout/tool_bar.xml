@@ -1,10 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tool_bar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="?attr/actionBarSize"
-    app:navigationIcon="@drawable/close"
-    app:titleTextColor="@android:color/white"
-    android:background="@color/colorFloat"/>
+    app:contentInsetStart="10dp"
+    app:contentInsetEnd="10dp"
+    android:background="@color/colorPrimary">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tb_tv_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/close"
+            android:textColor="@android:color/white"
+            android:minEms="4"
+            android:gravity="start"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/tb_tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="我是自定义View"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:layout_centerInParent="true"
+            android:layout_toEndOf="@id/tb_tv_start"
+            android:layout_toStartOf="@+id/tb_tv_end"/>
+
+        <TextView
+            android:id="@id/tb_tv_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:textColor="@android:color/white"
+            tools:text="提交"
+            android:textSize="20sp"
+            android:minEms="4"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+</android.support.v7.widget.Toolbar>

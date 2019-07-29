@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<color name="colorPrimary1">#34c083</color>-->
-    <!--<color name="colorPrimaryDark1">#fe8f6f</color>-->
-    <!--<color name="colorAccent1">#dddddd</color>-->
-
-
-    <color name="colorPrimary">#103927</color>
-    <!--<color name="colorPrimaryDark1">#fe8f6f</color>-->
-    <color name="colorAccent">#34c083</color>
+    <color name="colorPrimary">#34c083</color>
     <color name="colorCorrect">#34c083</color>
     <color name="colorWrong">#fe8f6f</color>
-    <color name="colorFloat">#B3103927</color>
+    <!--<color name="colorFloat">#B3103927</color>-->
+    <color name="colorFloat">#103927</color>
     <color name="colorGrey">#dddddd</color>
 </resources>

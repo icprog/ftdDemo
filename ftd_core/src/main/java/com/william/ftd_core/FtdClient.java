@@ -242,9 +242,7 @@ public class FtdClient {
         builder.addFormDataPart("userId", user.getPhrId());
         builder.addFormDataPart("username", user.getMoble());
         builder.addFormDataPart("userType", "1");
-        return service.picUpload(
-//                user.getUuid(),
-                builder.build());
+        return service.picUpload(builder.build());
     }
 
 
@@ -286,10 +284,7 @@ public class FtdClient {
     public Disposable getQuestion(final FtdQuestionListCallback callback) {
 
         GetQuestionParam param = new GetQuestionParam(user, this.schemeId);
-        return service.getQuestion(
-//                user.getUuid(),
-                param
-        )
+        return service.getQuestion(param)
                 .subscribeOn(Schedulers.io())
                 .map(new Function<FtdResponse<AskBean>, AskBean>() {
                     @Override
@@ -332,12 +327,7 @@ public class FtdClient {
                 constitutionWesternMedicineInfo,
                 traceId2
         );
-//        String json = gson.toJson(param);
-//        RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
-        return service.submitAnswer(
-//                user.getUuid(),
-                param
-        )
+        return service.submitAnswer(param)
                 .subscribeOn(Schedulers.io())
                 .map(new Function<FtdResponse<AskBean>, AskBean>() {
                     @Override
@@ -365,9 +355,7 @@ public class FtdClient {
      */
     public Disposable getRecordBySeqNo(long seqNo, final FtdLastReportCallback callback) {
         GetReportParam param = new GetReportParam(user.getPhrId(), seqNo);
-        return service.getLastReport(
-//                user.getUuid(),
-                param)
+        return service.getLastReport(param)
                 .subscribeOn(Schedulers.io())
                 .map(new Function<FtdResponse<ReportBean>, ReportBean>() {
                     @Override
@@ -407,11 +395,7 @@ public class FtdClient {
             diseaseIds.append(",");
         }
         GetAnalyzerParam param = new GetAnalyzerParam(diseaseIds.toString());
-//        String json = gson.toJson(param);
-//        RequestBody requestBody = RequestBody.create(MediaType.parse(ServiceApi.JSON_MEDIA), json);
-        return service.getAnalyzer(
-//                user.getUuid(),
-                param)
+        return service.getAnalyzer(param)
                 .subscribeOn(Schedulers.io())
                 .map(new Function<FtdResponse<AnalyzeResultBean>, AnalyzeResultBean>() {
                     @Override
@@ -441,8 +425,7 @@ public class FtdClient {
      */
     public Disposable getTendency(final FtdTendencyCallback callback) {
         GetTendencyParam param = new GetTendencyParam();
-        return service.getTendency(
-                param)
+        return service.getTendency(param)
                 .subscribeOn(Schedulers.io())
                 .map(new Function<FtdResponse<TendencyResult>, TendencyResult>() {
                     @Override

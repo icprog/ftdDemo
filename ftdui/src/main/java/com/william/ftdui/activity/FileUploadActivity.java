@@ -83,6 +83,11 @@ public class FileUploadActivity extends BaseActivity {
     }
 
     @Override
+    protected String setTitle() {
+        return "上传分析";
+    }
+
+    @Override
     protected int setContentViewResId() {
         return R.layout.activity_file_upload1;
     }

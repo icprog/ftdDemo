@@ -1,4 +1,4 @@
-package com.william.ftdui.widget.adapter;
+package com.william.ftdui.widget.aboutRV.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,31 +9,30 @@ import android.view.ViewGroup;
 import com.william.ftd_core.entity.DataBean;
 import com.william.ftd_core.entity.QuotaInfoListBean;
 import com.william.ftdui.R;
-import com.william.ftdui.widget.adapter.viewHolder.AnalyzeVH;
+import com.william.ftdui.widget.aboutRV.viewHolder.AnalyzeVH;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnalyzeAdapter extends RecyclerView.Adapter<AnalyzeVH> {
+public class IndexAnalyzeAdapter extends RecyclerView.Adapter<AnalyzeVH> {
 
     private List<DataBean> dataList = new ArrayList<DataBean>();
 
-    public AnalyzeAdapter(List<QuotaInfoListBean> list) {
-        process(list);
-    }
-
-    public void setData(List<QuotaInfoListBean> list) {
+    public void update(List<QuotaInfoListBean> list) {
         process(list);
         notifyDataSetChanged();
     }
 
-    private void process(List<QuotaInfoListBean> list){
+    private void process(List<QuotaInfoListBean> list) {
+        dataList.clear();
         List<DataBean> datas;
         for (QuotaInfoListBean quotaInfo : list) {
             datas = quotaInfo.getData();
-            for (DataBean data : datas) {
-                if (data.getScore() < data.getNormalScore()) {
-                    dataList.add(data);
+            if (datas != null) {
+                for (DataBean data : datas) {
+                    if (data.getScore() < data.getNormalScore()) {
+                        dataList.add(data);
+                    }
                 }
             }
         }

@@ -13,24 +13,23 @@
     <application>
         <activity
             android:name=".activity.WebActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/FtdUiTheme" />
+            android:screenOrientation="portrait"/>
+            <!--android:theme="@style/FtdUiTheme" />-->
         <activity
             android:name=".activity.ReportActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/FtdUiTheme" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.QuestionListActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/FtdUiTheme" />
+            android:screenOrientation="portrait"/>
+            <!--android:theme="@style/FtdUiTheme" />-->
         <activity
             android:name=".activity.FileUploadActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/FtdUiTheme" />
+            android:screenOrientation="portrait"/>
+            <!--android:theme="@style/FtdUiTheme" />-->
         <activity
             android:name=".activity.FtdActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/FtdUiTheme" />
+            android:screenOrientation="portrait"/>
+            <!--android:theme="@style/FtdUiTheme" />-->
     </application>
 
 </manifest>

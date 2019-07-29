@@ -5,23 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Toast;
 
-import com.william.ftd_core.FtdClient;
-import com.william.ftd_core.callback.FtdLoginCallback;
-import com.william.ftd_core.exception.FtdException;
-import com.william.ftd_core.param.InitParam;
-import com.william.ftdui.BuildConfig;
 import com.william.ftdui.R;
 import com.william.ftdui.fragment.CameraFragment;
 
-import java.io.File;
-
-public class FtdActivity extends BaseActivity {
-
+public class FtdActivity extends BaseActivity implements CameraFragment.OnCaptureCompleteListener {
 
     public static final int FACE = 0;
     public static final int TONGUE_TOP = 1;
@@ -33,6 +22,7 @@ public class FtdActivity extends BaseActivity {
         return false;
     }
 
+
     @IntDef(value = {FACE, TONGUE_TOP, TONGUE_BOTTOM, ASK})
     @interface Step {
     }
@@ -41,6 +31,11 @@ public class FtdActivity extends BaseActivity {
     @Override
     protected void onCreated(@Nullable Bundle savedInstanceState) {
         test();
+    }
+
+    @Override
+    protected String setTitle() {
+        return "拍照";
     }
 
     @Override
@@ -58,5 +53,12 @@ public class FtdActivity extends BaseActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onCaptureComplete() {
+        Intent intent = new Intent(this, FileUploadActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

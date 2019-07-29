@@ -14,9 +14,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.william.ftd_core.exception.FtdException;
+import com.william.ftd_hybrid.HybirdActivity;
 import com.william.ftdui.FtdUILoginCallback;
 import com.william.ftdui.FtdUi;
-import com.william.ftdui.widget.ConfirmationDialogFragment;
+import com.william.ftdui.widget.dialog.ConfirmationDialogFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,6 +44,16 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "请出入手机号！", Toast.LENGTH_SHORT).show();
         } else {
             start(mobile);
+        }
+    }
+
+    public void goToFTDHybird(View v){
+        EditText et = findViewById(R.id.et);
+        mobile = et.getText().toString();
+        if (TextUtils.isEmpty(mobile)) {
+            Toast.makeText(this, "请出入手机号！", Toast.LENGTH_SHORT).show();
+        } else {
+            HybirdActivity.start(this,mobile);
         }
     }
 

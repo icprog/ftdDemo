@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.william.ftdui.R;
@@ -19,7 +20,9 @@ import io.reactivex.disposables.Disposable;
 abstract class BaseActivity extends AppCompatActivity {
 
     private ProgressBar pb;
-    protected Toolbar toolBar;
+    private TextView tbTvStart;
+    private TextView tbTvTitle;
+    private TextView tbTvEnd;
 
     private LinkedList<Disposable> dosposableList = new LinkedList<>();
 
@@ -32,14 +35,19 @@ abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(setContentViewResId());
-        this.toolBar = findViewById(R.id.tool_bar);
+        Toolbar toolBar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolBar);
-        this.toolBar.setNavigationOnClickListener(new View.OnClickListener() {
+        this.tbTvStart = findViewById(R.id.tb_tv_start);
+        this.tbTvStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onNavClicked();
             }
         });
+        this.tbTvTitle = findViewById(R.id.tb_tv_title);
+        this.tbTvTitle.setText(setTitle());
+        this.tbTvEnd = findViewById(R.id.tb_tv_end);
+        setEndTv(this.tbTvEnd);
         pb = findViewById(R.id.pb);
         pb.setVisibility(setPBDefault() ? View.VISIBLE : View.GONE);
         setTitle("");
@@ -116,9 +124,30 @@ abstract class BaseActivity extends AppCompatActivity {
         return true;
     }
 
-    abstract protected void onCreated(@Nullable Bundle savedInstanceState);
+
+//    protected final TextView getTbTvEnd() {
+//        return tbTvEnd;
+//    }
+//
+//    protected final TextView getTbTvTitle() {
+//        return tbTvTitle;
+//    }
+
+
+
+
+
+
 
 
     @LayoutRes
     abstract protected int setContentViewResId();
+
+    protected String setTitle(){
+        return "";
+    }
+
+    protected void setEndTv(TextView tv){ }
+
+    abstract protected void onCreated(@Nullable Bundle savedInstanceState);
 }

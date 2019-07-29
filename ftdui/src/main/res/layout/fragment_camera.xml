@@ -65,8 +65,8 @@
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/iv_dashed"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="20dp"
-        android:background="@color/colorFloat">
+        android:layout_marginTop="20dp">
+        <!--android:background="@color/colorFloat">-->
 
         <TextView
             android:id="@+id/tv_desc"

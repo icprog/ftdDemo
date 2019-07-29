@@ -2,14 +2,11 @@ package com.william.ftdui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.util.Log;
 
 import com.william.ftd_core.FtdClient;
 import com.william.ftd_core.callback.FtdLoginCallback;
 import com.william.ftd_core.exception.FtdException;
-import com.william.ftd_core.param.InitParam;
 import com.william.ftdui.activity.FtdActivity;
 
 public class FtdUi {

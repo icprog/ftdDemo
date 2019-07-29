@@ -57,6 +57,29 @@ public class ReportBean {
     private List<TongueBean> tongue;
     private List<FaceBean> face;
 
+    /**
+     *
+     */
+    private AnalyzeResultBean analyzeResultBean;
+
+    private TendencyResult tendencyResult;
+
+    public TendencyResult getTendencyResult() {
+        return tendencyResult;
+    }
+
+    public void setTendencyResult(TendencyResult tendencyResult) {
+        this.tendencyResult = tendencyResult;
+    }
+
+    public AnalyzeResultBean getAnalyzeResultBean() {
+        return analyzeResultBean;
+    }
+
+    public void setAnalyzeResultBean(AnalyzeResultBean analyzeResultBean) {
+        this.analyzeResultBean = analyzeResultBean;
+    }
+
     public FaceDiagnoseBean getFaceDiagnose() {
         return faceDiagnose;
     }

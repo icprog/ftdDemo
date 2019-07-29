@@ -1,4 +1,4 @@
-package com.william.ftdui.widget.adapter;
+package com.william.ftdui.widget.aboutRV.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +10,7 @@ import com.william.ftd_core.entity.CardInfoBean;
 import com.william.ftd_core.entity.QuestionBean;
 import com.william.ftdui.constant.Constant;
 import com.william.ftdui.R;
-import com.william.ftdui.widget.adapter.viewHolder.QuestionVH;
+import com.william.ftdui.widget.aboutRV.viewHolder.QuestionVH;
 
 import java.util.ArrayList;
 

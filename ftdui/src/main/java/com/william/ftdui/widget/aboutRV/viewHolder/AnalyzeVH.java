@@ -1,4 +1,4 @@
-package com.william.ftdui.widget.adapter.viewHolder;
+package com.william.ftdui.widget.aboutRV.viewHolder;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -23,7 +23,8 @@ public class AnalyzeVH extends RecyclerView.ViewHolder {
     }
 
     public void bind(DataBean bean){
-        tvTitle.setText("●"+bean.getQuotaName());
+//        tvTitle.setText("● "+bean.getQuotaName());
+        tvTitle.setText(bean.getQuotaName());
         tvDesc.setText(bean.getQuotaDesc());
         zb.setNormalScore((int)(bean.getNormalScore()));
         zb.setScore((int)(bean.getScore()));

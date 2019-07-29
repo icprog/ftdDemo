@@ -8,42 +8,45 @@
     tools:context=".activity.WebActivity">
 
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/tool_bar"
+    <!--<android.support.v7.widget.Toolbar-->
+        <!--android:id="@+id/tool_bar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/colorFloat"-->
+        <!--android:minHeight="?attr/actionBarSize"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--app:titleTextColor="@android:color/white">-->
+
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+
+            <!--<ImageView-->
+                <!--android:id="@+id/btn_back"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:src="@drawable/close3"-->
+                <!--android:layout_alignParentStart="true"-->
+                <!--android:layout_centerVertical="true"/>-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/tv_title"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--tools:text="食养"-->
+                <!--android:layout_alignParentStart="true"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:gravity="center"-->
+                <!--android:textSize="24sp"-->
+                <!--android:textStyle="bold"-->
+                <!--android:textColor="@android:color/white"/>-->
+        <!--</RelativeLayout>-->
+    <!--</android.support.v7.widget.Toolbar>-->
+    <include layout="@layout/tool_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorFloat"
-        android:minHeight="?attr/actionBarSize"
-        app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="@android:color/white">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/btn_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/close3"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"/>
-
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:text="食养"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/white"/>
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
-
+        android:layout_gravity="top" />
     <WebView
         android:id="@+id/wv"
         android:layout_width="match_parent"
