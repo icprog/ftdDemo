@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('/Users/william/Projects/Android/FaceTongueDoctor/key.jks')
+            storePassword 'v123456'
+            keyAlias = 'laikang'
+            keyPassword 'v123456'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.william.facetonguedoctor"
