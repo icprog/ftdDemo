@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.william.ftd_core.entity.ReportBean;
 import com.william.ftdui.R;
+import com.william.ftdui.fragment.ReportFragment;
 import com.william.ftdui.widget.view.BarChartView;
 
 public class ReportAnalysisResolutionVH extends ReportBaseVH {
@@ -17,7 +18,7 @@ public class ReportAnalysisResolutionVH extends ReportBaseVH {
     }
 
     @Override
-    public void bind(ReportBean bean) {
+    public void bind(@ReportFragment.ReportType int reportType, ReportBean bean) {
         if (bean.getQuotaInfoList() != null) {
             bcv.setData(bean.getQuotaInfoList());
         }

@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide;
 import com.william.ftd_core.entity.AnalyzeResultBean;
 import com.william.ftd_core.entity.ReportBean;
 import com.william.ftdui.R;
+import com.william.ftdui.fragment.ReportFragment;
 
 /**
  * 专家点评
@@ -28,7 +29,7 @@ public class ReportProfessorVH extends ReportBaseVH {
     }
 
     @Override
-    public void bind(ReportBean bean) {
+    public void bind(@ReportFragment.ReportType int reportType, ReportBean bean) {
         AnalyzeResultBean analyzeResult = bean.getAnalyzeResultBean();
         if (analyzeResult != null && !TextUtils.isEmpty(analyzeResult.getOpinion())) {
             tv.setText(analyzeResult.getOpinion());

@@ -6,6 +6,7 @@ import android.view.View;
 import com.william.ftd_core.entity.ReportBean;
 import com.william.ftd_core.entity.TendencyResult;
 import com.william.ftdui.R;
+import com.william.ftdui.fragment.ReportFragment;
 import com.william.zhibiaoview.ZheXianView;
 
 import java.util.LinkedList;
@@ -21,7 +22,7 @@ public class ReportTendencyVH extends ReportBaseVH {
     }
 
     @Override
-    public void bind(ReportBean bean) {
+    public void bind(@ReportFragment.ReportType int reportType, ReportBean bean) {
 
         if (bean.getTendencyResult() != null) {
             List<TendencyResult.ResultBean> list = bean.getTendencyResult().getResult();

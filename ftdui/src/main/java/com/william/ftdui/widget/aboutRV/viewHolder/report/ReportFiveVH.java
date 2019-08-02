@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.william.ftd_core.entity.ReportBean;
 import com.william.ftdui.R;
+import com.william.ftdui.fragment.ReportFragment;
 import com.william.ftdui.widget.aboutRV.adapter.FiveAdapter;
 import com.william.ftdui.widget.aboutRV.adapter.ReportAdapter;
 import com.william.ftdui.widget.aboutRV.decoration.GridDividerItemDecoration;
@@ -28,7 +29,7 @@ public class ReportFiveVH extends ReportBaseVH {
     }
 
     @Override
-    public void bind(ReportBean bean) {
+    public void bind(@ReportFragment.ReportType int reportType, ReportBean bean) {
 
     }
 

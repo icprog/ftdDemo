@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.william.ftd_core.entity.ReportBean;
 import com.william.ftdui.R;
+import com.william.ftdui.fragment.ReportFragment;
 import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportAnalysisResolutionVH;
 import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportAnalysisResultVH;
 import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportBaseVH;
@@ -17,6 +18,7 @@ import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportFiveVH;
 import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportHeathAnalyzeVH;
 import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportIndexAnalyzeVH;
 import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportProfessorVH;
+import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportScoreVH;
 import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportTendencyVH;
 
 import java.util.ArrayList;
@@ -27,13 +29,21 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportBaseVH> {
 
     private ReportBean bean;
 
+    private int reportType;
+
     private ArrayList<Pair> vhList = new ArrayList<>();
 
     private OnWuYangSelectListener listener;
 
-    public ReportAdapter(OnWuYangSelectListener listener) {
+    public ReportAdapter(@ReportFragment.ReportType int reportType, OnWuYangSelectListener listener) {
+        this.reportType = reportType;
         this.listener = listener;
-        vhList.add(new Pair(R.layout.item_report_eight, ReportEightVH.class));
+
+        if (reportType == ReportFragment.REPORT_CARD) {
+            vhList.add(new Pair(R.layout.item_report_eight, ReportEightVH.class));
+        } else {
+            vhList.add(new Pair(R.layout.item_report_score, ReportScoreVH.class));
+        }
         vhList.add(new Pair(R.layout.item_report_professor, ReportProfessorVH.class));
         vhList.add(new Pair(R.layout.item_report_analyze_resolution, ReportAnalysisResolutionVH.class));
         vhList.add(new Pair(R.layout.item_report_analyze_result, ReportAnalysisResultVH.class));
@@ -72,7 +82,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportBaseVH> {
     @Override
     public void onBindViewHolder(@NonNull ReportBaseVH viewHolder, int i) {
         if (bean != null) {
-            viewHolder.bind(bean);
+            viewHolder.bind(this.reportType,bean);
             if (i == 7) {
                 ((ReportFiveVH) viewHolder).setListener(listener);
             }

@@ -1,10 +1,7 @@
 package com.william.ftd_hybrid;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -98,7 +95,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_camera, container, false);
+        return inflater.inflate(R.layout.fragment_camera_hybrid, container, false);
     }
 
     @Override

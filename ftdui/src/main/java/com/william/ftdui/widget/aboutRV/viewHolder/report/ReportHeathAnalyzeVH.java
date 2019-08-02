@@ -7,6 +7,7 @@ import android.view.View;
 import com.william.ftd_core.entity.AnalyzeResultBean;
 import com.william.ftd_core.entity.ReportBean;
 import com.william.ftdui.R;
+import com.william.ftdui.fragment.ReportFragment;
 import com.william.ftdui.widget.aboutRV.adapter.HeathAnalyzeAdapter;
 import com.william.ftdui.widget.aboutRV.decoration.DotDecoration;
 
@@ -18,13 +19,12 @@ public class ReportHeathAnalyzeVH extends ReportBaseVH {
     public ReportHeathAnalyzeVH(@NonNull View itemView) {
         super(itemView);
         rv = itemView.findViewById(R.id.rv);
-        // todo 加圆点
         rv.addItemDecoration(new DotDecoration());
         rv.setAdapter(adapter);
     }
 
     @Override
-    public void bind(ReportBean bean) {
+    public void bind(@ReportFragment.ReportType int reportType, ReportBean bean) {
         AnalyzeResultBean analyzeResultBean = bean.getAnalyzeResultBean();
         if (analyzeResultBean != null && analyzeResultBean.getDataList() != null) {
             adapter.update(analyzeResultBean.getDataList());

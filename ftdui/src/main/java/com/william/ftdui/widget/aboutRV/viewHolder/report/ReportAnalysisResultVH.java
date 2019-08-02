@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.william.ftd_core.entity.ReportBean;
 import com.william.ftdui.R;
+import com.william.ftdui.fragment.ReportFragment;
 import com.william.ftdui.widget.aboutRV.adapter.TextAdapter;
 import com.william.ftdui.widget.aboutRV.decoration.DotDecoration;
 
@@ -25,7 +26,7 @@ public class ReportAnalysisResultVH extends ReportBaseVH {
     }
 
     @Override
-    public void bind(ReportBean bean) {
+    public void bind(@ReportFragment.ReportType int reportType, ReportBean bean) {
         ReportBean.FaceDiagnoseBean fdb = bean.getFaceDiagnose();
         if (fdb != null) {
             LinkedList<String> list = new LinkedList<>();

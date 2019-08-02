@@ -37,8 +37,8 @@ public class JTCameraView extends TextureView {
     private Camera.CameraInfo mFacingFrontCameraInfo;
     private int mFacingBackCameraId = -1;
     private Camera.CameraInfo mFacingBackCameraInfo;
-    private static int mCameraId = -1;
-    private static Camera.CameraInfo mCameraInfo;
+    private  int mCameraId = -1;
+    private  Camera.CameraInfo mCameraInfo;
 
     private int mDisplayOrientation;
     private int mPictureOrientation;
@@ -157,9 +157,7 @@ public class JTCameraView extends TextureView {
             mCameraId = mFacingBackCameraId;
         }
         mCameraFacing = facing;
-        openCamera(mCameraId);
-        adjustCameraParameters();
-        configureTransform();
+        startPreview();
     }
 
     private void setupSizeCache(int width, int height) {
@@ -606,22 +604,6 @@ public class JTCameraView extends TextureView {
             } else {
                 return -1;
             }
-
-//            float width1 = (float) o1.width;
-//            float height1 = (float) o1.height;
-//            float width2 = (float) o2.width;
-//            float height2 = (float) o2.height;
-//
-//            float area1 = o1.width * o1.height;
-//            float area2 = o2.width * o2.height;
-//            if (width1 == height1) {
-//                return -1;
-//            }
-//            if (Math.abs(area1 - mArea) < Math.abs(area2 - mArea)) {
-//                return 1;
-//            } else {
-//                return -1;
-//            }
         }
     }
 }

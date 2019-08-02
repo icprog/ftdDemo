@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.william.ftd_core.entity.ReportBean;
 import com.william.ftdui.R;
+import com.william.ftdui.fragment.ReportFragment;
 import com.william.ftdui.widget.aboutRV.adapter.IndexAnalyzeAdapter;
 import com.william.ftdui.widget.aboutRV.decoration.DotDecoration;
 
@@ -22,7 +23,7 @@ public class ReportIndexAnalyzeVH extends ReportBaseVH {
     }
 
     @Override
-    public void bind(ReportBean bean) {
+    public void bind(@ReportFragment.ReportType int reportType, ReportBean bean) {
         if ( bean.getQuotaInfoList() != null) {
             adapter.update(bean.getQuotaInfoList());
         }

@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.view.View;
-
 import com.william.ftdui.R;
 import com.william.ftdui.fragment.CameraFragment;
 
@@ -30,7 +27,6 @@ public class FtdActivity extends BaseActivity implements CameraFragment.OnCaptur
 
     @Override
     protected void onCreated(@Nullable Bundle savedInstanceState) {
-        test();
     }
 
     @Override
@@ -41,18 +37,6 @@ public class FtdActivity extends BaseActivity implements CameraFragment.OnCaptur
     @Override
     protected int setContentViewResId() {
         return R.layout.activity_ftd;
-    }
-
-    private void test() {
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(FtdActivity.this, ReportActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
     }
 
     @Override

@@ -23,7 +23,7 @@ import com.laikang.jtcameraview.CameraStateListener;
 import com.laikang.jtcameraview.JTCameraView;
 import com.shuhart.stepview.StepView;
 import com.william.ftdui.R;
-import com.william.ftdui.activity.FileUploadActivity;
+import com.william.ftdui.activity.ReportActivity1;
 import com.william.ftdui.constant.Constant;
 
 import java.io.BufferedOutputStream;
@@ -32,6 +32,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+
+import static com.laikang.jtcameraview.Constants.CAMERA_FACING_BACK;
+import static com.laikang.jtcameraview.Constants.CAMERA_FACING_FRONT;
+
 
 public class CameraFragment extends Fragment implements CameraStateListener, View.OnClickListener {
     private static final String TAG = "CameraFragment";
@@ -48,6 +52,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
     private StepView mStepView;
     private JTCameraView mJTCameraView;
     private ImageView btnCapture;
+    private ImageView btnChangeFacing;
     private ImageView iv;
 
     private boolean canPreview;
@@ -99,6 +104,17 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         return inflater.inflate(R.layout.fragment_camera, container, false);
     }
 
+    private int mFacing = CAMERA_FACING_FRONT;
+
+    public void changeFacing() {
+        if (mFacing == CAMERA_FACING_FRONT) {
+            mFacing = CAMERA_FACING_BACK;
+        } else {
+            mFacing = CAMERA_FACING_FRONT;
+        }
+        mJTCameraView.setCameraFacing(mFacing);
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -112,6 +128,16 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         this.btnCapture.setOnClickListener(this);
         this.iv = rootView.findViewById(R.id.iv_dashed);
         this.iv.setImageResource(this.drawableId);
+        this.btnChangeFacing = rootView.findViewById(R.id.btn_change_facing);
+        btnChangeFacing.setOnClickListener(this);
+        rootView.findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ReportActivity1.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
     }
 
     /**
@@ -261,8 +287,11 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
 
     @Override
     public void onClick(View v) {
-
-        mJTCameraView.takePicture();
+        if (v.getId() == R.id.btn_capture) {
+            mJTCameraView.takePicture();
+        } else {
+            changeFacing();
+        }
     }
 
     private static class mMainThreadHandler extends Handler {
@@ -286,12 +315,13 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
                 fragment.mStepView.go(fragment.stepId, true);
                 fragment.loadImage(fragment.stepId);
             } else {
-                if (fragment.listener != null){
+                if (fragment.listener != null) {
                     fragment.listener.onCaptureComplete();
                 }
             }
         }
     }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

@@ -1,6 +1,7 @@
 package com.william.facetonguedoctor;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -17,6 +19,7 @@ import com.william.ftd_core.exception.FtdException;
 import com.william.ftd_hybrid.HybirdActivity;
 import com.william.ftdui.FtdUILoginCallback;
 import com.william.ftdui.FtdUi;
+import com.william.ftdui.activity.ReportActivity1;
 import com.william.ftdui.widget.dialog.ConfirmationDialogFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ProgressBar pb;
     private String mobile;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,17 +66,18 @@ public class MainActivity extends AppCompatActivity {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             pb.setVisibility(View.VISIBLE);
-            pb.setEnabled(false);
+            pb.setEnabled(true);
             FtdUi.login(mobile, this, new FtdUILoginCallback() {
                 @Override
                 public void onSuccess() {
-                    pb.setEnabled(true);
+                    pb.setEnabled(false);
                     pb.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onError(FtdException e) {
-                    pb.setEnabled(true);
+                    pb.setEnabled(false);
+                    pb.setVisibility(View.GONE);
                     Toast.makeText(MainActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
                 }
             });

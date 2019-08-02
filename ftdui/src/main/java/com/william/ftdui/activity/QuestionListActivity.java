@@ -119,9 +119,11 @@ public class QuestionListActivity extends BaseActivity implements
     @Override
     public void onSuccess(AskBean bean) {
         hideProgress();
-        Intent intent = new Intent(this, ReportActivity.class);
-        long seqNo = bean.getCardInfo().getSeqNo();
-        intent.putExtra("seqNo", seqNo);
+        Intent intent = new Intent(this, ReportActivity1.class);
+        long cardSeqNo = bean.getCardInfo().getSeqNo();
+        long constitutionSeqNo = bean.getConstitutionInfo().getSeqNo();
+        intent.putExtra("cardSeqNo", cardSeqNo);
+        intent.putExtra("constitutionSeqNo",constitutionSeqNo);
         startActivity(intent);
         finish();
     }
