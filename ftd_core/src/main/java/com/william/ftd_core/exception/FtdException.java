@@ -1,6 +1,6 @@
 package com.william.ftd_core.exception;
 
-public class FtdException extends Throwable {
+public class FtdException extends Exception {
 
 //    private static final String
 

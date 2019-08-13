@@ -23,7 +23,7 @@ import com.laikang.jtcameraview.CameraStateListener;
 import com.laikang.jtcameraview.JTCameraView;
 import com.shuhart.stepview.StepView;
 import com.william.ftdui.R;
-import com.william.ftdui.activity.ReportActivity1;
+import com.william.ftdui.activity.ReportActivity;
 import com.william.ftdui.constant.Constant;
 
 import java.io.BufferedOutputStream;
@@ -133,7 +133,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         rootView.findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), ReportActivity1.class);
+                Intent intent = new Intent(getContext(), ReportActivity.class);
                 startActivity(intent);
                 getActivity().finish();
             }

@@ -2,31 +2,31 @@ package com.william.ftd_core.entity;
 
 public class Conclusion {
 
-    private UploadResult faceResult;
-    private UploadResult tongueTopResult;
-    private UploadResult tongueBottomResult;
+    private FtdResponse<UploadResult> faceResult;
+    private FtdResponse<UploadResult> tongueTopResult;
+    private FtdResponse<UploadResult> tongueBottomResult;
 
-    public UploadResult getFaceResult() {
+    public FtdResponse<UploadResult> getFaceResult() {
         return faceResult;
     }
 
-    public void setFaceResult(UploadResult faceResult) {
+    public void setFaceResult(FtdResponse<UploadResult> faceResult) {
         this.faceResult = faceResult;
     }
 
-    public UploadResult getTongueTopResult() {
+    public FtdResponse<UploadResult> getTongueTopResult() {
         return tongueTopResult;
     }
 
-    public void setTongueTopResult(UploadResult tongueTopResult) {
+    public void setTongueTopResult(FtdResponse<UploadResult> tongueTopResult) {
         this.tongueTopResult = tongueTopResult;
     }
 
-    public UploadResult getTongueBottomResult() {
+    public FtdResponse<UploadResult> getTongueBottomResult() {
         return tongueBottomResult;
     }
 
-    public void setTongueBottomResult(UploadResult tongueBottomResult) {
+    public void setTongueBottomResult(FtdResponse<UploadResult> tongueBottomResult) {
         this.tongueBottomResult = tongueBottomResult;
     }
 }

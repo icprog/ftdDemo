@@ -17,7 +17,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.william.ftd_core.FtdClient;
 import com.william.ftd_core.callback.FtdMicroTipCallback;
 import com.william.ftd_core.callback.FtdPicUploadCallback;
+import com.william.ftd_core.entity.AnalyzeResultBean;
 import com.william.ftd_core.entity.Conclusion;
+import com.william.ftd_core.entity.FtdResponse;
 import com.william.ftd_core.entity.MicroTipBean;
 import com.william.ftd_core.entity.UploadResult;
 import com.william.ftd_core.exception.FtdException;
@@ -44,7 +46,7 @@ public class FileUploadActivity extends BaseActivity {
     private ProgressBar pbSub;
 
     @Override
-    protected void onCreated(@Nullable Bundle savedInstanceState) {
+    public void onCreated(@NonNull View view,@Nullable Bundle savedInstanceState) {
         ImageView ivFace = findViewById(R.id.iv_face);
         ImageView ivTongueTop = findViewById(R.id.iv_tongue_top);
         ImageView ivTongueBottom = findViewById(R.id.iv_tongue_bottom);
@@ -88,7 +90,7 @@ public class FileUploadActivity extends BaseActivity {
     }
 
     @Override
-    protected int setContentViewResId() {
+    public int setContentViewResId() {
         return R.layout.activity_file_upload1;
     }
 
@@ -108,9 +110,9 @@ public class FileUploadActivity extends BaseActivity {
             @Override
             public void onSuccess(Conclusion result) {
                 dismissProgress();
-                UploadResult faceUploadResult = result.getFaceResult();
-                UploadResult tongueUploadResult = result.getTongueTopResult();
-                UploadResult tongueBottomResult = result.getTongueBottomResult();
+                FtdResponse<UploadResult> faceUploadResult = result.getFaceResult();
+                FtdResponse<UploadResult> tongueUploadResult = result.getTongueTopResult();
+                FtdResponse<UploadResult> tongueBottomResult = result.getTongueBottomResult();
 
                 boolean faceSuccess = changeTvDescState(tvFaceUploadResult, faceUploadResult);
                 boolean tongueTopSuccess = changeTvDescState(tvTongueTopUploadResult, tongueUploadResult);
@@ -128,10 +130,11 @@ public class FileUploadActivity extends BaseActivity {
         addDisposable(fileUploadDisposable);
     }
 
-    private Boolean changeTvDescState(TextView tv, UploadResult result) {
+    private Boolean changeTvDescState(TextView tv, FtdResponse<UploadResult> response) {
         int drawableRes = R.drawable.close3;
         String content = "分析失败";
         boolean b = false;
+        UploadResult result = response.getData();
         if (result != null) {
             b = result.getErrCode() == 0;
             if (b) {

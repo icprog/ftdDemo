@@ -19,37 +19,6 @@ public class FtdUi {
      * @param context
      */
     public static void init(Context context) {
-//        ApplicationInfo appInfo = null;
-//        try {
-//            appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
-//        } catch (PackageManager.NameNotFoundException e) {
-//            Log.e(TAG, "init: ", e);
-//            return;
-//        }
-//
-//        String appId = String.valueOf(appInfo.metaData.getInt("laiKang.appId"));
-//        String appCode = String.valueOf(appInfo.metaData.getInt("laiKang.appCode"));
-//        String appKey = appInfo.metaData.getString("laiKang.appKey");
-//        String appSecret = appInfo.metaData.getString("laiKang.appSecret");
-//        String companyId = String.valueOf(appInfo.metaData.getInt("laiKang.companyId"));
-//        String companyPid = String.valueOf(appInfo.metaData.getInt("laiKang.companyPid"));
-//        String companyCode = appInfo.metaData.getString("laiKang.companyCode");
-//        String phrAppKey = appInfo.metaData.getString("laiKang.phrAppKey");
-//        String phrAppSecret = appInfo.metaData.getString("laiKang.phrAppSecret");
-//
-//
-//        InitParam param = new InitParam(
-//                appId,
-//                appCode,
-//                appKey,
-//                appSecret,
-//                companyId,
-//                companyPid,
-//                companyCode,
-//                phrAppKey,
-//                phrAppSecret
-//        );
-
         FtdClient.getInstance().init(context);
     }
 

@@ -2,6 +2,7 @@ package com.william.ftdui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -39,7 +40,7 @@ public class QuestionListActivity extends BaseActivity implements
     private String traceId2;
 
     @Override
-    protected void onCreated(@Nullable Bundle savedInstanceState) {
+    public void onCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         this.rv1 = findViewById(R.id.rv1);
         this.rv1.setAdapter(adapter1);
 
@@ -94,7 +95,7 @@ public class QuestionListActivity extends BaseActivity implements
     }
 
     @Override
-    protected int setContentViewResId() {
+    public int setContentViewResId() {
         return R.layout.activity_question_list;
     }
 
@@ -119,7 +120,7 @@ public class QuestionListActivity extends BaseActivity implements
     @Override
     public void onSuccess(AskBean bean) {
         hideProgress();
-        Intent intent = new Intent(this, ReportActivity1.class);
+        Intent intent = new Intent(this, ReportActivity.class);
         long cardSeqNo = bean.getCardInfo().getSeqNo();
         long constitutionSeqNo = bean.getConstitutionInfo().getSeqNo();
         intent.putExtra("cardSeqNo", cardSeqNo);

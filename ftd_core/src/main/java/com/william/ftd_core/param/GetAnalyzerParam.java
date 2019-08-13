@@ -1,17 +1,17 @@
 package com.william.ftd_core.param;
 
 public class GetAnalyzerParam {
-    private String diseaseIds;
+    private String data;
 
-    public GetAnalyzerParam(String diseaseIds) {
-        this.diseaseIds = diseaseIds;
+    public GetAnalyzerParam(String data) {
+        this.data = data;
     }
 
-    public String getDiseaseIds() {
-        return diseaseIds;
+    public String getdata() {
+        return data;
     }
 
-    public void setDiseaseIds(String diseaseIds) {
-        this.diseaseIds = diseaseIds;
+    public void setdata(String data) {
+        this.data = data;
     }
 }

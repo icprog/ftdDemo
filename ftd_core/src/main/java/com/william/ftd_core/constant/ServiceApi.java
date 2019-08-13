@@ -26,7 +26,7 @@ public interface ServiceApi {
     String RECIPE = "api/knowledge/health/dietary";//食谱
     String GET_RAISES = "api/knowledge/health/getRaises";//四养
     String GET_TIP = "api/ftdw/knowledge/getTips";//健康微语
-    String GET_HEALTH_ANALYZER = "/api/ftdw/knowledge/getDiseaseByCode";//健康分析
+    String GET_HEALTH_ANALYZER = "/api/ftdw/knowledge/getDiseaseByData";//健康分析
     String GET_TENDENCY = "api/report/getUserHistoryScoreTrend";
 
     String LK_TOKEN = "LkToken";

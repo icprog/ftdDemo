@@ -37,7 +37,7 @@ public class ReprotFragmentAdapter extends FragmentPagerAdapter {
                 return "中医辩证";
             case 1:
             default:
-                return "体质体质";
+                return "中医体质";
         }
     }
 }

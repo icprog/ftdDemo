@@ -25,6 +25,6 @@
         android:clickable="true"
         android:focusable="true"
         app:srcCompat="@drawable/btn_shutter_1"
-        android:layout_gravity="bottom|end"/>
+        android:layout_gravity="bottom|right"/>
 
 </FrameLayout>

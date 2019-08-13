@@ -2,7 +2,7 @@ package com.william.ftd_core.entity;
 
 import java.util.List;
 
-public  class DataBean {
+public class DataBean {
     /**
      * score : 6
      * quotaDesc : 面色白：主虚证，寒证，失血等。
@@ -26,6 +26,7 @@ public  class DataBean {
     private String quotaCode;
     private String quotaValue;
     private List<ValuesBean> values;
+    private int quotaNormal;
 
     public double getScore() {
         return score;
@@ -105,5 +106,13 @@ public  class DataBean {
 
     public void setValues(List<ValuesBean> values) {
         this.values = values;
+    }
+
+    public int getQuotaNormal() {
+        return quotaNormal;
+    }
+
+    public void setQuotaNormal(int quotaNormal) {
+        this.quotaNormal = quotaNormal;
     }
 }

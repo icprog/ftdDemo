@@ -18,6 +18,7 @@ public class HeathAnalyzeAdapter extends RecyclerView.Adapter<HeathAnalyzeSubVH>
     private ArrayList<AnalyzeResultBean.Data> dataList = new ArrayList<>(10);
 
     public void update(Collection<AnalyzeResultBean.Data> dataList) {
+        this.dataList.clear();
         this.dataList.addAll(dataList);
         notifyDataSetChanged();
     }

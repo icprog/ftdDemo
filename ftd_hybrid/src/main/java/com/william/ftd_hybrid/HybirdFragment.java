@@ -29,7 +29,9 @@ import java.io.File;
 public class HybirdFragment extends Fragment {
 
     //    private String urlReg = "https://lk-cloudt-qa.laikang.com/msz/index?userTel=%s";
-    private String urlReg = "http://10.4.105.42:9088/app/club/createClub";
+//    private String urlReg = "http://10.4.105.42:9088/app/club/createClub";
+//    private String urlReg = "http://10.4.105.42:9070/msz/index?companyCode=LKa1902b6fd4454b2f&AppId=1561110490&sourceType=shixiu&userTel=13701388515";
+    private String urlReg = "http://10.4.105.42:9070/msz/index?companyCode=%s&AppId=%s&sourceType=shixiu&userTel=%s";
     private String url;
     private WebView wv;
     private ProgressBar pb;
@@ -51,7 +53,7 @@ public class HybirdFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String mobile = getArguments().getString("mobile");
-        url = String.format(urlReg, mobile);
+        url = String.format(urlReg, "LKde25dbbdacb442a3", "1561015389", mobile);
     }
 
     @Override
@@ -101,7 +103,6 @@ public class HybirdFragment extends Fragment {
             }
         });
         this.wv.setWebChromeClient(new WebChromeClient() {
-
 
             @Override
             public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams

@@ -38,9 +38,9 @@ public class DotDecoration extends RecyclerView.ItemDecoration {
             top = outRect.top + 20;
             bottom = outRect.bottom + 40;
         } else {
-            left = paddingLeft;
+            left = outRect.left + paddingLeft;
             top = outRect.top + paddingBottom;
-            right = outRect.right - paddingLeft;
+            right = outRect.right;
             bottom = outRect.bottom + paddingBottom;
         }
 

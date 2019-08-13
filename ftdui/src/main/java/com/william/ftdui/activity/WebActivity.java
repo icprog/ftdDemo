@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -13,11 +14,12 @@ import android.widget.TextView;
 
 import com.william.ftdui.R;
 
-public class WebActivity extends BaseActivity implements View.OnClickListener {
+public class WebActivity extends BaseActivity {
 
     private WebView wv;
+
     @Override
-    protected void onCreated(@Nullable Bundle savedInstanceState) {
+    public void onCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         this.wv = findViewById(R.id.wv);
         setupWebView(wv);
 
@@ -33,7 +35,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     }
 
     @Override
-    protected int setContentViewResId() {
+    public int setContentViewResId() {
         return R.layout.activity_web;
     }
 
@@ -55,7 +57,7 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
         settings.setAllowFileAccessFromFileURLs(true);
         settings.setAllowUniversalAccessFromFileURLs(true);
 //        this.wv.setWebChromeClient(new MyWebChromeClient(this));
-        this.wv.setWebViewClient(new WebViewClient(){
+        this.wv.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
@@ -71,14 +73,12 @@ public class WebActivity extends BaseActivity implements View.OnClickListener {
     }
 
     @Override
-    public void onClick(View v) {
-//        if (v.getId() == R.id.btn_back) {
-//            if (wv.canGoBack()){
-//                wv.goBack();
-//                return;
-//            } else {
-//                finish();
-//            }
-//        }
+    protected void onBack() {
+        super.onBack();
+        if (wv.canGoBack()) {
+            wv.goBack();
+        } else {
+            finish();
+        }
     }
 }

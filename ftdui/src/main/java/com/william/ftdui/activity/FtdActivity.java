@@ -3,7 +3,10 @@ package com.william.ftdui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
+
 import com.william.ftdui.R;
 import com.william.ftdui.fragment.CameraFragment;
 
@@ -26,7 +29,7 @@ public class FtdActivity extends BaseActivity implements CameraFragment.OnCaptur
 
 
     @Override
-    protected void onCreated(@Nullable Bundle savedInstanceState) {
+    public void onCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     }
 
     @Override
@@ -35,7 +38,7 @@ public class FtdActivity extends BaseActivity implements CameraFragment.OnCaptur
     }
 
     @Override
-    protected int setContentViewResId() {
+    public int setContentViewResId() {
         return R.layout.activity_ftd;
     }
 

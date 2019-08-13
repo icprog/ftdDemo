@@ -1,23 +1,26 @@
 package com.william.ftdui.activity;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.william.ftdui.BasePage;
 import com.william.ftdui.R;
 
 import java.util.LinkedList;
 
 import io.reactivex.disposables.Disposable;
 
-abstract class BaseActivity extends AppCompatActivity {
+abstract class BaseActivity extends AppCompatActivity implements BasePage {
 
     private ProgressBar pb;
     private TextView tbTvStart;
@@ -34,14 +37,16 @@ abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(setContentViewResId());
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        View view = LayoutInflater.from(this).inflate(setContentViewResId(),null);
+        setContentView(view);
         Toolbar toolBar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolBar);
         this.tbTvStart = findViewById(R.id.tb_tv_start);
         this.tbTvStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onNavClicked();
+                onBack();
             }
         });
         this.tbTvTitle = findViewById(R.id.tb_tv_title);
@@ -51,10 +56,14 @@ abstract class BaseActivity extends AppCompatActivity {
         pb = findViewById(R.id.pb);
         pb.setVisibility(setPBDefault() ? View.VISIBLE : View.GONE);
         setTitle("");
-        onCreated(savedInstanceState);
+
+        onCreated(view,savedInstanceState);
     }
 
-    protected void onNavClicked(){
+    /**
+     * 点击后退按钮时调用
+     */
+    protected void onBack(){
         finish();
     }
 
@@ -140,8 +149,8 @@ abstract class BaseActivity extends AppCompatActivity {
 
 
 
-    @LayoutRes
-    abstract protected int setContentViewResId();
+//    @LayoutRes
+//    abstract protected int setContentViewResId();
 
     protected String setTitle(){
         return "";
@@ -149,5 +158,5 @@ abstract class BaseActivity extends AppCompatActivity {
 
     protected void setEndTv(TextView tv){ }
 
-    abstract protected void onCreated(@Nullable Bundle savedInstanceState);
+//    abstract protected void onCreated(@Nullable Bundle savedInstanceState);
 }

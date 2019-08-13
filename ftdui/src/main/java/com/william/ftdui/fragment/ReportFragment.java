@@ -6,14 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.william.ftd_core.FtdClient;
 import com.william.ftd_core.callback.FtdGetAnaylzerCallback;
 import com.william.ftd_core.callback.FtdLastReportCallback;
@@ -30,7 +25,7 @@ import com.william.ftdui.widget.aboutRV.decoration.SpaceDecoration;
 
 import io.reactivex.disposables.Disposable;
 
-public class ReportFragment extends Fragment
+public class ReportFragment extends BaseFragment
         implements FtdLastReportCallback, FtdGetAnaylzerCallback, FtdTendencyCallback, ReportAdapter.OnWuYangSelectListener {
 
     public static final int REPORT_CARD = 0;
@@ -42,6 +37,46 @@ public class ReportFragment extends Fragment
 
     @ReportType
     private int reportType;
+
+    /**
+     * 八纲图key
+     */
+    public static final int EIGHT = 0;//八纲图
+    /**
+     * 总得分key
+     */
+    public static final int SCORE = 1;//八纲图
+    /**
+     * 专家点评key
+     */
+    public static final int PROFESSOR = 2;//专家点评
+    /**
+     * 指数分析key
+     */
+    public static final int RESOLUTION = 3;
+    /**
+     * 指标结果key
+     */
+    public static final int RESULT = 4;
+    /**
+     * 趋势分析
+     */
+    public static final int TENDENCY = 5;
+    /**
+     * 健康分析key
+     */
+    public static final int HEATH = 6;
+    /**
+     * 指标分析
+     */
+    public static final int INDEX = 7;
+    /**
+     * 五养key
+     */
+    public static final int FIVE = 8;
+
+    @IntDef({EIGHT,SCORE,PROFESSOR,RESOLUTION,RESULT,TENDENCY,HEATH,INDEX,FIVE})
+    public @interface Plate{}
 
     private long seqNo;
 
@@ -84,18 +119,17 @@ public class ReportFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_card, container, false);
+    public int setContentViewResId() {
+        return R.layout.fragment_card;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         RecyclerView rv = view.findViewById(R.id.rv);
         rv.addItemDecoration(new SpaceDecoration());
         rv.setAdapter(adapter);
         Disposable disposable = FtdClient.getInstance().getRecordBySeqNo(seqNo, this);
-//        addDisposable(disposable);
+        addDisposable(disposable);
     }
 
     @Override
@@ -115,33 +149,34 @@ public class ReportFragment extends Fragment
     @Override
     public void onSuccess(ReportBean bean) {
         this.bean = bean;
-//        addDisposable(
-        FtdClient.getInstance().getAnalyzer(bean.getUr(), this);
-//    );
-//        addDisposable(
-        FtdClient.getInstance().getTendency(this);
-//    );
+//        if (this.reportType == REPORT_CARD) {
+            addDisposable(
+                    FtdClient.getInstance().getAnalyzer(bean.getUr(), this)
+            );
+//        }
+        addDisposable(
+                FtdClient.getInstance().getTendency(this)
+        );
         adapter.setData(this.bean);
     }
 
     @Override
     public void onError(FtdException e) {
-        int i = 0;
-        int ii = 0;
+        showToast(e.getMsg());
     }
 
     @Override
     public void onSuccess(AnalyzeResultBean bean) {
-//        hideProgress();
+        hideProgress();
         this.bean.setAnalyzeResultBean(bean);
-        this.adapter.notifyItemChanged(1);
-        this.adapter.notifyItemChanged(5);
+        this.adapter.notifyItem(PROFESSOR);
+        this.adapter.notifyItem(HEATH);
     }
 
     @Override
     public void onSuccess(TendencyResult result) {
-//        hideProgress();
+        hideProgress();
         this.bean.setTendencyResult(result);
-        this.adapter.notifyItemChanged(4);
+        this.adapter.notifyItem(TENDENCY);
     }
 }

@@ -27,22 +27,20 @@
 
         <TextView
             android:id="@+id/tb_tv_title"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="我是自定义View"
             android:gravity="center"
             android:textColor="@android:color/white"
             android:textSize="20sp"
-            android:layout_centerInParent="true"
-            android:layout_toEndOf="@id/tb_tv_start"
-            android:layout_toStartOf="@+id/tb_tv_end"/>
+            android:layout_centerInParent="true"/>
 
         <TextView
-            android:id="@id/tb_tv_end"
+            android:id="@+id/tb_tv_end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:gravity="end"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:textColor="@android:color/white"
             tools:text="提交"
             android:textSize="20sp"

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
-
 import com.google.gson.Gson;
 import com.william.ftd_core.callback.BaseCallback;
 import com.william.ftd_core.callback.FtdGetAnaylzerCallback;
@@ -34,12 +33,10 @@ import com.william.ftd_core.param.GetTendencyParam;
 import com.william.ftd_core.param.InitParam;
 import com.william.ftd_core.param.LoginParam;
 import com.william.ftd_core.param.SubmitAnswerParam;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -80,17 +77,14 @@ public class FtdClient {
 
     private User user;
 
-    //    private String schemeId = "2581181533264a9389efb46fc5d2da16";
     private String schemeId;
 
     private String lkToken = "";
 
-    public static FtdClient getInstance() {
-        return SingletonInstance.INSTANCE;
-    }
+    private static FtdClient INSTANCE = new FtdClient();
 
-    private static class SingletonInstance {
-        private static FtdClient INSTANCE = new FtdClient();
+    public static FtdClient getInstance() {
+        return INSTANCE;
     }
 
     /**
@@ -251,21 +245,37 @@ public class FtdClient {
         return Single.zip(picUpload(file1, ServiceApi.FACE), picUpload(file2, ServiceApi.TONGUE_TOP), picUpload(file3, ServiceApi.TONGUE_BOTTOM), new Function3<FtdResponse<UploadResult>, FtdResponse<UploadResult>, FtdResponse<UploadResult>, Conclusion>() {
             @Override
             public Conclusion apply(FtdResponse<UploadResult> faceResult, FtdResponse<UploadResult> tongueTopResult, FtdResponse<UploadResult> tongueBottomResult) throws Exception {
-                if (faceResult == null || faceResult == null || tongueBottomResult == null) {
-
-                }
-                if (faceResult.getCode() != 1000 || tongueTopResult.getCode() != 1000 || tongueBottomResult.getCode() != 1000) {
-
-                }
                 Conclusion conclusion = new Conclusion();
-                conclusion.setFaceResult(faceResult.getData());
-                conclusion.setTongueTopResult(tongueTopResult.getData());
-                conclusion.setTongueBottomResult(tongueBottomResult.getData());
+                conclusion.setFaceResult(faceResult);
+                conclusion.setTongueTopResult(tongueTopResult);
+                conclusion.setTongueBottomResult(tongueBottomResult);
                 return conclusion;
             }
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .map(new Function<Conclusion, Conclusion>() {
+                    @Override
+                    public Conclusion apply(Conclusion conclusion) throws Exception {
+
+                        FtdResponse faceResult = conclusion.getFaceResult();
+                        FtdResponse tongueTopResult = conclusion.getTongueTopResult();
+                        FtdResponse tongueBottomResult = conclusion.getTongueBottomResult();
+                        if (conclusion.getFaceResult() == null || conclusion.getTongueTopResult() == null || conclusion.getTongueBottomResult() == null) {
+                            throw new FtdException(0);
+                        }
+                        if (faceResult.getCode() != 1000) {
+                            throw new FtdException(faceResult.getCode());
+                        }
+                        if (tongueTopResult.getCode() != 1000) {
+                            throw new FtdException(tongueTopResult.getCode());
+                        }
+                        if (tongueBottomResult.getCode() != 1000){
+                            throw new FtdException(tongueBottomResult.getCode());
+                        }
+                        return conclusion;
+                    }
+                })
                 .subscribe(new Consumer<Conclusion>() {
                     @Override
                     public void accept(Conclusion result) throws Exception {
@@ -392,7 +402,9 @@ public class FtdClient {
         int size = urList.size();
         for (int i = 0; i < size; i++) {
             diseaseIds.append(urList.get(i).getDiseaseId());
-            diseaseIds.append(",");
+            if (i < size - 1) {
+                diseaseIds.append(",");
+            }
         }
         GetAnalyzerParam param = new GetAnalyzerParam(diseaseIds.toString());
         return service.getAnalyzer(param)
