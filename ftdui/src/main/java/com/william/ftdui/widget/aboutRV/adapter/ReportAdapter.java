@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.william.ftd_core.entity.ReportBean;
 import com.william.ftdui.R;
 import com.william.ftdui.fragment.ReportFragment;
@@ -19,6 +20,7 @@ import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportIndexAnalyzeVH;
 import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportProfessorVH;
 import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportScoreVH;
 import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportTendencyVH;
+
 import java.util.ArrayList;
 
 
@@ -33,6 +35,8 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportBaseVH> {
     private ArrayList<Pair> vhList = new ArrayList<>();
 
     private OnWuYangSelectListener listener;
+
+    private double constitutionScore;
 
     public ReportAdapter(@ReportFragment.ReportType int reportType, OnWuYangSelectListener listener) {
         this.reportType = reportType;
@@ -82,6 +86,16 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportBaseVH> {
         }
     }
 
+    /**
+     * 修改体质的健康分数为体证的得分
+     *
+     * @param score
+     */
+    public void setScore(double score) {
+        this.constitutionScore = score;
+        notifyItem(ReportFragment.SCORE);
+    }
+
     @Override
     public int getItemViewType(int position) {
         return position;
@@ -109,6 +123,10 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportBaseVH> {
             return;
         }
         viewHolder.bind(this.reportType, bean);
+
+        if (vhList.get(i).plate == ReportFragment.SCORE){
+            ((ReportScoreVH) viewHolder).setScore(constitutionScore);
+        }
 
         if (vhList.get(i).plate == ReportFragment.FIVE) {
             ((ReportFiveVH) viewHolder).setListener(listener);

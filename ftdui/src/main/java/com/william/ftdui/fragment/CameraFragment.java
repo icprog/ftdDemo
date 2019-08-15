@@ -8,7 +8,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,6 +24,7 @@ import com.shuhart.stepview.StepView;
 import com.william.ftdui.R;
 import com.william.ftdui.activity.ReportActivity;
 import com.william.ftdui.constant.Constant;
+import com.william.ftdui.constant.Step;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -32,22 +32,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import static com.laikang.jtcameraview.Constants.CAMERA_FACING_BACK;
 import static com.laikang.jtcameraview.Constants.CAMERA_FACING_FRONT;
 
 
 public class CameraFragment extends Fragment implements CameraStateListener, View.OnClickListener {
+
     private static final String TAG = "CameraFragment";
-
-    private static final String AUTO_PREVIEW = "autoPreview";
-    private static final String KEY_DRAWABLE_ID = "drawableId";
-    private static final String REQUEST_ID = "stepId";
-
-    private boolean autoPreview;
-    private int drawableId = R.drawable.xuxian_mian;
-    private int stepId = Constant.STEP_FACE;
-
 
     private StepView mStepView;
     private JTCameraView mJTCameraView;
@@ -64,12 +57,13 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
 
     private OnCaptureCompleteListener listener;
 
-    public static CameraFragment newInstance(boolean autoPreview, @DrawableRes int drawableId, int requestId) {
+    private ArrayList<Step> stepList;
+    private int currentStepIndex;
+
+    public static CameraFragment newInstance(ArrayList<Step> stepList) {
         CameraFragment fragment = new CameraFragment();
         Bundle args = new Bundle();
-        args.putBoolean(AUTO_PREVIEW, autoPreview);
-        args.putInt(KEY_DRAWABLE_ID, drawableId);
-        args.putInt(REQUEST_ID, requestId);
+        args.putParcelableArrayList("stepList", stepList);
         fragment.setArguments(args);
         return fragment;
     }
@@ -93,9 +87,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            this.autoPreview = args.getBoolean(AUTO_PREVIEW);
-            this.drawableId = args.getInt(KEY_DRAWABLE_ID);
-            this.stepId = args.getInt(REQUEST_ID);
+            this.stepList = args.getParcelableArrayList("stepList");
         }
     }
 
@@ -127,7 +119,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         this.btnCapture = rootView.findViewById(R.id.btn_capture);
         this.btnCapture.setOnClickListener(this);
         this.iv = rootView.findViewById(R.id.iv_dashed);
-        this.iv.setImageResource(this.drawableId);
+        this.iv.setImageResource(this.stepList.get(currentStepIndex).getDrawableId());
         this.btnChangeFacing = rootView.findViewById(R.id.btn_change_facing);
         btnChangeFacing.setOnClickListener(this);
         rootView.findViewById(R.id.btn_test).setOnClickListener(new View.OnClickListener() {
@@ -212,12 +204,11 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
 
     @Override
     public void onCupture(final Bitmap bitmap) {
-        showToast("获取拍照后的图像信息，需要自己保存");
         mBackgroundHandler.post(new Runnable() {
             @Override
             public void run() {
-                String fileName = Constant.steps.get(stepId).getFileName();
-                File file = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName + ".jpeg");
+                String fileName = stepList.get(currentStepIndex).getFileName();
+                File file = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
                 try {
                     OutputStream os = new FileOutputStream(file);
                     BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
@@ -226,41 +217,10 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
                     os.close();
                     bitmap.recycle();
                     Message msg = mBackgroundHandler.obtainMessage();
-                    msg.arg1 = stepId;
+                    msg.arg1 = currentStepIndex;
                     mMainThreadHandler.sendMessage(msg);
                 } catch (IOException e) {
                     Log.w(TAG, "图像文件写入失败： " + file, e);
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onCupture(final byte[] data) {
-        mBackgroundHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                String fileName = Constant.steps.get(stepId).getFileName();
-                File file;
-                OutputStream os = null;
-                try {
-                    file = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName + ".jpeg");
-                    os = new FileOutputStream(file);
-                    os.write(data);
-                    os.close();
-                    Message msg = mBackgroundHandler.obtainMessage();
-                    msg.arg1 = stepId;
-                    mMainThreadHandler.sendMessage(msg);
-                } catch (IOException e) {
-                    Log.w(TAG, "Cannot write to " + fileName + ".jpeg", e);
-                } finally {
-                    if (os != null) {
-                        try {
-                            os.close();
-                        } catch (IOException e) {
-                            // Ignore
-                        }
-                    }
                 }
             }
         });
@@ -309,11 +269,12 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
             if (fragment == null || fragment.getActivity() == null) {
                 return;
             }
-            int stepId = msg.arg1;
-            if (stepId < Constant.STEP_TONGUE_BOTTOM) {
-                fragment.stepId += 1;
-                fragment.mStepView.go(fragment.stepId, true);
-                fragment.loadImage(fragment.stepId);
+            int currnetStepIndex = msg.arg1;
+//            Constant.STEP_TONGUE_BOTTOM
+            if (currnetStepIndex < fragment.stepList.size()-1) {
+                fragment.currentStepIndex += 1;
+                fragment.mStepView.go(fragment.currentStepIndex, true);
+                fragment.loadImage(fragment.currentStepIndex);
             } else {
                 if (fragment.listener != null) {
                     fragment.listener.onCaptureComplete();

@@ -2,19 +2,26 @@ package com.william.ftd_hybrid;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 public class FtdActivity extends AppCompatActivity implements CameraFragment.OnCaptureCompleteListener {
-
 
     public static final int FACE = 0;
     public static final int TONGUE_TOP = 1;
     public static final int TONGUE_BOTTOM = 2;
     public static final int ASK = 3;
+
+    @Override
+    public void onCaptureComplete() {
+
+    }
 
 
     @IntDef(value = {FACE, TONGUE_TOP, TONGUE_BOTTOM, ASK})
@@ -36,7 +43,6 @@ public class FtdActivity extends AppCompatActivity implements CameraFragment.OnC
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_ftd_h);
-
 
     }
 

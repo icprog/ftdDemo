@@ -1,10 +1,13 @@
 package com.william.ftdui.constant;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.william.ftd_core.constant.ServiceApi;
 import com.william.ftdui.R;
 
 
-public class Step {
+public class Step implements Parcelable {
 
     private int type;
     private int drawableId;
@@ -31,6 +34,8 @@ public class Step {
         }
     }
 
+
+
     public int getDrawableId() {
         return drawableId;
     }
@@ -38,4 +43,34 @@ public class Step {
     public String getFileName() {
         return fileName;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public Step(Parcel in) {
+        type = in.readInt();
+        drawableId = in.readInt();
+        fileName = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(type);
+        dest.writeInt(drawableId);
+        dest.writeString(fileName);
+    }
+
+    public static final Creator<Step> CREATOR = new Creator<Step>() {
+        @Override
+        public Step createFromParcel(Parcel in) {
+            return new Step(in);
+        }
+
+        @Override
+        public Step[] newArray(int size) {
+            return new Step[size];
+        }
+    };
 }

@@ -12,7 +12,7 @@ import com.william.ftdui.widget.aboutRV.adapter.QuestionAdapter;
 
 public class QuestionVH extends RecyclerView.ViewHolder {
 
-    CheckBox cb;
+    public CheckBox cb;
     QuestionBean bean;
     private int trace;
 
@@ -25,6 +25,7 @@ public class QuestionVH extends RecyclerView.ViewHolder {
     public void bind(final QuestionBean bean,final QuestionAdapter.OnItemCheckedChangeListener listener) {
         this.bean = bean;
         cb.setText(bean.getContent());
+        cb.setChecked(bean.isChecked());
         cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

@@ -40,4 +40,8 @@ public class ReprotFragmentAdapter extends FragmentPagerAdapter {
                 return "中医体质";
         }
     }
+
+    public void setScore(double score){
+        fragments[1].setScore(score);
+    }
 }

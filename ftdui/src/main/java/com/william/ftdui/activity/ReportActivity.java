@@ -12,7 +12,7 @@ import com.william.ftdui.R;
 import com.william.ftdui.fragment.ReportFragment;
 import com.william.ftdui.widget.aboutVP.ReprotFragmentAdapter;
 
-public class ReportActivity extends BaseActivity {
+public class ReportActivity extends BaseActivity implements ReportFragment.Listener {
 
     private TabLayout tl;
     private ViewPager vp;
@@ -42,4 +42,8 @@ public class ReportActivity extends BaseActivity {
         return R.layout.activity_report;
     }
 
+    @Override
+    public void onGetScore(double score) {
+        adapter.setScore(score);
+    }
 }

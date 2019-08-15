@@ -55,10 +55,11 @@ public class TextAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         }
         SpannableString ss = new SpannableString(sb.toString());
-        ForegroundColorSpan fcs = new ForegroundColorSpan(viewHolder.itemView.getContext().getResources().getColor(R.color.colorWrong));
+        ForegroundColorSpan fcs;
         Scope scope;
         for (int i = 0; i < scopeList.size(); i++) {
             scope = scopeList.get(i);
+            fcs = new ForegroundColorSpan(viewHolder.itemView.getContext().getResources().getColor(R.color.colorWrong));
             ss.setSpan(fcs, scope.start, scope.end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         }
         ((TextView) viewHolder.itemView).setText(ss);

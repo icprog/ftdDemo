@@ -54,7 +54,9 @@ abstract class BaseActivity extends AppCompatActivity implements BasePage {
         this.tbTvEnd = findViewById(R.id.tb_tv_end);
         setEndTv(this.tbTvEnd);
         pb = findViewById(R.id.pb);
-        pb.setVisibility(setPBDefault() ? View.VISIBLE : View.GONE);
+        if (pb != null) {
+            pb.setVisibility(setPBDefault() ? View.VISIBLE : View.GONE);
+        }
         setTitle("");
 
         onCreated(view,savedInstanceState);

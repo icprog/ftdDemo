@@ -15,12 +15,10 @@ public interface ServiceApi {
 
     String GET_THIRD_TOKEN = "users/third/getThirdToken";
     String LOGIN = "users/third/login";
-    String PIC_UPLOAD = BuildConfig.BRAIN_IMG_UPLOAD_URL + "OvationHealth/FaceTongueCheckServlet";
     String PIC_UPLOAD1 = "api/testing/step/testingStep";
 
     String GET_QUESTION = "api/testing/step/getDiagnosis";
     String SUBMIT_ANSWER = "api/testing/step/getAskIng";
-    //    String GET_LAST_REPORT = "api/phr/getLatestReportData";
     String GET_LAST_REPORT = "api/phr/exame/getLatestRecordBySeqNo";
     String GET_ARTICLE = "api/ftdw/admin/getInfoListByTag";//好文
     String RECIPE = "api/knowledge/health/dietary";//食谱
@@ -36,10 +34,6 @@ public interface ServiceApi {
     int FACE = 0;
     int TONGUE_TOP = 1;
     int TONGUE_BOTTOM = 2;
-
-//    @IntDef({FACE, TONGUE_TOP, TONGUE_BOTTOM})
-//    @interface Type {
-//    }
 
     String MAC = "02:00:00:00:00:00";
 

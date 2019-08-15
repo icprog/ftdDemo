@@ -1,6 +1,7 @@
 package com.william.ftdui.fragment;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
@@ -9,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+
 import com.william.ftd_core.FtdClient;
 import com.william.ftd_core.callback.FtdGetAnaylzerCallback;
 import com.william.ftd_core.callback.FtdLastReportCallback;
@@ -75,8 +77,11 @@ public class ReportFragment extends BaseFragment
      */
     public static final int FIVE = 8;
 
-    @IntDef({EIGHT,SCORE,PROFESSOR,RESOLUTION,RESULT,TENDENCY,HEATH,INDEX,FIVE})
-    public @interface Plate{}
+    private Listener mListener;
+
+    @IntDef({EIGHT, SCORE, PROFESSOR, RESOLUTION, RESULT, TENDENCY, HEATH, INDEX, FIVE})
+    public @interface Plate {
+    }
 
     private long seqNo;
 
@@ -146,18 +151,27 @@ public class ReportFragment extends BaseFragment
         }
     }
 
+    public void setScore(double score) {
+        if (adapter != null) {
+            adapter.setScore(score);
+        }
+    }
+
     @Override
     public void onSuccess(ReportBean bean) {
         this.bean = bean;
-//        if (this.reportType == REPORT_CARD) {
-            addDisposable(
-                    FtdClient.getInstance().getAnalyzer(bean.getUr(), this)
-            );
-//        }
+        addDisposable(
+                FtdClient.getInstance().getAnalyzer(bean.getUr(), this)
+        );
         addDisposable(
                 FtdClient.getInstance().getTendency(this)
         );
+
+//        if (reportType == REPORT_CARD){
+//            bean.setScore(1.1d);
+//        }
         adapter.setData(this.bean);
+        mListener.onGetScore(this.bean.getScore());
     }
 
     @Override
@@ -178,5 +192,25 @@ public class ReportFragment extends BaseFragment
         hideProgress();
         this.bean.setTendencyResult(result);
         this.adapter.notifyItem(TENDENCY);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof Listener) {
+            this.mListener = (Listener) context;
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (this.mListener != null) {
+            this.mListener = null;
+        }
+    }
+
+    public interface Listener {
+        void onGetScore(double score);
     }
 }

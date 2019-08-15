@@ -4,27 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:padding="10dp">
+    android:background="@android:color/white">
 
     <TextView
         android:id="@+id/tv_disease"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold"
+        android:maxEms="9"
+        android:maxLines="1"
+        android:ellipsize="end"
         app:layout_constraintBottom_toTopOf="@+id/tv_score"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/epv"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="您疑似：寒证" />
+        tools:text="您疑似：超级无敌肾虚证" />
 
     <TextView
         android:id="@+id/tv_score"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/tv_date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/tv_disease"
@@ -43,8 +45,8 @@
 
     <com.william.ftdui.widget.view.ChartEightPrincipalView
         android:id="@+id/epv"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

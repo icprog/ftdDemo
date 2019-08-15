@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-
 import com.william.ftd_core.FtdClient;
 import com.william.ftd_core.callback.FtdQuestionListCallback;
 import com.william.ftd_core.callback.FtdSubmitCallback;
@@ -18,9 +17,7 @@ import com.william.ftd_core.exception.FtdException;
 import com.william.ftdui.R;
 import com.william.ftdui.constant.Constant;
 import com.william.ftdui.widget.aboutRV.adapter.QuestionAdapter;
-
 import java.util.LinkedList;
-
 import io.reactivex.disposables.Disposable;
 
 public class QuestionListActivity extends BaseActivity implements
@@ -31,7 +28,6 @@ public class QuestionListActivity extends BaseActivity implements
     private RecyclerView rv2;
     private QuestionAdapter adapter1 = new QuestionAdapter(this);
     private QuestionAdapter adapter2 = new QuestionAdapter(this);
-    private View btnSubmit;
 
     private LinkedList<QuestionBean> questionList1 = new LinkedList<>();
     private LinkedList<QuestionBean> questionList2 = new LinkedList<>();

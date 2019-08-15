@@ -96,7 +96,7 @@ public class ChartEightPrincipalView extends DemoView {
             chart.getDataAxis().hide();
 
 //			chart.getLinePaint().setColor(Color.rgb(133, 194, 2));
-            chart.getLinePaint().setColor(getResources().getColor(R.color.colorCorrect));
+            chart.getLinePaint().setColor(getResources().getColor(R.color.colorPrimary));
 
             chart.getLabelPaint().setFakeBoldText(true);
             chart.getLabelPaint().setTextSize(40f);

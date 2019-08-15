@@ -22,16 +22,14 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.io.File;
 
 
 public class HybirdFragment extends Fragment {
 
-    //    private String urlReg = "https://lk-cloudt-qa.laikang.com/msz/index?userTel=%s";
-//    private String urlReg = "http://10.4.105.42:9088/app/club/createClub";
-//    private String urlReg = "http://10.4.105.42:9070/msz/index?companyCode=LKa1902b6fd4454b2f&AppId=1561110490&sourceType=shixiu&userTel=13701388515";
-    private String urlReg = "http://10.4.105.42:9070/msz/index?companyCode=%s&AppId=%s&sourceType=shixiu&userTel=%s";
+    private static final String urlReg = "%smsz/index?companyCode=%s&AppId=%s&sourceType=shixiu&userTel=%s";
     private String url;
     private WebView wv;
     private ProgressBar pb;
@@ -41,9 +39,11 @@ public class HybirdFragment extends Fragment {
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 0;
     private static final int CAMERA_REQUEST_CODE = 1;
 
-    public static HybirdFragment newInstance(String mobile) {
+    public static HybirdFragment newInstance(String appId, String companyCode, String mobile) {
         HybirdFragment fragment = new HybirdFragment();
         Bundle b = new Bundle();
+        b.putString("appId", appId);
+        b.putString("companyCode", companyCode);
         b.putString("mobile", mobile);
         fragment.setArguments(b);
         return fragment;
@@ -52,8 +52,11 @@ public class HybirdFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String mobile = getArguments().getString("mobile");
-        url = String.format(urlReg, "LKde25dbbdacb442a3", "1561015389", mobile);
+        Bundle b = getArguments();
+        String mobile = b.getString("mobile");
+        String appId = b.getString("appId");
+        String companyCode = b.getString("companyCode");
+        url = String.format(urlReg, BuildConfig.HOST, companyCode, appId, mobile);
     }
 
     @Override

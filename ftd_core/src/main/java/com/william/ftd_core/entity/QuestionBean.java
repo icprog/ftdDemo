@@ -1,5 +1,7 @@
 package com.william.ftd_core.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 public class QuestionBean {
 
     /**
@@ -9,6 +11,9 @@ public class QuestionBean {
 
     private String code;
     private String content;
+
+
+    private transient boolean checked;
 
     public String getCode() {
         return code;
@@ -24,5 +29,13 @@ public class QuestionBean {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }

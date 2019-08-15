@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class BarChartView extends DemoView{
+public class BarChartView extends DemoView {
 
     private String TAG = "BarChart12View";
     private BarChart chartA = new BarChart();
@@ -34,11 +34,11 @@ public class BarChartView extends DemoView{
     private List<BarData> chartDataB = new LinkedList<BarData>();
 
     public BarChartView(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
-    public BarChartView(Context context, AttributeSet attrs){
-        this(context, attrs,0);
+    public BarChartView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
 
     public BarChartView(Context context, AttributeSet attrs, int defStyle) {
@@ -85,8 +85,8 @@ public class BarChartView extends DemoView{
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         //图所占范围大小
-        chartA.setChartRange(w,h);
-        chart2.setChartRange(w,h);
+        chartA.setChartRange(w, h);
+        chart2.setChartRange(w, h);
     }
 
 
@@ -94,13 +94,13 @@ public class BarChartView extends DemoView{
         try {
 
             //设置绘图区默认缩进px值,留置空间显示Axis,Axistitle....
-            int [] ltrb = getBarLnDefaultSpadding();
+            int[] ltrb = getBarLnDefaultSpadding();
             chartA.setPadding(ltrb[0], ltrb[1],
-                    ltrb[2], ltrb[3]+  DensityUtil.dip2px(this.getContext(), 30));
+                    ltrb[2], ltrb[3] + DensityUtil.dip2px(this.getContext(), 30));
 
             //标题
-            chartA.setTitle("指数分解");
-            chartA.setTitleAlign(XEnum.HorizontalAlign.LEFT);
+//            chartA.setTitle("指数分解");
+//            chartA.setTitleAlign(XEnum.HorizontalAlign.LEFT);
 //            chartA.addSubtitle("(XCL-Charts Demo)");
             //数据源
             chartA.setCategories(chartLabels);
@@ -124,13 +124,13 @@ public class BarChartView extends DemoView{
 //			chartA.getPlotGrid().hideOddRowBgColor();
 
             //定义数据轴标签显示格式
-            chartA.getDataAxis().setLabelFormatter(new IFormatterTextCallBack(){
+            chartA.getDataAxis().setLabelFormatter(new IFormatterTextCallBack() {
 
                 @Override
                 public String textFormatter(String value) {
                     // TODO Auto-generated method stub
                     Double tmp = Double.parseDouble(value);
-                    DecimalFormat df=new DecimalFormat("#0");
+                    DecimalFormat df = new DecimalFormat("#0");
                     String label = df.format(tmp).toString();
                     return (label);
                 }
@@ -159,10 +159,11 @@ public class BarChartView extends DemoView{
                 @Override
                 public String doubleFormatter(Double value) {
                     // TODO Auto-generated method stub
-                    DecimalFormat df=new DecimalFormat("#0");
+                    DecimalFormat df = new DecimalFormat("#0");
                     String label = df.format(value).toString();
                     return label;
-                }});
+                }
+            });
 
             //隐藏Key
             chartA.getPlotLegend().hide();
@@ -183,9 +184,9 @@ public class BarChartView extends DemoView{
         try {
 
             //设置绘图区默认缩进px值,留置空间显示Axis,Axistitle....
-            int [] ltrb = getBarLnDefaultSpadding();
+            int[] ltrb = getBarLnDefaultSpadding();
             chart2.setPadding(ltrb[0], ltrb[1],
-                    ltrb[2], ltrb[3] +  DensityUtil.dip2px(this.getContext(), 30));
+                    ltrb[2], ltrb[3] + DensityUtil.dip2px(this.getContext(), 30));
 
 
             //标题
@@ -211,13 +212,13 @@ public class BarChartView extends DemoView{
             chart2.getPlotGrid().hideOddRowBgColor();
 
             //定义数据轴标签显示格式
-            chart2.getDataAxis().setLabelFormatter(new IFormatterTextCallBack(){
+            chart2.getDataAxis().setLabelFormatter(new IFormatterTextCallBack() {
 
                 @Override
                 public String textFormatter(String value) {
                     // TODO Auto-generated method stub
                     Double tmp = Double.parseDouble(value);
-                    DecimalFormat df=new DecimalFormat("#0");
+                    DecimalFormat df = new DecimalFormat("#0");
                     String label = df.format(tmp).toString();
                     return (label);
                 }
@@ -249,10 +250,11 @@ public class BarChartView extends DemoView{
                 @Override
                 public String doubleFormatter(Double value) {
                     // TODO Auto-generated method stub
-                    DecimalFormat df=new DecimalFormat("#0");
+                    DecimalFormat df = new DecimalFormat("#0");
                     String label = df.format(value).toString();
                     return label;
-                }});
+                }
+            });
 
             //隐藏Key
             chart2.getPlotLegend().hide();
@@ -270,14 +272,13 @@ public class BarChartView extends DemoView{
 
     @Override
     public void render(Canvas canvas) {
-        try{
+        try {
             chartA.render(canvas);
             chart2.render(canvas);
-        } catch (Exception e){
+        } catch (Exception e) {
             Log.e(TAG, e.toString());
         }
     }
-
 
 
 }

@@ -74,7 +74,6 @@ public class WebActivity extends BaseActivity {
 
     @Override
     protected void onBack() {
-        super.onBack();
         if (wv.canGoBack()) {
             wv.goBack();
         } else {

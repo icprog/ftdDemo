@@ -257,22 +257,6 @@ public class FtdClient {
                 .map(new Function<Conclusion, Conclusion>() {
                     @Override
                     public Conclusion apply(Conclusion conclusion) throws Exception {
-
-                        FtdResponse faceResult = conclusion.getFaceResult();
-                        FtdResponse tongueTopResult = conclusion.getTongueTopResult();
-                        FtdResponse tongueBottomResult = conclusion.getTongueBottomResult();
-                        if (conclusion.getFaceResult() == null || conclusion.getTongueTopResult() == null || conclusion.getTongueBottomResult() == null) {
-                            throw new FtdException(0);
-                        }
-                        if (faceResult.getCode() != 1000) {
-                            throw new FtdException(faceResult.getCode());
-                        }
-                        if (tongueTopResult.getCode() != 1000) {
-                            throw new FtdException(tongueTopResult.getCode());
-                        }
-                        if (tongueBottomResult.getCode() != 1000){
-                            throw new FtdException(tongueBottomResult.getCode());
-                        }
                         return conclusion;
                     }
                 })

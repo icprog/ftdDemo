@@ -5,31 +5,39 @@ import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
+import com.william.ftd_core.constant.ServiceApi;
 import com.william.ftdui.R;
+import com.william.ftdui.constant.Constant;
+import com.william.ftdui.constant.Step;
 import com.william.ftdui.fragment.CameraFragment;
 
-public class FtdActivity extends BaseActivity implements CameraFragment.OnCaptureCompleteListener {
+import java.util.ArrayList;
 
-    public static final int FACE = 0;
-    public static final int TONGUE_TOP = 1;
-    public static final int TONGUE_BOTTOM = 2;
-    public static final int ASK = 3;
+public class FtdActivity extends BaseActivity implements CameraFragment.OnCaptureCompleteListener {
 
     @Override
     protected boolean setPBDefault() {
         return false;
     }
 
-
-    @IntDef(value = {FACE, TONGUE_TOP, TONGUE_BOTTOM, ASK})
-    @interface Step {
-    }
-
-
     @Override
     public void onCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Intent intent = getIntent();
+        ArrayList<Step> stepList = intent.getParcelableArrayListExtra("stepList");
+        if (stepList == null){
+            stepList = new ArrayList<>(3);
+            stepList.add(new Step(Constant.STEP_FACE));
+            stepList.add(new Step(Constant.STEP_TONGUE_TOP));
+            stepList.add(new Step(Constant.STEP_TONGUE_BOTTOM));
+        }
+
+        CameraFragment cf = CameraFragment.newInstance(stepList);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.container,cf);
+        ft.commit();
     }
 
     @Override

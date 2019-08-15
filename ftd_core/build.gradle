@@ -14,14 +14,21 @@ android {
 
     buildTypes {
 
+        dev {
+            buildConfigField "String", "BASE_URL", "\"https://lkj-dev.v.laikang.com/\""
+            debuggable true
+            matchingFallbacks = ['debug']
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+        }
+
         debug {
             buildConfigField "String", "BASE_URL", "\"https://qa.laikangland.com/\""
-            buildConfigField "String", "BRAIN_IMG_UPLOAD_URL", "\"https://lk-api-dev.op.laikang.com/\""
         }
         release {
             minifyEnabled false
             buildConfigField "String", "BASE_URL", "\"https://fine.laikangland.com/\""
-            buildConfigField "String", "BRAIN_IMG_UPLOAD_URL", "\"https://api.op.laikang.com/\""
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

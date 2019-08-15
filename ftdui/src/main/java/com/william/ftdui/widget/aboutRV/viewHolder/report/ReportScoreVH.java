@@ -8,7 +8,6 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.william.ftd_core.entity.ReportBean;
 import com.william.ftd_core.entity.SixDiseaseBean;
@@ -17,7 +16,7 @@ import com.william.ftdui.fragment.ReportFragment;
 import com.william.ftdui.widget.view.ChartEightPrincipalView;
 
 /**
- * 八纲图板块
+ * 体质仪表盘板块
  */
 public class ReportScoreVH extends ReportBaseVH {
 
@@ -38,18 +37,16 @@ public class ReportScoreVH extends ReportBaseVH {
         tvScoreMain = itemView.findViewById(R.id.tv_score_main);
     }
 
-    /**
-     * 初始化八纲图
-     */
+
     public void bind(@ReportFragment.ReportType int reportType, ReportBean bean) {
-        tvScoreMain.setText(String.valueOf(bean.getScore()));
-        String text = "健康得分" + bean.getScore() + "分";
-        SpannableString ss = new SpannableString(text);
-        ForegroundColorSpan fcs = new ForegroundColorSpan(context.getResources().getColor(R.color.colorPrimary));
-        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(26, true);
-        ss.setSpan(fcs, 4, text.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ss.setSpan(ass, 4, text.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tvScore.setText(ss);
+//        tvScoreMain.setText(String.valueOf(bean.getScore()));
+//        String text = "健康得分" + bean.getScore() + "分";
+//        SpannableString ss = new SpannableString(text);
+//        ForegroundColorSpan fcs = new ForegroundColorSpan(context.getResources().getColor(R.color.colorPrimary));
+//        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(26, true);
+//        ss.setSpan(fcs, 4, text.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        ss.setSpan(ass, 4, text.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        tvScore.setText(ss);
 
         if (bean.getEight() != null && bean.getEight().getSixDiseaseList() != null) {
             String sixDiseaseStr = bean.getEight().getSixDiseaseList();
@@ -63,5 +60,16 @@ public class ReportScoreVH extends ReportBaseVH {
         }
 
         tvDate.setText(bean.getCreateTime() + "检测");
+    }
+
+    public void setScore(double score){
+        tvScoreMain.setText(String.valueOf(score));
+        String text = "健康得分" + score + "分";
+        SpannableString ss = new SpannableString(text);
+        ForegroundColorSpan fcs = new ForegroundColorSpan(context.getResources().getColor(R.color.colorPrimary));
+        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(26, true);
+        ss.setSpan(fcs, 4, text.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(ass, 4, text.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tvScore.setText(ss);
     }
 }

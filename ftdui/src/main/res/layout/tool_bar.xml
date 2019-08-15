@@ -8,7 +8,8 @@
     android:minHeight="?attr/actionBarSize"
     app:contentInsetStart="10dp"
     app:contentInsetEnd="10dp"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimary"
+    android:layout_alignParentTop="true">
 
     <RelativeLayout
         android:layout_width="match_parent"

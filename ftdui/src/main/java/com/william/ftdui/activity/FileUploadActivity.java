@@ -25,8 +25,10 @@ import com.william.ftd_core.entity.UploadResult;
 import com.william.ftd_core.exception.FtdException;
 import com.william.ftdui.constant.Constant;
 import com.william.ftdui.R;
+import com.william.ftdui.constant.Step;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import io.reactivex.disposables.Disposable;
 
@@ -46,7 +48,7 @@ public class FileUploadActivity extends BaseActivity {
     private ProgressBar pbSub;
 
     @Override
-    public void onCreated(@NonNull View view,@Nullable Bundle savedInstanceState) {
+    public void onCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ImageView ivFace = findViewById(R.id.iv_face);
         ImageView ivTongueTop = findViewById(R.id.iv_tongue_top);
         ImageView ivTongueBottom = findViewById(R.id.iv_tongue_bottom);
@@ -69,9 +71,9 @@ public class FileUploadActivity extends BaseActivity {
 
         nsv = findViewById(R.id.nsv);
 
-        File faceImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_FACE).getFileName() + ".jpeg");
-        File tongueTopImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_TONGUE_TOP).getFileName() + ".jpeg");
-        File tongueBottomImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_TONGUE_BOTTOM).getFileName() + ".jpeg");
+        File faceImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_FACE).getFileName());
+        File tongueTopImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_TONGUE_TOP).getFileName());
+        File tongueBottomImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_TONGUE_BOTTOM).getFileName());
 
         loadImg(ivFace, faceImg);
         loadImg(ivTongueTop, tongueTopImg);
@@ -118,7 +120,7 @@ public class FileUploadActivity extends BaseActivity {
                 boolean tongueTopSuccess = changeTvDescState(tvTongueTopUploadResult, tongueUploadResult);
                 boolean tongueBottomSuccess = changeTvDescState(tvTongueBottomUploadResult, tongueBottomResult);
 
-                changeBtnSubmitState(faceSuccess && tongueTopSuccess && tongueBottomSuccess);
+                changeBtnSubmitState(faceSuccess, tongueTopSuccess, tongueBottomSuccess);
             }
 
             @Override
@@ -140,6 +142,8 @@ public class FileUploadActivity extends BaseActivity {
             if (b) {
                 drawableRes = R.drawable.correct1;
                 content = "分析成功";
+            } else {
+                content = new FtdException(result.getErrCode()).getMsg();
             }
         }
         tv.setCompoundDrawablesWithIntrinsicBounds(drawableRes, 0, 0, 0);
@@ -147,7 +151,8 @@ public class FileUploadActivity extends BaseActivity {
         return b;
     }
 
-    private void changeBtnSubmitState(final boolean b) {
+    private void changeBtnSubmitState(final boolean face, final boolean tongueTop, final boolean tongueBottom) {
+        final boolean b = face && tongueTop && tongueBottom;
         String content;
         int bjRes;
         if (b) {
@@ -162,13 +167,24 @@ public class FileUploadActivity extends BaseActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent();
                 Class clazz;
                 if (b) {
                     clazz = QuestionListActivity.class;
                 } else {
                     clazz = FtdActivity.class;
+                    ArrayList<Step> stepList = new ArrayList<>();
+                    if (!face) {
+                        stepList.add(new Step(Constant.STEP_FACE));
+                    }
+                    if (!tongueTop) {
+                        stepList.add(new Step(Constant.STEP_TONGUE_TOP));
+                    }
+                    if (!tongueBottom) {
+                        stepList.add(new Step(Constant.STEP_TONGUE_BOTTOM));
+                    }
+                    intent.putExtra("stepList", stepList);
                 }
-                Intent intent = new Intent();
                 intent.setClass(FileUploadActivity.this, clazz);
                 startActivity(intent);
                 finish();

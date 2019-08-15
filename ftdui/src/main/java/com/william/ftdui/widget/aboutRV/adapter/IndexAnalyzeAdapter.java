@@ -16,10 +16,10 @@ import java.util.List;
 
 public class IndexAnalyzeAdapter extends RecyclerView.Adapter<AnalyzeVH> {
 
-    private List<DataBean> dataList = new ArrayList<DataBean>();
+    private List<DataBean> dataList = new ArrayList<>();
 
-    public void update(List<QuotaInfoListBean> list) {
-        process(list);
+    public void update(List<DataBean> list) {
+        this.dataList.addAll(list);
         notifyDataSetChanged();
     }
 
