@@ -1,6 +1,5 @@
 package com.william.ftd_core.entity;
 
-import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 

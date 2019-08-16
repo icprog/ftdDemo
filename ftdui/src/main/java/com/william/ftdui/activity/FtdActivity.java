@@ -10,7 +10,6 @@ import com.william.ftdui.R;
 import com.william.ftdui.constant.Constant;
 import com.william.ftdui.constant.Step;
 import com.william.ftdui.fragment.CameraFragment;
-
 import java.util.ArrayList;
 
 public class FtdActivity extends BaseActivity implements CameraFragment.OnCaptureCompleteListener {
@@ -25,7 +24,7 @@ public class FtdActivity extends BaseActivity implements CameraFragment.OnCaptur
         Intent intent = getIntent();
         ArrayList<Step> stepList = intent.getParcelableArrayListExtra("stepList");
         if (stepList == null){
-            stepList = new ArrayList<>(3);
+            stepList = new ArrayList<>(10);
             stepList.add(new Step(Constant.STEP_FACE));
             stepList.add(new Step(Constant.STEP_TONGUE_TOP));
             stepList.add(new Step(Constant.STEP_TONGUE_BOTTOM));

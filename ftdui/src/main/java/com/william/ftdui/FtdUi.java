@@ -9,6 +9,8 @@ import com.william.ftd_core.callback.FtdLoginCallback;
 import com.william.ftd_core.exception.FtdException;
 import com.william.ftdui.activity.FtdActivity;
 
+import retrofit2.Converter;
+
 public class FtdUi {
 
     private static final String TAG = "FtdUi";
@@ -18,8 +20,9 @@ public class FtdUi {
      *
      * @param context
      */
-    public static void init(Context context) {
-        FtdClient.getInstance().init(context);
+    public static void init(Context context, Converter.Factory retrofitFactory, FtdClient.JsonConverter jsonConverter) {
+        FtdClient.getInstance().init(context,retrofitFactory,jsonConverter);
+
     }
 
     /**

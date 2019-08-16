@@ -1,7 +1,5 @@
 package com.william.ftd_core.entity;
 
-import com.google.gson.annotations.SerializedName;
-
 public class QuestionBean {
 
     /**

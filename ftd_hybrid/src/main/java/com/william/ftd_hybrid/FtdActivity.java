@@ -46,7 +46,7 @@ public class FtdActivity extends AppCompatActivity implements CameraFragment.OnC
         Intent intent = getIntent();
         ArrayList<Step> stepList = intent.getParcelableArrayListExtra("stepList");
         if (stepList == null){
-            stepList = new ArrayList<>(3);
+            stepList = new ArrayList<>(10);
             stepList.add(new Step(Constant.STEP_FACE));
             stepList.add(new Step(Constant.STEP_TONGUE_TOP));
             stepList.add(new Step(Constant.STEP_TONGUE_BOTTOM));

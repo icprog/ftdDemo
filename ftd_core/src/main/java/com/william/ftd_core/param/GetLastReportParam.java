@@ -1,9 +1,8 @@
 package com.william.ftd_core.param;
 
-import com.google.gson.annotations.SerializedName;
 
 public class GetLastReportParam {
-    @SerializedName("appkey")
+
     private String appKey = "0f8d616cc71dc3e8";
     private String secret = "f68f0b290f8d616cc71dc3e85ddd02c5";
     private String checkTypeCode = "FACE_TONGUE_LK";

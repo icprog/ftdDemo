@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
-import com.google.gson.Gson;
 import com.william.ftd_core.callback.BaseCallback;
 import com.william.ftd_core.callback.FtdGetAnaylzerCallback;
 import com.william.ftd_core.callback.FtdLastReportCallback;
@@ -33,10 +32,12 @@ import com.william.ftd_core.param.GetTendencyParam;
 import com.william.ftd_core.param.InitParam;
 import com.william.ftd_core.param.LoginParam;
 import com.william.ftd_core.param.SubmitAnswerParam;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -52,9 +53,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FtdClient {
 
@@ -63,7 +64,7 @@ public class FtdClient {
     private Retrofit retrofit;
     private FtdService service;
 
-    private Gson gson = new Gson();
+//    private Gson gson = new Gson();
 
     private String appKey;
     private String appId;
@@ -92,8 +93,8 @@ public class FtdClient {
      *
      * @param param
      */
-    public void init(final InitParam param) {
-
+    public void init(final InitParam param, Converter.Factory factory, JsonConverter jsonConverter) {
+        this.jsonConverter = jsonConverter;
         this.appId = param.getAppId();
         this.appKey = param.getAppKey();
         this.appSecret = param.getAppSecret();
@@ -103,16 +104,18 @@ public class FtdClient {
         this.phrAppKey = param.getPhrAppKey();
         this.phrAppSecret = param.getPhrAppSecret();
 
-        initWebService();
+        initWebService(factory);
     }
+
+    private JsonConverter jsonConverter;
 
     /**
      * 初始化方法二（推荐）
      *
      * @param context
      */
-    public void init(Context context) {
-
+    public void init(Context context, Converter.Factory retrofitFactory, JsonConverter jsonConverter) {
+        this.jsonConverter = jsonConverter;
         ApplicationInfo appInfo = null;
         try {
             appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
@@ -131,10 +134,10 @@ public class FtdClient {
         phrAppKey = appInfo.metaData.getString("laiKang.phrAppKey");
         phrAppSecret = appInfo.metaData.getString("laiKang.phrAppSecret");
 
-        initWebService();
+        initWebService(retrofitFactory);
     }
 
-    private void initWebService() {
+    private void initWebService(Converter.Factory factory) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .connectTimeout(1, TimeUnit.MINUTES)
                 .readTimeout(1, TimeUnit.MINUTES)
@@ -165,7 +168,7 @@ public class FtdClient {
                     okhttp3.Request originReq = chain.request();
                     Log.d(TAG, "正在请求：" + originReq.url() + "\n请求头：" + "originReq.headers()" + "\n请求体：" + originReq.body());
                     okhttp3.Response response = chain.proceed(originReq);
-//                    Log.d(TAG, "获得响应：" + response.body());
+                    Log.d(TAG, "获得响应：" + response.body());
                     return response;
                 }
             });
@@ -173,10 +176,15 @@ public class FtdClient {
         this.retrofit = new Retrofit.Builder()
                 .baseUrl(BuildConfig.BASE_URL)
                 .client(builder.build())
-                .addConverterFactory(GsonConverterFactory.create())//todo json解析框架外放，让用户灵活选择gson或者fastjson
+//                .addConverterFactory(GsonConverterFactory.create())//todo json解析框架外放，让用户灵活选择gson或者fastjson
+                .addConverterFactory(factory)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         this.service = this.retrofit.create(FtdService.class);
+    }
+
+    public interface JsonConverter {
+        String toJson(Object o);
     }
 
     /**
@@ -310,8 +318,10 @@ public class FtdClient {
      * @param callback
      */
     public Disposable submitAnswer(List<QuestionBean> questionList1, List<QuestionBean> questionList2, String traceId1, String traceId2, final FtdSubmitCallback callback) {
-        String westernMedicineInfo = gson.toJson(questionList1);
-        String constitutionWesternMedicineInfo = gson.toJson(questionList2);
+//        String westernMedicineInfo = gson.toJson(questionList1);
+//        String constitutionWesternMedicineInfo = gson.toJson(questionList2);
+        String westernMedicineInfo = this.jsonConverter.toJson(questionList1);
+        String constitutionWesternMedicineInfo = this.jsonConverter.toJson(questionList2);
         SubmitAnswerParam param = new SubmitAnswerParam(
                 user.getPhrId(),
                 user.getMoble(),
