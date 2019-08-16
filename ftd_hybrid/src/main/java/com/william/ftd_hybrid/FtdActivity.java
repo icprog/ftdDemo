@@ -10,8 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
-import com.william.ftd_hybrid.constant.Constant;
-import com.william.ftd_hybrid.constant.Step;
+import com.william.ftd_base.CameraFragment;
+import com.william.ftd_base.constant.Constant;
+import com.william.ftd_base.constant.Step;
 import java.util.ArrayList;
 
 public class FtdActivity extends AppCompatActivity implements CameraFragment.OnCaptureCompleteListener {

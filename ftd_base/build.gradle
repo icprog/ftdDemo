@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 
 android {
-
     compileSdkVersion "${SDK}" as int
+
 
     defaultConfig {
         minSdkVersion "${MIN_SDK}" as int
@@ -13,13 +13,7 @@ android {
     }
 
     buildTypes {
-
-        debug {
-            buildConfigField "String", "HOST", "\"http://10.4.105.125:9070/\""
-            matchingFallbacks = ['debug']
-        }
         release {
-            buildConfigField "String", "HOST", "\"http://10.4.105.125:9070/\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -31,12 +25,10 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation "com.android.support:appcompat-v7:$V7"
-    implementation "com.android.support.constraint:constraint-layout:$CONSTRAIT"
-    implementation "com.android.support:support-v4:$V4"
-
     testImplementation "junit:junit:$JUNIT"
     androidTestImplementation "com.android.support.test:runner:$RUNNER"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$ESPRESSO"
 
-    implementation project(path: ':ftd_base')
+    api project(':JTCameraView')
+    implementation 'com.shuhart.stepview:stepview:1.5.0'
 }

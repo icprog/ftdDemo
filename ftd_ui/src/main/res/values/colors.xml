@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#01a9ef</color>
+    <!--<color name="colorCorrect">#01a9ef</color>-->
+    <color name="colorWrong">#fe8f6f</color>
+    <!--<color name="colorFloat">#B3103927</color>-->
+    <color name="colorFloat">#103927</color>
+    <color name="colorGrey">#dddddd</color>
+
+    <color name="colorCorrect">#34c083</color>
+</resources>
