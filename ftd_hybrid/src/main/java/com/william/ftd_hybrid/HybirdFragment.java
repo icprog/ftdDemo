@@ -139,21 +139,12 @@ public class HybirdFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        Uri[] uris = null;
-//        if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-//            uris = (Uri[]) data.getParcelableArrayExtra("paths");
-//        }
-//        uploadMessageAboveL.onReceiveValue(uris);
-//        uploadMessageAboveL = null;
-
         Uri[] uris = null;
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             String[] paths = data.getStringArrayExtra("paths");
-//            uris = (Uri[]) data.getParcelableArrayExtra("paths");
             uris = new Uri[3];
             for (int i = 0; i < paths.length; i++) {
                 File file = new File(paths[i]);
-//                uris[i] = Uri.parse(paths[i]);
                 uris[i] = Uri.fromFile(file);
             }
         }
@@ -178,6 +169,15 @@ public class HybirdFragment extends Fragment {
         if (pb != null && pb.isEnabled()) {
             pb.setVisibility(View.GONE);
             pb.setEnabled(false);
+        }
+    }
+
+    public boolean goback(){
+        if (wv.canGoBack()){
+            wv.goBack();
+            return true;
+        } else {
+            return false;
         }
     }
 }

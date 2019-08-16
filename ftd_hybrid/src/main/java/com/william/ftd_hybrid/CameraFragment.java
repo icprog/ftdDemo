@@ -266,8 +266,16 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
                 fragment.mStepView.go(fragment.currentStepIndex, true);
                 fragment.loadImage(fragment.currentStepIndex);
             } else {
-                if (fragment.listener != null) {
-                    fragment.listener.onCaptureComplete();
+                String[] paths = new String[3];
+                String fileName;
+                for (int i = 0; i < Constant.steps.size(); i++) {
+                    fileName = Constant.steps.valueAt(i).getFileName();
+                    File file = new File(fragment.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName + ".jpeg");
+                    paths[i] = file.getPath();
+                }
+
+                if (fragment.listener != null){
+                    fragment.listener.onCaptureComplete(paths);
                 }
             }
         }
@@ -288,6 +296,6 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
     }
 
     public interface OnCaptureCompleteListener {
-        void onCaptureComplete();
+        void onCaptureComplete(String[] paths);
     }
 }

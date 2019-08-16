@@ -173,7 +173,7 @@ public class FtdClient {
         this.retrofit = new Retrofit.Builder()
                 .baseUrl(BuildConfig.BASE_URL)
                 .client(builder.build())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())//todo json解析框架外放，让用户灵活选择gson或者fastjson
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
         this.service = this.retrofit.create(FtdService.class);

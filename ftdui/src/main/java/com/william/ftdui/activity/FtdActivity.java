@@ -2,13 +2,10 @@ package com.william.ftdui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-
-import com.william.ftd_core.constant.ServiceApi;
 import com.william.ftdui.R;
 import com.william.ftdui.constant.Constant;
 import com.william.ftdui.constant.Step;

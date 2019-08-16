@@ -2,31 +2,19 @@ package com.william.ftd_hybrid;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.TextView;
+import com.william.ftd_hybrid.constant.Constant;
+import com.william.ftd_hybrid.constant.Step;
+import java.util.ArrayList;
 
 public class FtdActivity extends AppCompatActivity implements CameraFragment.OnCaptureCompleteListener {
-
-    public static final int FACE = 0;
-    public static final int TONGUE_TOP = 1;
-    public static final int TONGUE_BOTTOM = 2;
-    public static final int ASK = 3;
-
-    @Override
-    public void onCaptureComplete() {
-
-    }
-
-
-    @IntDef(value = {FACE, TONGUE_TOP, TONGUE_BOTTOM, ASK})
-    @interface Step {
-    }
 
     public static void getPicFromCamera(Activity activity, int requestCode) {
         Intent intent = new Intent(activity, FtdActivity.class);
@@ -44,6 +32,29 @@ public class FtdActivity extends AppCompatActivity implements CameraFragment.OnC
 
         setContentView(R.layout.activity_ftd_h);
 
+        Toolbar toolBar = findViewById(R.id.tool_bar);
+        setSupportActionBar(toolBar);
+
+        TextView tbTvStart = findViewById(R.id.tb_tv_start);
+        tbTvStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        Intent intent = getIntent();
+        ArrayList<Step> stepList = intent.getParcelableArrayListExtra("stepList");
+        if (stepList == null){
+            stepList = new ArrayList<>(3);
+            stepList.add(new Step(Constant.STEP_FACE));
+            stepList.add(new Step(Constant.STEP_TONGUE_TOP));
+            stepList.add(new Step(Constant.STEP_TONGUE_BOTTOM));
+        }
+        CameraFragment cf = CameraFragment.newInstance(stepList);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.container,cf);
+        ft.commit();
     }
 
     @Override

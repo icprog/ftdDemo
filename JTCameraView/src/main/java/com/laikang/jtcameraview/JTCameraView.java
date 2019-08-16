@@ -12,14 +12,12 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Size;
 import android.view.TextureView;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
 import static com.laikang.jtcameraview.Constants.CAMERA_FACING_BACK;
 import static com.laikang.jtcameraview.Constants.CAMERA_FACING_FRONT;
 

@@ -10,12 +10,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 public class HybirdActivity extends AppCompatActivity {
 
     public static final String TAG = "FTD_HYBRID";
 
-    private Toolbar toolBar;
 
     private String appId;
     private String companyCode;
@@ -24,7 +25,8 @@ public class HybirdActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hybird);
-        this.toolBar = findViewById(R.id.tool_bar);
+
+        Toolbar toolBar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolBar);
 
         Intent intent = getIntent();
@@ -39,10 +41,20 @@ public class HybirdActivity extends AppCompatActivity {
             return;
         }
 
-        HybirdFragment fragment = HybirdFragment.newInstance(appId, companyCode, mobile);
+        final HybirdFragment fragment = HybirdFragment.newInstance(appId, companyCode, mobile);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.container, fragment);
         ft.commit();
+
+        TextView tbTvStart = findViewById(R.id.tb_tv_start);
+        tbTvStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!fragment.goback()){
+                    finish();
+                }
+            }
+        });
     }
 
     public static void start(Context context, String mobile) {

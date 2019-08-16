@@ -3,7 +3,6 @@ package com.william.ftdui.activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -135,30 +134,10 @@ abstract class BaseActivity extends AppCompatActivity implements BasePage {
         return true;
     }
 
-
-//    protected final TextView getTbTvEnd() {
-//        return tbTvEnd;
-//    }
-//
-//    protected final TextView getTbTvTitle() {
-//        return tbTvTitle;
-//    }
-
-
-
-
-
-
-
-
-//    @LayoutRes
-//    abstract protected int setContentViewResId();
-
     protected String setTitle(){
         return "";
     }
 
     protected void setEndTv(TextView tv){ }
 
-//    abstract protected void onCreated(@Nullable Bundle savedInstanceState);
 }

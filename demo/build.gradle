@@ -4,9 +4,9 @@ android {
     signingConfigs {
         debug {
             storeFile file('/Users/william/Projects/Android/FaceTongueDoctor/key.jks')
-            storePassword 'v123456'
+            storePassword 'laikang'
             keyAlias = 'laikang'
-            keyPassword 'v123456'
+            keyPassword 'laikang'
         }
     }
     compileSdkVersion 28
