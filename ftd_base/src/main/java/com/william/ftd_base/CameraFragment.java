@@ -193,11 +193,17 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
 
     @Override
     public void onCupture(final Bitmap bitmap) {
+        final Context context = getContext();
+        if (context == null) {
+            return;
+        }
+//        String fileName = stepList.get(currentStepIndex).getFileName();
+//        final File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
         mBackgroundHandler.post(new Runnable() {
             @Override
             public void run() {
                 String fileName = stepList.get(currentStepIndex).getFileName();
-                File file = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
+                File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
                 try {
                     OutputStream os = new FileOutputStream(file);
                     BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
@@ -259,8 +265,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
                 return;
             }
             int currnetStepIndex = msg.arg1;
-//            Constant.STEP_TONGUE_BOTTOM
-            if (currnetStepIndex < fragment.stepList.size()-1) {
+            if (currnetStepIndex < fragment.stepList.size() - 1) {
                 fragment.currentStepIndex += 1;
                 fragment.mStepView.go(fragment.currentStepIndex, true);
                 fragment.loadImage(fragment.currentStepIndex);
@@ -269,11 +274,11 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
                 String fileName;
                 for (int i = 0; i < Constant.steps.size(); i++) {
                     fileName = Constant.steps.valueAt(i).getFileName();
-                    File file = new File(fragment.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName + ".jpeg");
+                    File file = new File(fragment.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
                     paths[i] = file.getPath();
                 }
 
-                if (fragment.listener != null){
+                if (fragment.listener != null) {
                     fragment.listener.onCaptureComplete(paths);
                 }
             }

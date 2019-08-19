@@ -13,9 +13,9 @@ public class Constant {
     @IntDef({STEP_FACE,STEP_TONGUE_TOP,STEP_TONGUE_BOTTOM,STEP_ASK})
     public @interface StepId{}
 
-    public static final String FILE_NAME_FACE = "FILE_NAME_FACE";
-    public static final String FILE_NAME_TONGUE_TOP = "FILE_NAME_TONGUE_TOP";
-    public static final String FILE_NAME_TONGUE_BOTTOM = "FILE_NAME_TONGUE_BOTTOM";
+    public static final String FILE_NAME_FACE = "FILE_NAME_FACE.jpeg";
+    public static final String FILE_NAME_TONGUE_TOP = "FILE_NAME_TONGUE_TOP.jpeg";
+    public static final String FILE_NAME_TONGUE_BOTTOM = "FILE_NAME_TONGUE_BOTTOM.jpeg";
 
     public static SparseArray<Step> steps = new SparseArray<Step>();
 

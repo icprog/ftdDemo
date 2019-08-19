@@ -517,7 +517,6 @@ public class JTCameraView extends TextureView {
 //                    mListener.onCupture(data);
                 }
 
-
                 Bitmap rawBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 rawBitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
