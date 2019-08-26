@@ -14,7 +14,7 @@
         <activity android:name=".activity.WebActivity" />
         <activity android:name=".activity.ReportActivity" />
         <activity android:name=".activity.QuestionListActivity" />
-        <activity android:name=".activity.FileUploadActivity" />
+        <activity android:name=".activity.FileUploadActivity"/>
         <activity android:name=".activity.FtdActivity" />
     </application>
 

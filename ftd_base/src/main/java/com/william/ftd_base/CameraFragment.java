@@ -27,6 +27,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static com.laikang.jtcameraview.Constants.CAMERA_FACING_BACK;
 import static com.laikang.jtcameraview.Constants.CAMERA_FACING_FRONT;
 
@@ -52,7 +55,9 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
 
     private String[] stepIDs;
     private Step[] steps;
-    private int currentStepIndex;
+    private AtomicInteger currentStepIndex = new AtomicInteger();
+
+    private int mFacing = CAMERA_FACING_FRONT;
 
     public static CameraFragment newInstance(String[] stepIDs) {
         CameraFragment fragment = new CameraFragment();
@@ -97,8 +102,6 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         return inflater.inflate(R.layout.fragment_camera, container, false);
     }
 
-    private int mFacing = CAMERA_FACING_FRONT;
-
     public void changeFacing() {
         if (mFacing == CAMERA_FACING_FRONT) {
             mFacing = CAMERA_FACING_BACK;
@@ -120,7 +123,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         this.btnCapture = rootView.findViewById(R.id.btn_capture);
         this.btnCapture.setOnClickListener(this);
         this.iv = rootView.findViewById(R.id.iv_dashed);
-        this.iv.setImageResource(this.steps[currentStepIndex].getDrawableId());
+        this.iv.setImageResource(this.steps[currentStepIndex.get()].getDrawableId());
         this.btnChangeFacing = rootView.findViewById(R.id.btn_change_facing);
         btnChangeFacing.setOnClickListener(this);
     }
@@ -179,7 +182,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
 
     @Override
     public void onShutter() {
-
+        btnCapture.setEnabled(false);
     }
 
     private void showToast(String str) {
@@ -210,7 +213,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         mBackgroundHandler.post(new Runnable() {
             @Override
             public void run() {
-                String fileName = steps[currentStepIndex].getFileName();
+                String fileName = steps[currentStepIndex.get()].getFileName();
                 File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
                 try {
                     OutputStream os = new FileOutputStream(file);
@@ -220,7 +223,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
                     os.flush();
                     os.close();
                     Message msg = mBackgroundHandler.obtainMessage();
-                    msg.arg1 = currentStepIndex;
+                    msg.arg1 = currentStepIndex.get();
                     mMainThreadHandler.sendMessage(msg);
                 } catch (IOException e) {
                     Log.w(TAG, "图像文件写入失败： " + file, e);
@@ -235,7 +238,6 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
      * @param bitmap
      * @return
      */
-
     private Bitmap cropBitmap(Bitmap bitmap) {
 
         double bitmapWidth = bitmap.getWidth();
@@ -308,11 +310,9 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
             if (fragment == null || fragment.getActivity() == null) {
                 return;
             }
-            int currnetStepIndex = msg.arg1;
-            if (currnetStepIndex < fragment.steps.length - 1) {
-                fragment.currentStepIndex += 1;
-                fragment.mStepView.go(fragment.currentStepIndex, true);
-                fragment.loadImage(fragment.currentStepIndex);
+            if (fragment.currentStepIndex.getAndIncrement() < fragment.steps.length - 1) {
+                fragment.mStepView.go(fragment.currentStepIndex.get(), true);
+                fragment.loadImage(fragment.currentStepIndex.get());
             } else {
                 FtdResult[] results = new FtdResult[fragment.steps.length];
                 String fileName;
@@ -321,11 +321,11 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
                     File file = new File(fragment.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
                     results[i] = new FtdResult(fragment.steps[i].getStepId(), file.getPath());
                 }
-
                 if (fragment.listener != null) {
                     fragment.listener.onCaptureComplete(results);
                 }
             }
+            fragment.btnCapture.setEnabled(true);
         }
     }
 

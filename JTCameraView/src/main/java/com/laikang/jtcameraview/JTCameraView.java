@@ -127,6 +127,7 @@ public class JTCameraView extends TextureView {
              */
             @Override
             public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                releaseCamera();
                 return false;
             }
 
@@ -543,6 +544,7 @@ public class JTCameraView extends TextureView {
         if (isPictureCaptureInProgress.getAndSet(true)) {
             return;
         }
+        Log.e(TAG, "takePictureInternal: 当值为"+isPictureCaptureInProgress+"时调用" );
         mCamera.takePicture(new Camera.ShutterCallback() {
 
             @Override
@@ -554,6 +556,7 @@ public class JTCameraView extends TextureView {
         }, null, null, new Camera.PictureCallback() {
             @Override
             public void onPictureTaken(final byte[] data, Camera camera) {
+                isPictureCaptureInProgress.set(false);
 
                 Bitmap rawBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -577,7 +580,6 @@ public class JTCameraView extends TextureView {
                 }
                 camera.cancelAutoFocus();
                 camera.startPreview();
-                isPictureCaptureInProgress.set(false);
             }
         });
 

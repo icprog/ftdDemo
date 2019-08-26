@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top" />
 
-    <android.support.constraint.ConstraintLayout
+    <RelativeLayout
         android:id="@+id/cl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,89 +22,86 @@
         android:paddingTop="30dp"
         android:paddingBottom="30dp">
 
-        <ImageView
-            android:id="@+id/iv_face"
-            android:layout_width="0dp"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/cl_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            app:layout_constraintEnd_toStartOf="@id/iv_tongue_top"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:layout_alignParentTop="true">
 
-        <ImageView
-            android:id="@+id/iv_tongue_top"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:adjustViewBounds="true"
-            app:layout_constraintBottom_toBottomOf="@id/iv_face"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/iv_face"
-            app:layout_constraintTop_toTopOf="@id/iv_face"
-            android:layout_marginStart="5dp" />
+            <ImageView
+                android:id="@+id/iv_face"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                app:layout_constraintEnd_toStartOf="@id/iv_tongue_top"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/iv_face"
-            android:background="@color/colorFloat"
-            android:gravity="center"
-            android:padding="2dp"
-            android:text="面部"
-            android:textColor="@android:color/white"
-            app:layout_constraintBottom_toBottomOf="@id/iv_face"
-            app:layout_constraintEnd_toEndOf="@id/iv_face"
-            app:layout_constraintStart_toStartOf="@id/iv_face" />
+            <ImageView
+                android:id="@+id/iv_tongue_top"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:adjustViewBounds="true"
+                app:layout_constraintBottom_toBottomOf="@id/iv_face"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_face"
+                app:layout_constraintTop_toTopOf="@id/iv_face" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/iv_tongue_top"
-            android:background="@color/colorFloat"
-            android:gravity="center"
-            android:padding="2dp"
-            android:text="舌面"
-            android:textColor="@android:color/white"
-            app:layout_constraintBottom_toBottomOf="@id/iv_tongue_top"
-            app:layout_constraintEnd_toEndOf="@id/iv_tongue_top"
-            app:layout_constraintStart_toStartOf="@id/iv_tongue_top" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/iv_face"
+                android:background="@color/colorFloat"
+                android:gravity="center"
+                android:padding="2dp"
+                android:text="面部"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="@id/iv_face"
+                app:layout_constraintEnd_toEndOf="@id/iv_face"
+                app:layout_constraintStart_toStartOf="@id/iv_face" />
 
-        <TextView
-            android:id="@+id/tv_result_face"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv_face"
-            android:layout_marginTop="10dp"
-            android:drawablePadding="10dp"
-            app:layout_constraintEnd_toEndOf="@id/iv_face"
-            app:layout_constraintStart_toStartOf="@id/iv_face"
-            app:layout_constraintTop_toBottomOf="@id/iv_face"
-            tools:text="分析失败，脸太白了" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/iv_tongue_top"
+                android:background="@color/colorFloat"
+                android:gravity="center"
+                android:padding="2dp"
+                android:text="舌面"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="@id/iv_tongue_top"
+                app:layout_constraintEnd_toEndOf="@id/iv_tongue_top"
+                app:layout_constraintStart_toStartOf="@id/iv_tongue_top" />
+
+            <TextView
+                android:id="@+id/tv_result_face"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_face"
+                android:layout_marginTop="10dp"
+                android:drawablePadding="10dp"
+                app:layout_constraintEnd_toEndOf="@id/iv_face"
+                app:layout_constraintStart_toStartOf="@id/iv_face"
+                app:layout_constraintTop_toBottomOf="@id/iv_face"
+                tools:text="分析失败，脸太白了" />
 
 
-        <TextView
-            android:id="@+id/tv_result_tongue_top"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/iv_tongue_top"
-            android:layout_marginTop="10dp"
-            android:drawablePadding="10dp"
-            app:layout_constraintEnd_toEndOf="@id/iv_tongue_top"
-            app:layout_constraintStart_toStartOf="@id/iv_tongue_top"
-            app:layout_constraintTop_toBottomOf="@id/iv_tongue_top"
-            tools:text="分析失败，脸太白了" />
-
-        <include
-            layout="@layout/pb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            <TextView
+                android:id="@+id/tv_result_tongue_top"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_tongue_top"
+                android:layout_marginTop="10dp"
+                android:drawablePadding="10dp"
+                app:layout_constraintEnd_toEndOf="@id/iv_tongue_top"
+                app:layout_constraintStart_toStartOf="@id/iv_tongue_top"
+                app:layout_constraintTop_toBottomOf="@id/iv_tongue_top"
+                tools:text="分析失败，脸太白了" />
+        </android.support.constraint.ConstraintLayout>
 
         <Button
             android:id="@+id/submit"
@@ -116,28 +113,23 @@
             android:text="上传中..."
             android:textColor="@android:color/white"
             android:textSize="24sp"
-            app:layout_constraintTop_toBottomOf="@id/tv_result_face" />
+            android:layout_below="@+id/cl_content"/>
 
-    </android.support.constraint.ConstraintLayout>
+        <include
+            layout="@layout/pb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/cl"
         android:layout_marginTop="10dp"
         android:background="@android:color/white"
         android:padding="10dp">
-
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/iv_refresh"
-            android:gravity="center"
-            android:padding="10dp"
-            android:textSize="20sp"
-            tools:text="若要不失眠，株洲加百联" />
 
         <ImageView
             android:id="@+id/iv_refresh"
@@ -146,6 +138,23 @@
             android:layout_alignParentEnd="true"
             android:adjustViewBounds="true"
             android:src="@drawable/reload" />
+
+        <ProgressBar
+            android:id="@+id/pb_sub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/iv_refresh"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textSize="20sp"
+            tools:text="若要不失眠，株洲加百联" />
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/nsv"
@@ -163,13 +172,6 @@
                 tools:text="这里的白莲子是指莲子，桂皮、肾、心经，有养心安神的作用，对虚烦惊悸、失眠不美等症状有起小。" />
 
         </android.support.v4.widget.NestedScrollView>
-
-        <ProgressBar
-            android:id="@+id/pb_sub"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
     </RelativeLayout>
-
 
 </LinearLayout>

@@ -28,9 +28,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
-import com.google.gson.Gson;
 import com.william.ftd_base.FtdResult;
 import com.william.ftd_base.constant.Constant;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -92,7 +95,6 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
         String appId = b.getString("appId");
         String companyCode = b.getString("companyCode");
         url = String.format(urlReg, BuildConfig.HOST, companyCode, appId, mobile);
-//        url = "http://10.4.105.162:8081/#/test";
     }
 
     @Override
@@ -207,7 +209,7 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
         if (requestCode == CAMERA_PERMISSION_REQUEST_CODE &&
                 grantResults.length > 0 &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            FtdActivity.getPicFromCamera(this,stepIds, CAMERA_REQUEST_CODE);
+            FtdActivity.getPicFromCamera(this, stepIds, CAMERA_REQUEST_CODE);
         }
     }
 
@@ -219,14 +221,14 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
         File[] files = null;
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
             Parcelable[] resultData = data.getParcelableArrayExtra("results");
-            results = Arrays.copyOf(resultData,resultData.length,FtdResult[].class);
+            results = Arrays.copyOf(resultData, resultData.length, FtdResult[].class);
             uris = new Uri[results.length];
             files = new File[results.length];
             for (int i = 0; i < results.length; i++) {
                 files[i] = new File(results[i].getPath());
                 uris[i] = Uri.fromFile(files[i]);
             }
-            send(files,results);
+            send(files, results);
         }
         if (uploadMessageAboveL != null) {
             uploadMessageAboveL.onReceiveValue(uris);
@@ -236,21 +238,30 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
 
     /**
      * 拍照结果异步序列化成字符串
+     *
      * @param files
      * @param results
      */
-    private void send(final File[] files,final FtdResult[] results){
+    private void send(final File[] files, final FtdResult[] results) {
         mBackgroundHandler.post(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < results.length; i++) {
-                    results[i].setImgRes(trans(files[i]));
+                JSONArray jsonArray = new JSONArray();
+                JSONObject jsonObject;
+                try {
+                    for (int i = 0; i < results.length; i++) {
+                        results[i].setImgRes(trans(files[i]));
+                        jsonObject = new JSONObject();
+                        jsonObject.put("stepId", results[i].getStepId());
+                        jsonObject.put("imgRes", results[i].getImgRes());
+                        jsonArray.put(jsonObject);
+                    }
+                    Message msg = mMainThreadHandler.obtainMessage();
+                    msg.obj = jsonArray.toString();
+                    mMainThreadHandler.sendMessage(msg);
+                } catch (JSONException e) {
+                    Log.e(TAG, "send()方法报错: ", e);
                 }
-                Gson gson = new Gson();
-                String result = gson.toJson(results);
-                Message msg = mMainThreadHandler.obtainMessage();
-                msg.obj = result;
-                mMainThreadHandler.sendMessage(msg);
             }
         });
     }
@@ -318,7 +329,7 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
         }
     }
 
-    private static class MainThreadHandler extends Handler{
+    private static class MainThreadHandler extends Handler {
         private WeakReference<HybirdFragment> fragment;
 
         public MainThreadHandler(HybirdFragment fragment) {
