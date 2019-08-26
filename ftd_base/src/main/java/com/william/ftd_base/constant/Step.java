@@ -8,10 +8,12 @@ import com.william.ftd_base.R;
 
 public class Step implements Parcelable {
 
+    private String stepId;
     private int drawableId;
     private String fileName;
 
-    public Step(@Constant.StepId int stepId) {
+    public Step(@Constant.StepId String stepId) {
+        this.stepId = stepId;
         switch (stepId) {
             case Constant.STEP_FACE:
                 drawableId = R.drawable.xuxian_mian;
@@ -30,6 +32,7 @@ public class Step implements Parcelable {
     }
 
     protected Step(Parcel in) {
+        stepId = in.readString();
         drawableId = in.readInt();
         fileName = in.readString();
     }
@@ -54,6 +57,14 @@ public class Step implements Parcelable {
         return fileName;
     }
 
+    public String getStepId() {
+        return stepId;
+    }
+
+    public void setStepId(String stepId) {
+        this.stepId = stepId;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -61,6 +72,7 @@ public class Step implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(stepId);
         dest.writeInt(drawableId);
         dest.writeString(fileName);
     }

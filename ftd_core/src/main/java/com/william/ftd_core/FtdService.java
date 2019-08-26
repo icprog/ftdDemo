@@ -19,7 +19,6 @@ import com.william.ftd_core.param.SubmitAnswerParam;
 import io.reactivex.Single;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -49,7 +48,7 @@ public interface FtdService {
      * @param files
      * @return
      */
-    @POST(ServiceApi.PIC_UPLOAD1)
+    @POST(ServiceApi.PIC_UPLOAD)
     Single<FtdResponse<UploadResult>> picUpload(
             @Body RequestBody files);
 

@@ -7,31 +7,6 @@
     android:orientation="vertical"
     tools:context=".activity.QuestionListActivity">
 
-    <!--<android.support.v7.widget.Toolbar-->
-        <!--android:id="@+id/tool_bar"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="top"-->
-        <!--android:minHeight="?attr/actionBarSize"-->
-        <!--app:navigationIcon="@drawable/shutdown"-->
-        <!--app:titleTextColor="@android:color/white"-->
-        <!--android:background="@color/colorFloat">-->
-        <!--<FrameLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:padding="10dp">-->
-        <!--<TextView-->
-            <!--android:id="@+id/btn_submit"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="提交"-->
-            <!--android:textStyle="bold"-->
-            <!--android:textSize="18sp"-->
-            <!--android:textColor="@android:color/white"-->
-            <!--android:layout_gravity="length"/>-->
-        <!--</FrameLayout>-->
-    <!--</android.support.v7.widget.Toolbar>-->
-
     <include layout="@layout/tool_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

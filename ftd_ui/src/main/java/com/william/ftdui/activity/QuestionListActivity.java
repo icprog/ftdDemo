@@ -1,5 +1,6 @@
 package com.william.ftdui.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,6 +36,11 @@ public class QuestionListActivity extends BaseActivity implements
 
     private String traceId1;
     private String traceId2;
+
+    public static void start(Context context){
+        Intent intent = new Intent(context,QuestionListActivity.class);
+        context.startActivity(intent);
+    }
 
     @Override
     public void onCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

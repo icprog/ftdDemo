@@ -1,23 +1,25 @@
 package com.william.ftd_base.constant;
 
 import android.support.annotation.IntDef;
-import android.util.SparseArray;
+import android.support.annotation.StringDef;
+import android.support.v4.util.ArrayMap;
 
 public class Constant {
 
-    public static final int STEP_FACE = 0;
-    public static final int STEP_TONGUE_TOP = 1;
-    public static final int STEP_TONGUE_BOTTOM = 2;
-    public static final int STEP_ASK = 3;
+    public static final String STEP_FACE = "STEP_FACE";
+    public static final String STEP_TONGUE_TOP = "STEP_TONGUE_TOP";
+    public static final String STEP_TONGUE_BOTTOM = "STEP_TONGUE_BOTTOM";
+    public static final String STEP_ASK = "STEP_ASK";
 
-    @IntDef({STEP_FACE,STEP_TONGUE_TOP,STEP_TONGUE_BOTTOM,STEP_ASK})
-    public @interface StepId{}
+    @StringDef({STEP_FACE, STEP_TONGUE_TOP, STEP_TONGUE_BOTTOM, STEP_ASK})
+    public @interface StepId {
+    }
 
     public static final String FILE_NAME_FACE = "FILE_NAME_FACE.jpeg";
     public static final String FILE_NAME_TONGUE_TOP = "FILE_NAME_TONGUE_TOP.jpeg";
     public static final String FILE_NAME_TONGUE_BOTTOM = "FILE_NAME_TONGUE_BOTTOM.jpeg";
 
-    public static SparseArray<Step> steps = new SparseArray<Step>();
+    public static ArrayMap<String,Step> steps = new ArrayMap<>();
 
     static {
         steps.put(STEP_FACE, new Step(STEP_FACE));
@@ -30,6 +32,7 @@ public class Constant {
     //体证
     public static final int TRACE_ZHENG = 2;
 
-    @IntDef({TRACE_ZHI,TRACE_ZHENG})
-    public @interface Trace{}
+    @IntDef({TRACE_ZHI, TRACE_ZHENG})
+    public @interface Trace {
+    }
 }

@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.william.ftd_base.constant.Constant;
@@ -24,8 +25,12 @@ import com.william.ftd_core.entity.MicroTipBean;
 import com.william.ftd_core.entity.UploadResult;
 import com.william.ftd_core.exception.FtdException;
 import com.william.ftdui.R;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 import io.reactivex.disposables.Disposable;
 
 public class FileUploadActivity extends BaseActivity {
@@ -37,7 +42,6 @@ public class FileUploadActivity extends BaseActivity {
 
     private TextView tvFaceUploadResult;
     private TextView tvTongueTopUploadResult;
-    private TextView tvTongueBottomUploadResult;
 
     private NestedScrollView nsv;
 
@@ -47,7 +51,6 @@ public class FileUploadActivity extends BaseActivity {
     public void onCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ImageView ivFace = findViewById(R.id.iv_face);
         ImageView ivTongueTop = findViewById(R.id.iv_tongue_top);
-        ImageView ivTongueBottom = findViewById(R.id.iv_tongue_bottom);
 
         btnSubmit = findViewById(R.id.submit);
 
@@ -63,7 +66,6 @@ public class FileUploadActivity extends BaseActivity {
 
         tvFaceUploadResult = findViewById(R.id.tv_result_face);
         tvTongueTopUploadResult = findViewById(R.id.tv_result_tongue_top);
-        tvTongueBottomUploadResult = findViewById(R.id.tv_result_tongue_bottom);
 
         nsv = findViewById(R.id.nsv);
 
@@ -73,7 +75,6 @@ public class FileUploadActivity extends BaseActivity {
 
         loadImg(ivFace, faceImg);
         loadImg(ivTongueTop, tongueTopImg);
-        loadImg(ivTongueBottom, tongueBottomImg);
 
         pbSub = findViewById(R.id.pb_sub);
 
@@ -110,13 +111,11 @@ public class FileUploadActivity extends BaseActivity {
                 dismissProgress();
                 FtdResponse<UploadResult> faceUploadResult = result.getFaceResult();
                 FtdResponse<UploadResult> tongueUploadResult = result.getTongueTopResult();
-                FtdResponse<UploadResult> tongueBottomResult = result.getTongueBottomResult();
 
                 boolean faceSuccess = changeTvDescState(tvFaceUploadResult, faceUploadResult);
                 boolean tongueTopSuccess = changeTvDescState(tvTongueTopUploadResult, tongueUploadResult);
-                boolean tongueBottomSuccess = changeTvDescState(tvTongueBottomUploadResult, tongueBottomResult);
 
-                changeBtnSubmitState(faceSuccess, tongueTopSuccess, tongueBottomSuccess);
+                changeBtnSubmitState(faceSuccess, tongueTopSuccess);
             }
 
             @Override
@@ -129,26 +128,23 @@ public class FileUploadActivity extends BaseActivity {
     }
 
     private Boolean changeTvDescState(TextView tv, FtdResponse<UploadResult> response) {
-        int drawableRes = R.drawable.close3;
-        String content = "分析失败";
-        boolean b = false;
-        UploadResult result = response.getData();
-        if (result != null) {
-            b = result.getErrCode() == 0;
-            if (b) {
-                drawableRes = R.drawable.correct;
-                content = "分析成功";
-            } else {
-                content = new FtdException(result.getErrCode()).getMsg();
-            }
+        boolean b = response.getCode() == 1000;
+        int drawableRes;
+        String content;
+        if (b) {
+            drawableRes = R.drawable.result_correct;
+            content = "分析成功";
+        } else {
+            drawableRes = R.drawable.result_wrong;
+            content = response.getMsg();
         }
         tv.setCompoundDrawablesWithIntrinsicBounds(drawableRes, 0, 0, 0);
         tv.setText(content);
         return b;
     }
 
-    private void changeBtnSubmitState(final boolean face, final boolean tongueTop, final boolean tongueBottom) {
-        final boolean b = face && tongueTop && tongueBottom;
+    private void changeBtnSubmitState(final boolean face, final boolean tongueTop) {
+        final boolean b = face && tongueTop;
         String content;
         int bjRes;
         if (b) {
@@ -163,26 +159,18 @@ public class FileUploadActivity extends BaseActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                Class clazz;
                 if (b) {
-                    clazz = QuestionListActivity.class;
+                    QuestionListActivity.start(FileUploadActivity.this);
                 } else {
-                    clazz = FtdActivity.class;
-                    ArrayList<Step> stepList = new ArrayList<>();
+                    ArrayList<String> stepList = new ArrayList<>();
                     if (!face) {
-                        stepList.add(new Step(Constant.STEP_FACE));
+                        stepList.add(Constant.STEP_FACE);
                     }
                     if (!tongueTop) {
-                        stepList.add(new Step(Constant.STEP_TONGUE_TOP));
+                        stepList.add(Constant.STEP_TONGUE_TOP);
                     }
-                    if (!tongueBottom) {
-                        stepList.add(new Step(Constant.STEP_TONGUE_BOTTOM));
-                    }
-                    intent.putExtra("stepList", stepList);
+                    FtdActivity.getPicFromCamera(FileUploadActivity.this, stepList.toArray(new String[stepList.size()]));
                 }
-                intent.setClass(FileUploadActivity.this, clazz);
-                startActivity(intent);
                 finish();
             }
         });

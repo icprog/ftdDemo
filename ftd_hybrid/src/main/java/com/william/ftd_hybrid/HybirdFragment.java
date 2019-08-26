@@ -7,8 +7,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.net.http.SslError;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,24 +21,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.william.ftd_base.FtdResult;
+import com.william.ftd_base.constant.Constant;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.Arrays;
 
 
 public class HybirdFragment extends Fragment implements FileChooser.OnFileChooserListener {
@@ -54,6 +57,23 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
 
     private FileChooser fileChooser = new FileChooser(this);
 
+    private String[] stepIds;
+
+    private Handler mBackgroundHandler;
+    private HandlerThread mBackgroundThread;
+
+    private Handler mMainThreadHandler = new MainThreadHandler(this);
+
+
+    private Handler getBackgroundHandler() {
+        if (mBackgroundHandler == null) {
+            mBackgroundThread = new HandlerThread("background");
+            mBackgroundThread.start();
+            mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
+        }
+        return mBackgroundHandler;
+    }
+
     public static HybirdFragment newInstance(String appId, String companyCode, String mobile) {
         HybirdFragment fragment = new HybirdFragment();
         Bundle b = new Bundle();
@@ -71,8 +91,8 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
         String mobile = b.getString("mobile");
         String appId = b.getString("appId");
         String companyCode = b.getString("companyCode");
-//        url = String.format(urlReg, BuildConfig.HOST, companyCode, appId, mobile);
-        url = "http://10.4.105.162:8081/#/test";
+        url = String.format(urlReg, BuildConfig.HOST, companyCode, appId, mobile);
+//        url = "http://10.4.105.162:8081/#/test";
     }
 
     @Override
@@ -88,13 +108,23 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
         pb = getView().findViewById(R.id.pb);
         setupWebView(wv);
         wv.loadUrl(url);
+        getBackgroundHandler();
+    }
 
-        getView().findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                onCaptureComplete();
-            }
-        });
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mBackgroundThread == null) {
+            return;
+        }
+        mBackgroundThread.quitSafely();
+        try {
+            mBackgroundThread.join();
+            mBackgroundThread = null;
+            mBackgroundHandler = null;
+        } catch (InterruptedException e) {
+            Log.e(TAG, "close: 后台线程关闭失败：", e);
+        }
     }
 
     /**
@@ -107,14 +137,12 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
         settings.setBuiltInZoomControls(true);
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
-        settings.setSupportZoom(true);
+        settings.setSupportZoom(false);
         settings.setDomStorageEnabled(true);
         settings.setDatabaseEnabled(true);
-//        settings.setTextZoom(100);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setAllowFileAccessFromFileURLs(true);
         settings.setAllowUniversalAccessFromFileURLs(true);
-//        this.wv.setWebChromeClient(new MyWebChromeClient(this));
         this.wv.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -127,25 +155,6 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
                 super.onPageFinished(view, url);
                 hideProgress();
             }
-
-            @Override
-            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                super.onReceivedError(view, request, error);
-
-                int i = 0;
-            }
-
-            @Override
-            public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
-                super.onReceivedHttpError(view, request, errorResponse);
-                int i = 0;
-            }
-
-            @Override
-            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                super.onReceivedSslError(view, handler, error);
-                int i = 0;
-            }
         });
         this.wv.setWebChromeClient(new WebChromeClient() {
 
@@ -154,7 +163,7 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
                     fileChooserParams) {
                 uploadMessageAboveL = filePathCallback;
 
-                getPicFromCamera();
+                getPicFromCamera(new String[]{Constant.STEP_FACE, Constant.STEP_TONGUE_TOP, Constant.STEP_TONGUE_BOTTOM});
 
                 return true;
             }
@@ -169,7 +178,8 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
      * 进入拍照页面
      */
     @Override
-    public void getPicFromCamera() {
+    public void getPicFromCamera(String[] stepIds) {
+        this.stepIds = stepIds;
         for (String requiredPermission : REQUIRED_PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(getContext(), requiredPermission) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(REQUIRED_PERMISSIONS, CAMERA_PERMISSION_REQUEST_CODE);
@@ -178,8 +188,7 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
             }
         }
         //打开相机
-        FtdActivity.getPicFromCamera(HybirdFragment.this, CAMERA_REQUEST_CODE);
-
+        FtdActivity.getPicFromCamera(HybirdFragment.this, stepIds, CAMERA_REQUEST_CODE);
     }
 
     /**
@@ -187,14 +196,9 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
      */
     @Override
     public void onCaptureComplete(String fileDatas) {
-        String jsReg = "callJS(%s)";
+        String jsReg = "onCaptureComplete(%s)";
         String jsMethod = String.format(jsReg, fileDatas);
-        wv.evaluateJavascript(jsMethod, new ValueCallback<String>() {
-            @Override
-            public void onReceiveValue(String value) {
-                Toast.makeText(getContext(), value, Toast.LENGTH_SHORT).show();
-            }
-        });
+        wv.evaluateJavascript(jsMethod, null);
     }
 
     @Override
@@ -203,7 +207,7 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
         if (requestCode == CAMERA_PERMISSION_REQUEST_CODE &&
                 grantResults.length > 0 &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            FtdActivity.getPicFromCamera(this, CAMERA_REQUEST_CODE);
+            FtdActivity.getPicFromCamera(this,stepIds, CAMERA_REQUEST_CODE);
         }
     }
 
@@ -211,31 +215,44 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Uri[] uris = null;
-        String[] paths = null;
-        File[] files = new File[3];
+        FtdResult[] results = null;
+        File[] files = null;
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
-            paths = data.getStringArrayExtra("paths");
-            uris = new Uri[3];
-            for (int i = 0; i < paths.length; i++) {
-                files[i] = new File(paths[i]);
+            Parcelable[] resultData = data.getParcelableArrayExtra("results");
+            results = Arrays.copyOf(resultData,resultData.length,FtdResult[].class);
+            uris = new Uri[results.length];
+            files = new File[results.length];
+            for (int i = 0; i < results.length; i++) {
+                files[i] = new File(results[i].getPath());
                 uris[i] = Uri.fromFile(files[i]);
             }
+            send(files,results);
         }
         if (uploadMessageAboveL != null) {
             uploadMessageAboveL.onReceiveValue(uris);
             uploadMessageAboveL = null;
         }
+    }
 
-        StringBuffer fileDatasBuffer = new StringBuffer("[");
-        for (int i = 0; i < files.length; i++) {
-            String f = trans(files[0]);
-            fileDatasBuffer.append("'");
-            fileDatasBuffer.append(f);
-            fileDatasBuffer.append("',");
-        }
-        fileDatasBuffer.append("]");
-        String result = fileDatasBuffer.toString();
-        this.fileChooser.onCaptureComplete(result);
+    /**
+     * 拍照结果异步序列化成字符串
+     * @param files
+     * @param results
+     */
+    private void send(final File[] files,final FtdResult[] results){
+        mBackgroundHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < results.length; i++) {
+                    results[i].setImgRes(trans(files[i]));
+                }
+                Gson gson = new Gson();
+                String result = gson.toJson(results);
+                Message msg = mMainThreadHandler.obtainMessage();
+                msg.obj = result;
+                mMainThreadHandler.sendMessage(msg);
+            }
+        });
     }
 
     /**
@@ -298,6 +315,22 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
             return true;
         } else {
             return false;
+        }
+    }
+
+    private static class MainThreadHandler extends Handler{
+        private WeakReference<HybirdFragment> fragment;
+
+        public MainThreadHandler(HybirdFragment fragment) {
+            this.fragment = new WeakReference<>(fragment);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            String result = (String) msg.obj;
+            this.fragment.get().fileChooser.onCaptureComplete(result);
         }
     }
 }

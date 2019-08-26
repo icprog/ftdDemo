@@ -1,6 +1,10 @@
 package com.william.ftd_hybrid;
 
+import android.support.v4.util.ArrayMap;
 import android.webkit.JavascriptInterface;
+
+import com.william.ftd_base.constant.Constant;
+import com.william.ftd_base.constant.Step;
 
 public class FileChooser {
 
@@ -11,8 +15,8 @@ public class FileChooser {
     }
 
     @JavascriptInterface
-    public void capture() {
-        listener.getPicFromCamera();
+    public void capture(String[] stepIds) {
+        listener.getPicFromCamera(stepIds);
     }
 
     public void onCaptureComplete(String fileData) {
@@ -20,7 +24,7 @@ public class FileChooser {
     }
 
     interface OnFileChooserListener {
-        void getPicFromCamera();
+        void getPicFromCamera(String[] stepIds);
 
         void onCaptureComplete(String fileData);
     }

@@ -13,9 +13,9 @@ public interface ServiceApi {
     String PLACE_COMPANY_P_ID = "PlaceCompanyPid";
     String COMPANY_CODE = "companyCode";
 
-    String GET_THIRD_TOKEN = "users/third/getThirdToken";
-    String LOGIN = "users/third/login";
-    String PIC_UPLOAD1 = "api/testing/step/testingStep";
+    String GET_THIRD_TOKEN = "api/third/member/getThirdToken";
+    String LOGIN = "api/third/member/login";
+    String PIC_UPLOAD = "api/testing/step/testingStep";
 
     String GET_QUESTION = "api/testing/step/getDiagnosis";
     String SUBMIT_ANSWER = "api/testing/step/getAskIng";

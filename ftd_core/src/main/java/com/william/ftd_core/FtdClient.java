@@ -64,8 +64,6 @@ public class FtdClient {
     private Retrofit retrofit;
     private FtdService service;
 
-//    private Gson gson = new Gson();
-
     private String appKey;
     private String appId;
     private String appCode;
@@ -176,7 +174,6 @@ public class FtdClient {
         this.retrofit = new Retrofit.Builder()
                 .baseUrl(BuildConfig.BASE_URL)
                 .client(builder.build())
-//                .addConverterFactory(GsonConverterFactory.create())//todo json解析框架外放，让用户灵活选择gson或者fastjson
                 .addConverterFactory(factory)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
@@ -256,7 +253,6 @@ public class FtdClient {
                 Conclusion conclusion = new Conclusion();
                 conclusion.setFaceResult(faceResult);
                 conclusion.setTongueTopResult(tongueTopResult);
-                conclusion.setTongueBottomResult(tongueBottomResult);
                 return conclusion;
             }
         })
@@ -318,8 +314,6 @@ public class FtdClient {
      * @param callback
      */
     public Disposable submitAnswer(List<QuestionBean> questionList1, List<QuestionBean> questionList2, String traceId1, String traceId2, final FtdSubmitCallback callback) {
-//        String westernMedicineInfo = gson.toJson(questionList1);
-//        String constitutionWesternMedicineInfo = gson.toJson(questionList2);
         String westernMedicineInfo = this.jsonConverter.toJson(questionList1);
         String constitutionWesternMedicineInfo = this.jsonConverter.toJson(questionList2);
         SubmitAnswerParam param = new SubmitAnswerParam(

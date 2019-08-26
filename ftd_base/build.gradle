@@ -31,4 +31,5 @@ dependencies {
 
     api project(':JTCameraView')
     implementation 'com.shuhart.stepview:stepview:1.5.0'
+    implementation "com.android.support.constraint:constraint-layout:$CONSTRAIT"
 }

@@ -15,7 +15,7 @@ android {
     buildTypes {
 
         debug {
-            buildConfigField "String", "HOST", "\"http://10.4.105.125:9070/\""
+            buildConfigField "String", "HOST", "\"http://10.4.105.7:9070/\""
             matchingFallbacks = ['debug']
         }
         release {
@@ -39,4 +39,5 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$ESPRESSO"
 
     implementation project(path: ':ftd_base')
+    compileOnly 'com.google.code.gson:gson:2.8.5'
 }

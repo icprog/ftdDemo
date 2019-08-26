@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.william.ftd_base.constant.Constant;
 import com.william.ftd_core.FtdClient;
 import com.william.ftd_core.callback.FtdLoginCallback;
 import com.william.ftd_core.exception.FtdException;
@@ -38,9 +39,7 @@ public class FtdUi {
                 if (callback != null) {
                     callback.onSuccess();
                 }
-                Intent intent = new Intent();
-                intent.setClass(context, FtdActivity.class);
-                context.startActivity(intent);
+                FtdActivity.getPicFromCamera(context,new String[]{Constant.STEP_FACE,Constant.STEP_TONGUE_TOP,Constant.STEP_TONGUE_BOTTOM});
             }
 
             @Override
