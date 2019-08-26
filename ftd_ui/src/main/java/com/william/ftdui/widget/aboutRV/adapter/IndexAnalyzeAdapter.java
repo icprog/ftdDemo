@@ -19,6 +19,7 @@ public class IndexAnalyzeAdapter extends RecyclerView.Adapter<AnalyzeVH> {
     private List<DataBean> dataList = new ArrayList<>();
 
     public void update(List<DataBean> list) {
+        dataList.clear();
         this.dataList.addAll(list);
         notifyDataSetChanged();
     }
