@@ -48,7 +48,7 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
 
     private static final String TAG = "HybirdFragment";
 
-    private static final String urlReg = "%smsz/index?companyCode=%s&AppId=%s&sourceType=shixiu&userTel=%s";
+    private static final String urlReg = "%smsz/index?companyCode=%s&AppId=%s&userTel=%s";
     private String url;
     private WebView wv;
     private ProgressBar pb;

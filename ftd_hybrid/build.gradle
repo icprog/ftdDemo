@@ -16,15 +16,14 @@ android {
 
         debug {
             buildConfigField "String", "HOST", "\"https://lk-cloudt-qa.laikang.com/\""
-            matchingFallbacks = ['debug']
+//            buildConfigField "String", "HOST", "\"http://10.4.105.7:9070/\""
         }
         release {
-            buildConfigField "String", "HOST", "\"http://10.4.105.125:9070/\""
+            buildConfigField "String", "HOST", "\"https://fine.laikang.com/\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {

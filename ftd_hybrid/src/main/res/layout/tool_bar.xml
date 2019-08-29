@@ -30,7 +30,7 @@
             android:id="@+id/tb_tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="我是自定义View"
+            android:text="中医辨识"
             android:gravity="center"
             android:textColor="@android:color/white"
             android:textSize="20sp"

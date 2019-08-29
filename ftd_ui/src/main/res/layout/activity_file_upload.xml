@@ -52,6 +52,7 @@
                 app:layout_constraintTop_toTopOf="@id/iv_face" />
 
             <TextView
+                android:id="@+id/tv1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/iv_face"
@@ -60,11 +61,12 @@
                 android:padding="2dp"
                 android:text="面部"
                 android:textColor="@android:color/white"
-                app:layout_constraintBottom_toBottomOf="@id/iv_face"
+                app:layout_constraintTop_toBottomOf="@id/iv_face"
                 app:layout_constraintEnd_toEndOf="@id/iv_face"
                 app:layout_constraintStart_toStartOf="@id/iv_face" />
 
             <TextView
+                android:id="@+id/tv2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/iv_tongue_top"
@@ -73,7 +75,7 @@
                 android:padding="2dp"
                 android:text="舌面"
                 android:textColor="@android:color/white"
-                app:layout_constraintBottom_toBottomOf="@id/iv_tongue_top"
+                app:layout_constraintTop_toBottomOf="@id/iv_tongue_top"
                 app:layout_constraintEnd_toEndOf="@id/iv_tongue_top"
                 app:layout_constraintStart_toStartOf="@id/iv_tongue_top" />
 
@@ -86,9 +88,8 @@
                 android:drawablePadding="10dp"
                 app:layout_constraintEnd_toEndOf="@id/iv_face"
                 app:layout_constraintStart_toStartOf="@id/iv_face"
-                app:layout_constraintTop_toBottomOf="@id/iv_face"
+                app:layout_constraintTop_toBottomOf="@id/tv1"
                 tools:text="分析失败，脸太白了" />
-
 
             <TextView
                 android:id="@+id/tv_result_tongue_top"
@@ -99,7 +100,7 @@
                 android:drawablePadding="10dp"
                 app:layout_constraintEnd_toEndOf="@id/iv_tongue_top"
                 app:layout_constraintStart_toStartOf="@id/iv_tongue_top"
-                app:layout_constraintTop_toBottomOf="@id/iv_tongue_top"
+                app:layout_constraintTop_toBottomOf="@id/tv2"
                 tools:text="分析失败，脸太白了" />
         </android.support.constraint.ConstraintLayout>
 
