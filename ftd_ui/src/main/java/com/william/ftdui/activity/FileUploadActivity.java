@@ -1,6 +1,5 @@
 package com.william.ftdui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -11,7 +10,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.william.ftd_base.constant.Constant;
@@ -25,12 +23,8 @@ import com.william.ftd_core.entity.MicroTipBean;
 import com.william.ftd_core.entity.UploadResult;
 import com.william.ftd_core.exception.FtdException;
 import com.william.ftdui.R;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-
 import io.reactivex.disposables.Disposable;
 
 public class FileUploadActivity extends BaseActivity {
@@ -52,7 +46,7 @@ public class FileUploadActivity extends BaseActivity {
         ImageView ivFace = findViewById(R.id.iv_face);
         ImageView ivTongueTop = findViewById(R.id.iv_tongue_top);
 
-        btnSubmit = findViewById(R.id.submit);
+        btnSubmit = findViewById(R.id.btn_submit);
 
         ivRefresh = findViewById(R.id.iv_refresh);
         ivRefresh.setOnClickListener(new View.OnClickListener() {
@@ -69,9 +63,11 @@ public class FileUploadActivity extends BaseActivity {
 
         nsv = findViewById(R.id.nsv);
 
-        File faceImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_FACE).getFileName());
-        File tongueTopImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_TONGUE_TOP).getFileName());
-        File tongueBottomImg = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), Constant.steps.get(Constant.STEP_TONGUE_BOTTOM).getFileName());
+        ArrayList<Step> stepList = getIntent().getParcelableArrayListExtra("stepResult");
+
+        File faceImg = new File(stepList.get(0).getPhotoPath());
+        File tongueTopImg = new File(stepList.get(1).getPhotoPath());
+        File tongueBottomImg = new File(stepList.get(2).getPhotoPath());
 
         loadImg(ivFace, faceImg);
         loadImg(ivTongueTop, tongueTopImg);
@@ -146,16 +142,12 @@ public class FileUploadActivity extends BaseActivity {
     private void changeBtnSubmitState(final boolean face, final boolean tongueTop) {
         final boolean b = face && tongueTop;
         String content;
-        int bjRes;
         if (b) {
-            content = "去问诊";
-            bjRes = R.drawable.selector_btn_submit;
+            content = "下一步";
         } else {
-            content = "返回重拍";
-            bjRes = R.drawable.selector_btn_submit1;
+            content = "重新拍摄";
         }
         btnSubmit.setText(content);
-        btnSubmit.setBackgroundResource(bjRes);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

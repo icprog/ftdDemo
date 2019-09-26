@@ -30,6 +30,7 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$ESPRESSO"
 
     api project(':JTCameraView')
-    implementation 'com.shuhart.stepview:stepview:1.5.0'
+//    implementation 'com.shuhart.stepview:stepview:1.5.0'
+    api 'com.william:zhibiaoview:1.2.3'
     implementation "com.android.support.constraint:constraint-layout:$CONSTRAIT"
 }

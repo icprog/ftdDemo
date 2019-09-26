@@ -5,11 +5,11 @@
     android:id="@+id/tool_bar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:background="@drawable/border_full"
     android:minHeight="?attr/actionBarSize"
-    app:contentInsetStart="10dp"
     app:contentInsetEnd="10dp"
-    android:background="@color/colorPrimary"
-    android:layout_alignParentTop="true">
+    app:contentInsetStart="10dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,34 +19,22 @@
             android:id="@+id/tb_tv_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/close"
-            android:textColor="@android:color/white"
-            android:minEms="4"
-            android:gravity="start"
             android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:drawableStart="@drawable/close"
+            android:gravity="start"
+            android:minEms="4"
+            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/tb_tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="我是自定义View"
+            android:layout_centerInParent="true"
             android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:layout_centerInParent="true"/>
+            android:text="拍照"
+            android:textColor="@color/textColor"
+            android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/tb_tv_end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            tools:text="提交"
-            android:textSize="20sp"
-            android:minEms="4"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"/>
     </RelativeLayout>
 </android.support.v7.widget.Toolbar>

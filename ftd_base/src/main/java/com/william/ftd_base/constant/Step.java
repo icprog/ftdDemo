@@ -9,22 +9,28 @@ import com.william.ftd_base.R;
 public class Step implements Parcelable {
 
     private String stepId;
-    private int drawableId;
+    private int dashedResID;
+    private int tipResID;
     private String fileName;
+
+    private String photoPath;
 
     public Step(@Constant.StepId String stepId) {
         this.stepId = stepId;
         switch (stepId) {
             case Constant.STEP_FACE:
-                drawableId = R.drawable.xuxian_mian;
+                dashedResID = R.drawable.xuxian_mian;
+                tipResID = 0;
                 fileName = Constant.FILE_NAME_FACE;
                 break;
             case Constant.STEP_TONGUE_TOP:
-                drawableId = R.drawable.xuxian_she;
+                dashedResID = R.drawable.xuxian_she;
+                tipResID = R.drawable.tip_tongue_top;
                 fileName = Constant.FILE_NAME_TONGUE_TOP;
                 break;
             case Constant.STEP_TONGUE_BOTTOM:
-                drawableId = R.drawable.xuxian_shedi;
+                dashedResID = R.drawable.xuxian_shedi;
+                tipResID = R.drawable.tip_tongue_bottom;
                 fileName = Constant.FILE_NAME_TONGUE_BOTTOM;
                 break;
             default:
@@ -33,8 +39,10 @@ public class Step implements Parcelable {
 
     protected Step(Parcel in) {
         stepId = in.readString();
-        drawableId = in.readInt();
+        dashedResID = in.readInt();
+        tipResID = in.readInt();
         fileName = in.readString();
+        photoPath = in.readString();
     }
 
     public static final Creator<Step> CREATOR = new Creator<Step>() {
@@ -49,8 +57,8 @@ public class Step implements Parcelable {
         }
     };
 
-    public int getDrawableId() {
-        return drawableId;
+    public int getDashedResID() {
+        return dashedResID;
     }
 
     public String getFileName() {
@@ -65,6 +73,22 @@ public class Step implements Parcelable {
         this.stepId = stepId;
     }
 
+    public String getPhotoPath() {
+        return photoPath;
+    }
+
+    public int getTipResID() {
+        return tipResID;
+    }
+
+    public void setTipResID(int tipResID) {
+        this.tipResID = tipResID;
+    }
+
+    public void setPhotoPath(String photoPath) {
+        this.photoPath = photoPath;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -73,7 +97,9 @@ public class Step implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(stepId);
-        dest.writeInt(drawableId);
+        dest.writeInt(dashedResID);
+        dest.writeInt(tipResID);
         dest.writeString(fileName);
+        dest.writeString(photoPath);
     }
 }

@@ -2,7 +2,7 @@
 <!-- shape如果不声明形状则默认为正方形 -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <solid android:color="@color/colorCorrect" />
+    <solid android:color="@color/colorPrimary" />
 
     <!--<stroke-->
         <!--android:width="1px"-->
@@ -11,5 +11,5 @@
 
     <!--<padding android:bottom="10dp" android:left="15dp" android:right="15dp" android:top="10dp"/>-->
     <!--<corners android:bottomLeftRadius="25dp" android:topLeftRadius="25dp" android:topRightRadius="25dp"  android:bottomRightRadius="25dp"  />-->
-    <corners android:radius="25dp"/>
+    <corners android:radius="5dp"/>
 </shape>

@@ -28,7 +28,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
-import com.william.ftd_base.FtdResult;
 import com.william.ftd_base.constant.Constant;
 
 import org.json.JSONArray;
@@ -38,7 +37,6 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Arrays;
@@ -216,24 +214,24 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Uri[] uris = null;
-        FtdResult[] results = null;
-        File[] files = null;
-        if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
-            Parcelable[] resultData = data.getParcelableArrayExtra("results");
-            results = Arrays.copyOf(resultData, resultData.length, FtdResult[].class);
-            uris = new Uri[results.length];
-            files = new File[results.length];
-            for (int i = 0; i < results.length; i++) {
-                files[i] = new File(results[i].getPath());
-                uris[i] = Uri.fromFile(files[i]);
-            }
-            send(files, results);
-        }
-        if (uploadMessageAboveL != null) {
-            uploadMessageAboveL.onReceiveValue(uris);
-            uploadMessageAboveL = null;
-        }
+//        Uri[] uris = null;
+//        FtdResult[] results = null;
+//        File[] files = null;
+//        if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
+//            Parcelable[] resultData = data.getParcelableArrayExtra("results");
+//            results = Arrays.copyOf(resultData, resultData.length, FtdResult[].class);
+//            uris = new Uri[results.length];
+//            files = new File[results.length];
+//            for (int i = 0; i < results.length; i++) {
+//                files[i] = new File(results[i].getPath());
+//                uris[i] = Uri.fromFile(files[i]);
+//            }
+//            send(files, results);
+//        }
+//        if (uploadMessageAboveL != null) {
+//            uploadMessageAboveL.onReceiveValue(uris);
+//            uploadMessageAboveL = null;
+//        }
     }
 
     /**
@@ -242,29 +240,29 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
      * @param files
      * @param results
      */
-    private void send(final File[] files, final FtdResult[] results) {
-        mBackgroundHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                JSONArray jsonArray = new JSONArray();
-                JSONObject jsonObject;
-                try {
-                    for (int i = 0; i < results.length; i++) {
-                        results[i].setImgRes(trans(files[i]));
-                        jsonObject = new JSONObject();
-                        jsonObject.put("stepId", results[i].getStepId());
-                        jsonObject.put("imgRes", results[i].getImgRes());
-                        jsonArray.put(jsonObject);
-                    }
-                    Message msg = mMainThreadHandler.obtainMessage();
-                    msg.obj = jsonArray.toString();
-                    mMainThreadHandler.sendMessage(msg);
-                } catch (JSONException e) {
-                    Log.e(TAG, "send()方法报错: ", e);
-                }
-            }
-        });
-    }
+//    private void send(final File[] files, final FtdResult[] results) {
+//        mBackgroundHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                JSONArray jsonArray = new JSONArray();
+//                JSONObject jsonObject;
+//                try {
+//                    for (int i = 0; i < results.length; i++) {
+//                        results[i].setImgRes(trans(files[i]));
+//                        jsonObject = new JSONObject();
+//                        jsonObject.put("stepId", results[i].getStepId());
+//                        jsonObject.put("imgRes", results[i].getImgRes());
+//                        jsonArray.put(jsonObject);
+//                    }
+//                    Message msg = mMainThreadHandler.obtainMessage();
+//                    msg.obj = jsonArray.toString();
+//                    mMainThreadHandler.sendMessage(msg);
+//                } catch (JSONException e) {
+//                    Log.e(TAG, "send()方法报错: ", e);
+//                }
+//            }
+//        });
+//    }
 
     /**
      * 文件序列化，并且Base64编码
@@ -287,8 +285,6 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
             byte[] bytes = os.toByteArray();
             String dataBase64 = Base64.encodeToString(bytes, Base64.NO_WRAP);
             return fileDataBuffer.append(dataBase64).toString();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

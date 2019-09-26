@@ -9,97 +9,136 @@
         android:id="@+id/jtcv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <com.shuhart.stepview.StepView
-        android:id="@+id/step"
+    <ImageView
         android:layout_width="0dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/iv_dashed"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bj"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.william.zhibiaoview.StepView
+        android:id="@+id/step"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
         app:layout_constraintEnd_toEndOf="@id/iv_dashed"
         app:layout_constraintStart_toStartOf="@id/iv_dashed"
-        app:sv_animationType="Circle"
-        app:sv_doneTextColor="@color/colorCorrect"
-        app:sv_doneStepMarkColor="@android:color/white"
-        app:sv_doneStepLineColor="@color/colorCorrect"
-        app:sv_doneCircleColor="@color/colorCorrect"
-        app:sv_nextStepLineColor="@color/colorPrimary"
-        app:sv_nextStepCircleColor="@color/colorPrimary"
-        app:sv_nextTextColor="@color/colorPrimary"
-        app:sv_selectedCircleColor="@color/colorCorrect"
-        app:sv_selectedStepNumberColor="@android:color/white"
-        app:sv_selectedTextColor="@color/colorCorrect"
-        app:sv_stepLineWidth="1px"
-        app:sv_stepNumberTextSize="12sp"
-        app:sv_steps="@array/steps" />
+        app:layout_constraintTop_toBottomOf="@id/space" />
+
+    <ImageView
+        android:id="@+id/iv_area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/xuxian_mian"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/iv_dashed"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_centerHorizontal="true"
-        android:adjustViewBounds="true"
-        android:tint="@color/colorPrimary"
-        tools:src="@drawable/xuxian_she"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        app:layout_constraintBottom_toTopOf="@+id/cl_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/step" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/xuxian_she" />
+
+    <ImageView
+        android:id="@+id/iv_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:src="@drawable/tip_tongue_top"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/cl_bottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_area"/>
+
+    <TextView
+        android:id="@+id/tv_img_title_face"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="拍照在虚线内，识别更准确"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/step"
+        app:layout_constraintStart_toStartOf="@+id/step"
+        app:layout_constraintTop_toBottomOf="@+id/step" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="中国中医科学院权威发布\n与北京中医药大学专家合作发布"
+        app:layout_constraintEnd_toEndOf="@+id/tv_img_title_face"
+        app:layout_constraintStart_toStartOf="@+id/tv_img_title_face"
+        app:layout_constraintTop_toBottomOf="@+id/tv_img_title_face" />
+
+
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/cl_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
-            android:id="@+id/tv_desc"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/iv_album"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="请素颜免冠，保持光线充足"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            tools:text="请素颜免冠，保持光线充足"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:src="@drawable/album"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
 
         <ImageView
             android:id="@+id/btn_capture"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom|center"
-            android:contentDescription="@string/app_name"
+            android:contentDescription="capture"
             android:scaleType="fitCenter"
             android:src="@drawable/paizhao"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_desc"/>
+            app:layout_constraintTop_toBottomOf="parent" />
 
         <ImageView
             android:id="@+id/btn_change_facing"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom|center"
+            android:layout_marginEnd="10dp"
             android:contentDescription="@string/app_name"
             android:scaleType="fitCenter"
             android:src="@drawable/change"
-            android:tint="@color/colorPrimary"
-            android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_desc"/>
+            app:layout_constraintTop_toTopOf="parent" />
+
 
     </android.support.constraint.ConstraintLayout>
+
 
 </android.support.constraint.ConstraintLayout>

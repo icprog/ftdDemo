@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+<!--    <color name="colorPrimary">#00000000</color>-->
     <color name="colorPrimary">#01a9ef</color>
     <!--<color name="colorCorrect">#01a9ef</color>-->
     <color name="colorWrong">#fe8f6f</color>
@@ -8,4 +9,6 @@
     <color name="colorGrey">#dddddd</color>
 
     <color name="colorCorrect">#34c083</color>
+
+    <color name="textColor">#333333</color>
 </resources>

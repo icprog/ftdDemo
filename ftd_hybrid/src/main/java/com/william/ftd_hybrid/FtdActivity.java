@@ -10,12 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
+
 import com.william.ftd_base.CameraFragment;
-import com.william.ftd_base.FtdResult;
-import com.william.ftd_base.constant.Constant;
 import com.william.ftd_base.constant.Step;
+
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class FtdActivity extends AppCompatActivity implements CameraFragment.OnCaptureCompleteListener {
 
@@ -56,11 +55,15 @@ public class FtdActivity extends AppCompatActivity implements CameraFragment.OnC
     }
 
     @Override
-    public void onCaptureComplete(FtdResult[] results) {
-
+    public void onCaptureComplete(ArrayList<Step> stepList) {
         Intent intent = new Intent();
-        intent.putExtra("results", results);
+        intent.putExtra("results", stepList);
         setResult(Activity.RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 }

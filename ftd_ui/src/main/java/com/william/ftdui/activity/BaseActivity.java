@@ -50,8 +50,8 @@ abstract class BaseActivity extends AppCompatActivity implements BasePage {
         });
         this.tbTvTitle = findViewById(R.id.tb_tv_title);
         this.tbTvTitle.setText(setTitle());
-        this.tbTvEnd = findViewById(R.id.tb_tv_end);
-        setEndTv(this.tbTvEnd);
+//        this.tbTvEnd = findViewById(R.id.tb_tv_end);
+//        setEndTv(this.tbTvEnd);
         pb = findViewById(R.id.pb);
         if (pb != null) {
             pb.setVisibility(setPBDefault() ? View.VISIBLE : View.GONE);

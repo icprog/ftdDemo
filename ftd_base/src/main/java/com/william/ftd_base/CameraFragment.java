@@ -1,6 +1,8 @@
 package com.william.ftd_base;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,18 +20,17 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import com.laikang.jtcameraview.CameraStateListener;
 import com.laikang.jtcameraview.JTCameraView;
-import com.shuhart.stepview.StepView;
 import com.william.ftd_base.constant.Constant;
 import com.william.ftd_base.constant.Step;
+import com.william.zhibiaoview.StepView;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import static com.laikang.jtcameraview.Constants.CAMERA_FACING_BACK;
 import static com.laikang.jtcameraview.Constants.CAMERA_FACING_FRONT;
 
@@ -42,7 +43,10 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
     private JTCameraView mJTCameraView;
     private ImageView btnCapture;
     private ImageView btnChangeFacing;
-    private ImageView iv;
+    private ImageView ivDashed;
+    private ImageView ivArea;
+    private ImageView ivTip;
+    private ImageView btnAlum;
 
     private boolean canPreview;
 
@@ -54,7 +58,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
     private OnCaptureCompleteListener listener;
 
     private String[] stepIDs;
-    private Step[] steps;
+    private ArrayList<Step> stepList = new ArrayList<>(10);
     private AtomicInteger currentStepIndex = new AtomicInteger();
 
     private int mFacing = CAMERA_FACING_FRONT;
@@ -89,9 +93,8 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
             this.stepIDs = args.getStringArray("stepIDs");
             // 空判断
             if (stepIDs != null) {
-                this.steps = new Step[stepIDs.length];
-                for (int i = 0; i < stepIDs.length; i++) {
-                    this.steps[i] = Constant.steps.get(stepIDs[i]);
+                for (String stepID : stepIDs) {
+                    this.stepList.add(Constant.steps.get(stepID));
                 }
             }
         }
@@ -122,18 +125,25 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         this.mJTCameraView.autoPreview = canPreview;
         this.btnCapture = rootView.findViewById(R.id.btn_capture);
         this.btnCapture.setOnClickListener(this);
-        this.iv = rootView.findViewById(R.id.iv_dashed);
-        this.iv.setImageResource(this.steps[currentStepIndex.get()].getDrawableId());
+        this.ivDashed = rootView.findViewById(R.id.iv_dashed);
+        this.ivDashed.setImageResource(this.stepList.get(currentStepIndex.get()).getDashedResID());
+        this.ivArea = rootView.findViewById(R.id.iv_area);
+        this.ivTip = rootView.findViewById(R.id.iv_tip);
+        this.ivTip.setImageResource(this.stepList.get(currentStepIndex.get()).getTipResID());
         this.btnChangeFacing = rootView.findViewById(R.id.btn_change_facing);
         btnChangeFacing.setOnClickListener(this);
+        this.btnAlum = rootView.findViewById(R.id.iv_album);
+        this.btnAlum.setOnClickListener(this);
     }
 
     /**
      * 切换参照图片
      */
     private void loadImage(int stepId) {
-        int currentDrawable = steps[stepId].getDrawableId();
-        this.iv.setImageResource(currentDrawable);
+        int dashedResID = stepList.get(stepId).getDashedResID();
+        int tipResID = stepList.get(stepId).getTipResID();
+        this.ivDashed.setImageResource(dashedResID);
+        this.ivTip.setImageResource(tipResID);
     }
 
     @Override
@@ -213,7 +223,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         mBackgroundHandler.post(new Runnable() {
             @Override
             public void run() {
-                String fileName = steps[currentStepIndex.get()].getFileName();
+                String fileName = stepList.get(currentStepIndex.get()).getFileName();
                 File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
                 try {
                     OutputStream os = new FileOutputStream(file);
@@ -250,8 +260,8 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
 
         double num = Math.sqrt(bitmapArea / jtArea);
 
-        int ivWidth = (int) (iv.getWidth() * num);
-        int ivHeight = (int) (iv.getHeight() * num);
+        int ivWidth = (int) (ivArea.getWidth() * num);
+        int ivHeight = (int) (ivArea.getHeight() * num);
 
         int x = (int) (bitmapWidth - ivWidth) / 2;
         int y = (int) (bitmapHeight - ivHeight) / 2;
@@ -288,12 +298,17 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btn_capture) {
+        int id = v.getId();
+        if (id == R.id.btn_capture) {
             mJTCameraView.takePicture();
-        } else {
+
+        } else if (id == R.id.iv_album) {
+            goPhotoAlbum();
+        } else if (id == R.id.btn_change_facing) {
             changeFacing();
         }
     }
+
 
     private static class mMainThreadHandler extends Handler {
 
@@ -310,22 +325,50 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
             if (fragment == null || fragment.getActivity() == null) {
                 return;
             }
-            if (fragment.currentStepIndex.getAndIncrement() < fragment.steps.length - 1) {
-                fragment.mStepView.go(fragment.currentStepIndex.get(), true);
+            if (fragment.currentStepIndex.getAndIncrement() < fragment.stepList.size() - 1) {
+                fragment.mStepView.setSelectedIndex(fragment.currentStepIndex.get());
                 fragment.loadImage(fragment.currentStepIndex.get());
             } else {
-                FtdResult[] results = new FtdResult[fragment.steps.length];
-                String fileName;
-                for (int i = 0; i < fragment.steps.length; i++) {
-                    fileName = fragment.steps[i].getFileName();
-                    File file = new File(fragment.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
-                    results[i] = new FtdResult(fragment.steps[i].getStepId(), file.getPath());
-                }
-                if (fragment.listener != null) {
-                    fragment.listener.onCaptureComplete(results);
-                }
+                fragment.callbackResult();
             }
             fragment.btnCapture.setEnabled(true);
+        }
+    }
+
+    private void callbackResult() {
+        String fileName;
+        for (int i = 0; i < stepList.size(); i++) {
+            fileName = stepList.get(i).getFileName();
+            File file = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
+            stepList.get(i).setPhotoPath(file.getPath());
+        }
+        if (listener != null) {
+            listener.onCaptureComplete(stepList);
+        }
+    }
+
+    private void goPhotoAlbum() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, 2);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if (requestCode == 2) {
+            String path = AlbumUtil.getRealPathFromUri(getContext(),data.getData());
+            stepList.get(currentStepIndex.get()).setPhotoPath(path);
+
+            if (currentStepIndex.getAndIncrement() == stepList.size() - 1 && listener != null) {
+                listener.onCaptureComplete(stepList);
+            } else {
+                loadImage(currentStepIndex.get());
+            }
         }
     }
 
@@ -344,6 +387,6 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
     }
 
     public interface OnCaptureCompleteListener {
-        void onCaptureComplete(FtdResult[] results);
+        void onCaptureComplete(ArrayList<Step> stepList);
     }
 }

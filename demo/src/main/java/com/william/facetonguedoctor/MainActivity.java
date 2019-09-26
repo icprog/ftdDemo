@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.william.ftd_core.FtdClient;
 import com.william.ftd_core.exception.FtdException;
@@ -19,6 +20,7 @@ import com.william.ftd_hybrid.FtdHybrid;
 import com.william.ftdui.FtdUILoginCallback;
 import com.william.ftdui.FtdUi;
 import com.william.ftdui.widget.dialog.ConfirmationDialogFragment;
+
 import retrofit2.Converter;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -73,7 +75,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void start(String mobile) {
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             pb.setVisibility(View.VISIBLE);
             pb.setEnabled(true);
             FtdUi.login(mobile, this, new FtdUILoginCallback() {
@@ -90,7 +93,8 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
                 }
             });
-        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)
+                && ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             ConfirmationDialogFragment
                     .newInstance(com.william.ftdui.R.string.camera_permission_confirmation,
                             new String[]{Manifest.permission.CAMERA},
@@ -98,7 +102,8 @@ public class MainActivity extends AppCompatActivity {
                             com.william.ftdui.R.string.camera_permission_not_granted)
                     .show(getSupportFragmentManager(), FRAGMENT_DIALOG);
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA,
+                    Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
         }
     }
 
