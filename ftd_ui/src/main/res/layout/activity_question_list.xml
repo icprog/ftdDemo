@@ -71,7 +71,7 @@
                 app:layoutManager="android.support.v7.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_img_title_face" />
+                app:layout_constraintTop_toBottomOf="@id/tv_tip_content" />
 
             <TextView
                 android:id="@+id/tv2"

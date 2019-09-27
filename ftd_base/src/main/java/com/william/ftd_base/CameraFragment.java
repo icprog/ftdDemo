@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.laikang.jtcameraview.CameraStateListener;
 import com.laikang.jtcameraview.JTCameraView;
@@ -47,6 +48,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
     private ImageView ivArea;
     private ImageView ivTip;
     private ImageView btnAlum;
+    private TextView tvTipContent;
 
     private boolean canPreview;
 
@@ -134,16 +136,20 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         btnChangeFacing.setOnClickListener(this);
         this.btnAlum = rootView.findViewById(R.id.iv_album);
         this.btnAlum.setOnClickListener(this);
+        this.tvTipContent = rootView.findViewById(R.id.tv_tip_content);
     }
 
     /**
      * 切换参照图片
      */
     private void loadImage(int stepId) {
-        int dashedResID = stepList.get(stepId).getDashedResID();
-        int tipResID = stepList.get(stepId).getTipResID();
+        Step step = stepList.get(stepId);
+        int dashedResID = step.getDashedResID();
+        int tipResID = step.getTipResID();
         this.ivDashed.setImageResource(dashedResID);
         this.ivTip.setImageResource(tipResID);
+        this.tvTipContent.setText(step.getTipText());
+        listener.onStepComplete(stepList.get(stepId));
     }
 
     @Override
@@ -195,9 +201,6 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         btnCapture.setEnabled(false);
     }
 
-    private void showToast(String str) {
-        Toast.makeText(getContext(), str, Toast.LENGTH_SHORT);
-    }
 
     private Handler getBackgroundHandler() {
         if (mBackgroundHandler == null) {
@@ -387,6 +390,7 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
     }
 
     public interface OnCaptureCompleteListener {
+        void onStepComplete(Step step);
         void onCaptureComplete(ArrayList<Step> stepList);
     }
 }

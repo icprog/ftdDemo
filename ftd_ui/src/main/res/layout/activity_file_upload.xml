@@ -29,6 +29,7 @@
             android:orientation="vertical">
 
             <com.william.zhibiaoview.StepView
+                android:id="@+id/step"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 app:selectIndex="2"

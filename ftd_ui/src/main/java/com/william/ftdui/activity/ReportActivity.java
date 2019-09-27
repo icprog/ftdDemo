@@ -34,7 +34,7 @@ public class ReportActivity extends BaseActivity implements ReportFragment.Liste
 
     @Override
     protected String setTitle() {
-        return "评估报告";
+        return "报告详情  ";
     }
 
     @Override

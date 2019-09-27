@@ -9,10 +9,11 @@ import com.william.ftd_base.R;
 public class Step implements Parcelable {
 
     private String stepId;
+    private String tipText;
+    private String title;
     private int dashedResID;
     private int tipResID;
     private String fileName;
-
     private String photoPath;
 
     public Step(@Constant.StepId String stepId) {
@@ -22,16 +23,22 @@ public class Step implements Parcelable {
                 dashedResID = R.drawable.xuxian_mian;
                 tipResID = 0;
                 fileName = Constant.FILE_NAME_FACE;
+                tipText = "拍照在虚线内，识别更精准";
+                title = "面诊";
                 break;
             case Constant.STEP_TONGUE_TOP:
                 dashedResID = R.drawable.xuxian_she;
                 tipResID = R.drawable.tip_tongue_top;
                 fileName = Constant.FILE_NAME_TONGUE_TOP;
+                tipText = "正对白光，张大嘴巴，放松伸出舌头";
+                title = "舌诊";
                 break;
             case Constant.STEP_TONGUE_BOTTOM:
                 dashedResID = R.drawable.xuxian_shedi;
                 tipResID = R.drawable.tip_tongue_bottom;
                 fileName = Constant.FILE_NAME_TONGUE_BOTTOM;
+                tipText = "正对白光，舌尖顶上颚，左右处于居中位置";
+                title = "舌诊";
                 break;
             default:
         }
@@ -39,6 +46,8 @@ public class Step implements Parcelable {
 
     protected Step(Parcel in) {
         stepId = in.readString();
+        tipText = in.readString();
+        title = in.readString();
         dashedResID = in.readInt();
         tipResID = in.readInt();
         fileName = in.readString();
@@ -89,6 +98,22 @@ public class Step implements Parcelable {
         this.photoPath = photoPath;
     }
 
+    public String getTipText() {
+        return tipText;
+    }
+
+    public void setTipText(String tipText) {
+        this.tipText = tipText;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -97,6 +122,8 @@ public class Step implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(stepId);
+        dest.writeString(tipText);
+        dest.writeString(title);
         dest.writeInt(dashedResID);
         dest.writeInt(tipResID);
         dest.writeString(fileName);

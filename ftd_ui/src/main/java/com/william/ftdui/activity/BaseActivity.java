@@ -21,9 +21,9 @@ import io.reactivex.disposables.Disposable;
 
 abstract class BaseActivity extends AppCompatActivity implements BasePage {
 
-    private ProgressBar pb;
-    private TextView tbTvStart;
-    private TextView tbTvTitle;
+    protected ProgressBar pb;
+    protected TextView tbTvStart;
+    protected TextView tbTvTitle;
     private TextView tbTvEnd;
 
     private LinkedList<Disposable> dosposableList = new LinkedList<>();

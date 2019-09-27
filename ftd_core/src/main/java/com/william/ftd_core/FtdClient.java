@@ -35,6 +35,9 @@ import com.william.ftd_core.param.SubmitAnswerParam;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -256,6 +259,40 @@ public class FtdClient {
                 return conclusion;
             }
         })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(new Function<Conclusion, Conclusion>() {
+                    @Override
+                    public Conclusion apply(Conclusion conclusion) throws Exception {
+                        return conclusion;
+                    }
+                })
+                .subscribe(new Consumer<Conclusion>() {
+                    @Override
+                    public void accept(Conclusion result) throws Exception {
+                        if (callback != null) {
+                            callback.onSuccess(result);
+                        }
+                    }
+                }, new ErrorConsumer(callback));
+    }
+
+    public Disposable picUpload(ArrayList<File> fileList, final FtdPicUploadCallback callback) {
+        schemeId = Util.getUUID();
+        LinkedList<Single<FtdResponse<UploadResult>>> disposableLinkedList = new LinkedList<>();
+        for (int i = 0; i < fileList.size(); i++) {
+            disposableLinkedList.add( picUpload(fileList.get(i),i));
+        }
+         return Single.zip(disposableLinkedList, new Function< Object[], Conclusion>() {
+
+             @Override
+             public Conclusion apply(Object[] objects) throws Exception {
+                 Conclusion conclusion = new Conclusion();
+                 conclusion.setFaceResult((FtdResponse<UploadResult>)objects[0]);
+                 conclusion.setTongueTopResult((FtdResponse<UploadResult>)objects[1]);
+                 return conclusion;
+             }
+         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(new Function<Conclusion, Conclusion>() {

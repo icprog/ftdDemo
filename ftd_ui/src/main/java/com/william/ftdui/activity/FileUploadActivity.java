@@ -1,7 +1,6 @@
 package com.william.ftdui.activity;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -10,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.william.ftd_base.constant.Constant;
@@ -23,8 +23,11 @@ import com.william.ftd_core.entity.MicroTipBean;
 import com.william.ftd_core.entity.UploadResult;
 import com.william.ftd_core.exception.FtdException;
 import com.william.ftdui.R;
+import com.william.zhibiaoview.StepView;
+
 import java.io.File;
 import java.util.ArrayList;
+
 import io.reactivex.disposables.Disposable;
 
 public class FileUploadActivity extends BaseActivity {
@@ -39,7 +42,11 @@ public class FileUploadActivity extends BaseActivity {
 
     private NestedScrollView nsv;
 
+    private StepView stepView;
+
     private ProgressBar pbSub;
+
+    private ArrayList<File> fileList = new ArrayList<>();
 
     @Override
     public void onCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -63,18 +70,20 @@ public class FileUploadActivity extends BaseActivity {
 
         nsv = findViewById(R.id.nsv);
 
+        stepView = findViewById(R.id.step);
+
         ArrayList<Step> stepList = getIntent().getParcelableArrayListExtra("stepResult");
 
-        File faceImg = new File(stepList.get(0).getPhotoPath());
-        File tongueTopImg = new File(stepList.get(1).getPhotoPath());
-        File tongueBottomImg = new File(stepList.get(2).getPhotoPath());
+        for (Step step : stepList) {
+            fileList.add(new File(step.getPhotoPath()));
+        }
 
-        loadImg(ivFace, faceImg);
-        loadImg(ivTongueTop, tongueTopImg);
+        loadImg(ivFace, fileList.get(0));
+        loadImg(ivTongueTop, fileList.get(1));
 
         pbSub = findViewById(R.id.pb_sub);
 
-        upload(faceImg, tongueTopImg, tongueBottomImg);
+        upload(fileList);
 
         getMicroTip();
     }
@@ -96,12 +105,9 @@ public class FileUploadActivity extends BaseActivity {
     /**
      * 上传图片去分析
      *
-     * @param FaceImg
-     * @param TongueTopImg
-     * @param TongueBottomImg
      */
-    private void upload(File FaceImg, File TongueTopImg, File TongueBottomImg) {
-        Disposable fileUploadDisposable = FtdClient.getInstance().picUpload(FaceImg, TongueTopImg, TongueBottomImg, new FtdPicUploadCallback() {
+    private void upload(ArrayList<File> fileCollection) {
+        Disposable fileUploadDisposable = FtdClient.getInstance().picUpload(fileCollection, new FtdPicUploadCallback() {
             @Override
             public void onSuccess(Conclusion result) {
                 dismissProgress();
@@ -123,6 +129,7 @@ public class FileUploadActivity extends BaseActivity {
         addDisposable(fileUploadDisposable);
     }
 
+
     private Boolean changeTvDescState(TextView tv, FtdResponse<UploadResult> response) {
         boolean b = response.getCode() == 1000;
         int drawableRes;
@@ -143,7 +150,8 @@ public class FileUploadActivity extends BaseActivity {
         final boolean b = face && tongueTop;
         String content;
         if (b) {
-            content = "下一步";
+            content = "去问诊";
+            stepView.setSelectedIndex(3);
         } else {
             content = "重新拍摄";
         }

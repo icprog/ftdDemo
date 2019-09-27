@@ -64,8 +64,8 @@ public class QuestionListActivity extends BaseActivity implements
         Disposable disposable = FtdClient.getInstance().getQuestion(new FtdQuestionListCallback() {
             @Override
             public void onSuccess(AskBean bean) {
-                CardInfoBean bean1 = bean.getCardInfo();
-                CardInfoBean bean2 = bean.getConstitutionInfo();
+                CardInfoBean bean1 = bean.getConstitutionInfo();
+                CardInfoBean bean2 = bean.getCardInfo();
                 traceId1 = bean1.getTraceId();
                 traceId2 = bean2.getTraceId();
                 adapter1.addData(bean1, Constant.TRACE_ZHI);

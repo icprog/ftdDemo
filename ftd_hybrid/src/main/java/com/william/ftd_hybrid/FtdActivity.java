@@ -55,6 +55,11 @@ public class FtdActivity extends AppCompatActivity implements CameraFragment.OnC
     }
 
     @Override
+    public void onStepComplete(Step step) {
+
+    }
+
+    @Override
     public void onCaptureComplete(ArrayList<Step> stepList) {
         Intent intent = new Intent();
         intent.putExtra("results", stepList);

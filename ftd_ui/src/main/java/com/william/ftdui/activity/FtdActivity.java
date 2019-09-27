@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.william.ftd_base.CameraFragment;
+import com.william.ftd_base.constant.Constant;
 import com.william.ftd_base.constant.Step;
 import com.william.ftdui.R;
 
@@ -41,7 +42,7 @@ public class FtdActivity extends BaseActivity implements CameraFragment.OnCaptur
 
     @Override
     protected String setTitle() {
-        return "拍照";
+        return "面诊";
     }
 
     @Override
@@ -55,6 +56,12 @@ public class FtdActivity extends BaseActivity implements CameraFragment.OnCaptur
 //        startActivity(intent);
 //        finish();
 //    }
+
+    @Override
+    public void onStepComplete(Step step) {
+        String title = step.getTitle();
+        tbTvTitle.setText(title);
+    }
 
     @Override
     public void onCaptureComplete(ArrayList<Step> stepList) {
