@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (permissions.length != 1 || grantResults.length != 1) {
+        if (permissions.length < 1 || grantResults.length < 1) {
             Toast.makeText(this, "请求权限失败。", Toast.LENGTH_SHORT).show();
             return;
         }

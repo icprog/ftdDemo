@@ -3,10 +3,19 @@ package com.william.ftd_base.constant;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.util.ArrayMap;
 
 import com.william.ftd_base.R;
 
 public class Step implements Parcelable {
+
+//    public static Step[] steps = new Step[3];
+    public static ArrayMap<String,Step> stepMap = new ArrayMap<>();
+    static {
+        stepMap.put(Constant.STEP_FACE,null);
+        stepMap.put(Constant.STEP_TONGUE_TOP,null);
+        stepMap.put(Constant.STEP_TONGUE_BOTTOM,null);
+    }
 
     private String stepId;
     private String tipText;
@@ -17,6 +26,7 @@ public class Step implements Parcelable {
     private String photoPath;
 
     public Step(@Constant.StepId String stepId) {
+
         this.stepId = stepId;
         switch (stepId) {
             case Constant.STEP_FACE:

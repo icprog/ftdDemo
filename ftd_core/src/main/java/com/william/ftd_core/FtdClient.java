@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
+
 import com.william.ftd_core.callback.BaseCallback;
 import com.william.ftd_core.callback.FtdGetAnaylzerCallback;
 import com.william.ftd_core.callback.FtdLastReportCallback;
@@ -29,14 +30,13 @@ import com.william.ftd_core.param.GetAnalyzerParam;
 import com.william.ftd_core.param.GetQuestionParam;
 import com.william.ftd_core.param.GetReportParam;
 import com.william.ftd_core.param.GetTendencyParam;
+import com.william.ftd_core.param.HeaderParam;
 import com.william.ftd_core.param.InitParam;
 import com.william.ftd_core.param.LoginParam;
 import com.william.ftd_core.param.SubmitAnswerParam;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -135,7 +135,18 @@ public class FtdClient {
         phrAppKey = appInfo.metaData.getString("laiKang.phrAppKey");
         phrAppSecret = appInfo.metaData.getString("laiKang.phrAppSecret");
 
-        initWebService(retrofitFactory);
+//        initWebService(retrofitFactory);
+        HeaderParam param = new HeaderParam();
+        param.appId = appId;
+        param.appCode = appCode;
+        param.appKey = appKey;
+        param.appSecret = appSecret;
+        param.companyId = companyId;
+        param.companyPid = companyPid;
+        param.companyCode = companyCode;
+        param.phrAppKey = phrAppKey;
+        param.phrAppSecret = phrAppSecret;
+        ServerConnection.getInstance().init(param);
     }
 
     private void initWebService(Converter.Factory factory) {
@@ -277,11 +288,11 @@ public class FtdClient {
                 }, new ErrorConsumer(callback));
     }
 
-    public Disposable picUpload(ArrayList<File> fileList, final FtdPicUploadCallback callback) {
+    public Disposable picUpload(File[] fileList, final FtdPicUploadCallback callback) {
         schemeId = Util.getUUID();
         LinkedList<Single<FtdResponse<UploadResult>>> disposableLinkedList = new LinkedList<>();
-        for (int i = 0; i < fileList.size(); i++) {
-            disposableLinkedList.add( picUpload(fileList.get(i),i));
+        for (int i = 0; i < fileList.length; i++) {
+            disposableLinkedList.add( picUpload(fileList[i],i));
         }
          return Single.zip(disposableLinkedList, new Function< Object[], Conclusion>() {
 

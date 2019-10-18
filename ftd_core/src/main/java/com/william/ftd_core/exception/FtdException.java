@@ -7,6 +7,15 @@ public class FtdException extends Exception {
     private int code;
     private String msg;
 
+    public FtdException() {
+        this("网络不稳定，请稍后重试");
+    }
+
+    public FtdException(String msg) {
+        super(msg);
+        this.msg = msg;
+    }
+
     public FtdException(int code) {
         this.code = code;
         switch (code) {
@@ -84,8 +93,8 @@ public class FtdException extends Exception {
             case 100115:
                 msg = "亲，您的网络好像有问题哦";
                 break;
-            default:
-                msg = "网络不稳定，请稍后重试";
+//            default:
+//                msg = "网络不稳定，请稍后重试";
         }
     }
 

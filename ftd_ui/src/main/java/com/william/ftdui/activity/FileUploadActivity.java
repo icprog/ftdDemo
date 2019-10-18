@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.william.ftd_base.constant.Constant;
@@ -46,12 +45,9 @@ public class FileUploadActivity extends BaseActivity {
 
     private ProgressBar pbSub;
 
-    private ArrayList<File> fileList = new ArrayList<>();
 
     @Override
     public void onCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        ImageView ivFace = findViewById(R.id.iv_face);
-        ImageView ivTongueTop = findViewById(R.id.iv_tongue_top);
 
         btnSubmit = findViewById(R.id.btn_submit);
 
@@ -72,25 +68,22 @@ public class FileUploadActivity extends BaseActivity {
 
         stepView = findViewById(R.id.step);
 
-        ArrayList<Step> stepList = getIntent().getParcelableArrayListExtra("stepResult");
+        File[] files = new File[3];
+        files[0] = loadImg(Step.stepMap.get(Constant.STEP_FACE));
+        files[1] = loadImg(Step.stepMap.get(Constant.STEP_TONGUE_TOP));
+        files[2] = loadImg(Step.stepMap.get(Constant.STEP_TONGUE_BOTTOM));
 
-        for (Step step : stepList) {
-            fileList.add(new File(step.getPhotoPath()));
-        }
-
-        loadImg(ivFace, fileList.get(0));
-        loadImg(ivTongueTop, fileList.get(1));
 
         pbSub = findViewById(R.id.pb_sub);
 
-        upload(fileList);
+        upload(files);
 
         getMicroTip();
     }
 
     @Override
     protected String setTitle() {
-        return "上传分析";
+        return "面舌分析";
     }
 
     @Override
@@ -98,15 +91,30 @@ public class FileUploadActivity extends BaseActivity {
         return R.layout.activity_file_upload;
     }
 
-    private void loadImg(@NonNull ImageView iv, @NonNull File file) {
-        Glide.with(iv).load(file).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into(iv);
+    private File loadImg(Step step) {
+
+        if (step == null) {
+            return null;
+        }
+        File file = new File(step.getPhotoPath());
+        String stepID = step.getStepId();
+        int ivResID = 0;
+        if (stepID.equals(Constant.STEP_FACE)) {
+            ivResID = R.id.iv_face;
+        } else if (stepID.equals(Constant.STEP_TONGUE_TOP)) {
+            ivResID = R.id.iv_tongue_top;
+        }
+        if (ivResID != 0) {
+            ImageView iv = findViewById(ivResID);
+            Glide.with(iv).load(file).skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into(iv);
+        }
+        return file;
     }
 
     /**
      * 上传图片去分析
-     *
      */
-    private void upload(ArrayList<File> fileCollection) {
+    private void upload(File[] fileCollection) {
         Disposable fileUploadDisposable = FtdClient.getInstance().picUpload(fileCollection, new FtdPicUploadCallback() {
             @Override
             public void onSuccess(Conclusion result) {

@@ -39,20 +39,12 @@ public class ReportScoreVH extends ReportBaseVH {
 
 
     public void bind(@ReportFragment.ReportType int reportType, ReportBean bean) {
-//        tvScoreMain.setText(String.valueOf(bean.getScore()));
-//        String text = "健康得分" + bean.getScore() + "分";
-//        SpannableString ss = new SpannableString(text);
-//        ForegroundColorSpan fcs = new ForegroundColorSpan(context.getResources().getColor(R.color.colorPrimary));
-//        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(26, true);
-//        ss.setSpan(fcs, 4, text.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        ss.setSpan(ass, 4, text.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        tvScore.setText(ss);
 
         if (bean.getEight() != null && bean.getEight().getSixDiseaseList() != null) {
             String sixDiseaseStr = bean.getEight().getSixDiseaseList();
             Gson gson = new Gson();
             SixDiseaseBean[] diseaseBeans = gson.fromJson(sixDiseaseStr, SixDiseaseBean[].class);
-            view.setData(diseaseBeans);
+//            view.setData(diseaseBeans);
         }
 
         if (bean.getUr() != null && !bean.getUr().isEmpty()) {
