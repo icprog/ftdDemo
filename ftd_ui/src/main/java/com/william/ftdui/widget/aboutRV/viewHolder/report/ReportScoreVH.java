@@ -48,12 +48,12 @@ public class ReportScoreVH extends ReportBaseVH {
 //        ss.setSpan(ass, 4, text.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 //        tvScore.setText(ss);
 
-        if (bean.getEight() != null && bean.getEight().getSixDiseaseList() != null) {
-            String sixDiseaseStr = bean.getEight().getSixDiseaseList();
-            Gson gson = new Gson();
-            SixDiseaseBean[] diseaseBeans = gson.fromJson(sixDiseaseStr, SixDiseaseBean[].class);
-            view.setData(diseaseBeans);
-        }
+//        if (bean.getEight() != null && bean.getEight().getSixDiseaseList() != null) {
+//            String sixDiseaseStr = bean.getEight().getSixDiseaseList();
+//            Gson gson = new Gson();
+//            SixDiseaseBean[] diseaseBeans = gson.fromJson(sixDiseaseStr, SixDiseaseBean[].class);
+//            view.setData(diseaseBeans);
+//        }
 
         if (bean.getUr() != null && !bean.getUr().isEmpty()) {
             tvDisease.setText("您疑似：" + bean.getUr().get(0).getDiseaseName());

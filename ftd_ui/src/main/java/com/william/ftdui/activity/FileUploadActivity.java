@@ -79,7 +79,7 @@ public class FileUploadActivity extends BaseActivity {
         }
 
         loadImg(ivFace, fileList.get(0));
-        loadImg(ivTongueTop, fileList.get(1));
+        loadImg(ivTongueTop, fileList.get(1));//todo这里下标越界了
 
         pbSub = findViewById(R.id.pb_sub);
 
