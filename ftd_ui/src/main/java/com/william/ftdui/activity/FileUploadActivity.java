@@ -3,6 +3,7 @@ package com.william.ftdui.activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.ArrayMap;
 import android.support.v4.widget.NestedScrollView;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +28,7 @@ import com.william.zhibiaoview.StepView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import io.reactivex.disposables.Disposable;
 
@@ -46,7 +48,8 @@ public class FileUploadActivity extends BaseActivity {
 
     private ProgressBar pbSub;
 
-    private ArrayList<File> fileList = new ArrayList<>();
+//    private ArrayList<File> fileList = new ArrayList<>();
+    private static ArrayMap<String,File> fileList = new ArrayMap();
 
     @Override
     public void onCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -75,15 +78,23 @@ public class FileUploadActivity extends BaseActivity {
         ArrayList<Step> stepList = getIntent().getParcelableArrayListExtra("stepResult");
 
         for (Step step : stepList) {
-            fileList.add(new File(step.getPhotoPath()));
+//            fileList.add(new File(step.getPhotoPath()));
+            fileList.put(step.getStepId(),new File(step.getPhotoPath()));
         }
 
-        loadImg(ivFace, fileList.get(0));
-        loadImg(ivTongueTop, fileList.get(1));//todo这里下标越界了
+        loadImg(ivFace, fileList.get(Constant.STEP_FACE));
+        loadImg(ivTongueTop, fileList.get(Constant.STEP_TONGUE_TOP));//todo这里下标越界了
 
         pbSub = findViewById(R.id.pb_sub);
 
-        upload(fileList);
+        ArrayList<File> list = new ArrayList<>();
+//        for (File file : fileList.values()) {
+//            list.add(file);
+//        }
+        list.add(fileList.get(Constant.STEP_FACE));
+        list.add(fileList.get(Constant.STEP_TONGUE_TOP));
+        list.add(fileList.get(Constant.STEP_TONGUE_BOTTOM));
+        upload(list);
 
         getMicroTip();
     }
