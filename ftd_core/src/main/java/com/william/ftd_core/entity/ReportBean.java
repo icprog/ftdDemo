@@ -39,6 +39,7 @@ public class ReportBean {
     private String typeCode;
     private double score;
     private EightBean eight;
+    private double entropyScore;
     private Object uwr;
     private String evaluate;
     private Object objJson;
@@ -56,6 +57,15 @@ public class ReportBean {
     private List<?> signUqo;
     private List<TongueBean> tongue;
     private List<FaceBean> face;
+
+
+    public double getEntropyScore() {
+        return entropyScore;
+    }
+
+    public void setEntropyScore(double entropyScore) {
+        this.entropyScore = entropyScore;
+    }
 
     /**
      *

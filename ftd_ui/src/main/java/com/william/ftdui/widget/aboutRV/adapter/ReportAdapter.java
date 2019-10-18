@@ -19,6 +19,7 @@ import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportHeathAnalyzeVH;
 import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportIndexAnalyzeVH;
 import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportProfessorVH;
 import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportScoreVH;
+import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportShangVH;
 import com.william.ftdui.widget.aboutRV.viewHolder.report.ReportTendencyVH;
 
 import java.util.ArrayList;
@@ -51,7 +52,8 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportBaseVH> {
 
 
     private void loadCard() {
-        vhList.add(new Pair(ReportFragment.EIGHT, R.layout.item_report_eight, ReportEightVH.class));
+//        vhList.add(new Pair(ReportFragment.EIGHT, R.layout.item_report_eight, ReportEightVH.class));
+        vhList.add(new Pair(ReportFragment.EIGHT, R.layout.item_report_entropy_dashboard, ReportShangVH.class));
         vhList.add(new Pair(ReportFragment.PROFESSOR, R.layout.item_report_professor, ReportProfessorVH.class));
         vhList.add(new Pair(ReportFragment.RESOLUTION, R.layout.item_report_analyze_resolution, ReportAnalysisResolutionVH.class));
         vhList.add(new Pair(ReportFragment.RESULT, R.layout.item_report_analyze_result, ReportAnalysisResultVH.class));
