@@ -36,11 +36,11 @@ public class LoginTask implements FtdTask, LoginRunnable.LoginCallback {
 
     @Override
     public void onSuccess(User user) {
-
+        int i = 0;
     }
 
     @Override
     public void onFail(FtdException e) {
-
+        int i = 0;
     }
 }
