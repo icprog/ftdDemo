@@ -3,6 +3,9 @@ package com.william.ftd_core;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+
+import com.william.ftd_core.runnable.LoginRunnable;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -45,8 +48,8 @@ public class TaskManager {
                 workQueue);
     }
 
-    public static void start(String phone) {
-        FtdTask task = new LoginTask(phone);
+    public static void start(String phone, LoginRunnable.LoginCallback callback) {
+        FtdTask task = new LoginTask(phone,callback);
         instance.threadPool.execute(task.getRunnable());
     }
 }

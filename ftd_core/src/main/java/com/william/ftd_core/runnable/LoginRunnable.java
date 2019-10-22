@@ -1,6 +1,7 @@
 package com.william.ftd_core.runnable;
 
 import com.lk.mogaijson.JSON;
+import com.lk.mogaijson.JSONObject;
 import com.lk.mogaijson.TypeReference;
 import com.william.ftd_core.BaseCallback;
 import com.william.ftd_core.LoginTask;
@@ -40,38 +41,30 @@ public class LoginRunnable implements Runnable {
      * @throws IOException
      * @throws FtdException
      */
-    private <T> T checkResponse(Response response) throws IOException, FtdException {
-        if (response.isSuccessful() && response.body() != null) {
-            String tokenResult = response.body().string();
-//            FtdResponse<T> ftdResponse = JSON.parseObject(tokenResult, new TypeReference<FtdResponse<T>>() {
-//            });
-            FtdResponse<T> ftdResponse = JSON.parseObject(tokenResult, new TypeReference<FtdResponse<T>>() {
-            });
-            if (ftdResponse.getCode() == 1000 && ftdResponse.getData() != null) {
-                return ftdResponse.getData();
-            } else {
-                throw new FtdException(ftdResponse.getMsg());
-            }
-        } else {
+    private <T> T checkResponse(Response response, Class<T> clazz) throws IOException, FtdException {
+        if (!response.isSuccessful()) {
             throw new FtdException();
         }
-    }
-
-    private  <T> T checkResponse1(Response response,Class<FtdResponse<T>> clazz) throws IOException, FtdException {
-        if (response.isSuccessful() && response.body() != null) {
-            String tokenResult = response.body().string();
-            FtdResponse<T> ftdResponse = JSON.parseObject(tokenResult, clazz);
-//            FtdResponse<String> ftdResponse = JSON.parseObject(tokenResult, new TypeReference<FtdResponse<String>>() {
-//            });
-            if (ftdResponse.getCode() == 1000 && ftdResponse.getData() != null) {
-//                return ftdResponse.getData();
-                return JSON.parseObject(ftdResponse.getData(),clazz);
-//                return t;
-            } else {
-                throw new FtdException(ftdResponse.getMsg());
-            }
+        String responseBody = response.body().string();
+        FtdResponse ftdResponse = JSON.parseObject(responseBody, FtdResponse.class);
+        if (ftdResponse.getCode() != 1000) {
+            throw new FtdException(ftdResponse.getMsg());
+        }
+        if (
+                clazz == byte.class ||
+                        clazz == short.class ||
+                        clazz == int.class ||
+                        clazz == long.class ||
+                        clazz == float.class ||
+                        clazz == double.class ||
+                        clazz == boolean.class ||
+                        clazz == char.class ||
+                        clazz == String.class
+        ) {
+            return (T) (ftdResponse.getData());
         } else {
-            throw new FtdException();
+            JSONObject jb = (JSONObject) ftdResponse.getData();
+            return jb.toJavaObject(clazz);
         }
     }
 
@@ -85,7 +78,7 @@ public class LoginRunnable implements Runnable {
         String tokenResult;
         try {
             tokenResponse = ServerConnection.getInstance().getToken();
-            tokenResult = checkResponse(tokenResponse);
+            tokenResult = checkResponse(tokenResponse, String.class);
         } catch (Exception e) {
             throw new FtdException();
         }
@@ -101,7 +94,7 @@ public class LoginRunnable implements Runnable {
         try {
             LoginParam param = new LoginParam(task.getPhone(), task.getCompanyCode(), task.getAppId(), token);
             Response loginResponse = ServerConnection.getInstance().login(param);
-            User user = checkResponse1(loginResponse);
+            User user = checkResponse(loginResponse, User.class);
             task.onSuccess(user);
         } catch (Exception e) {
             throw new FtdException();

@@ -9,6 +9,7 @@ import com.william.ftd_core.FtdClient;
 import com.william.ftd_core.TaskManager;
 import com.william.ftd_core.callback.FtdLoginCallback;
 import com.william.ftd_core.exception.FtdException;
+import com.william.ftd_core.runnable.LoginRunnable;
 import com.william.ftdui.activity.FtdActivity;
 
 import retrofit2.Converter;
@@ -33,7 +34,7 @@ public class FtdUi {
      * @param phone
      * @param context
      */
-    public static void login(final String phone, final Context context, final FtdUILoginCallback callback) {
+    public static void login(final String phone, final Context context, final LoginRunnable.LoginCallback callback ) {
 //        FtdClient.getInstance().login(phone, new FtdLoginCallback() {
 //            @Override
 //            public void onSuccess() {
@@ -51,6 +52,6 @@ public class FtdUi {
 //                }
 //            }
 //        });
-        TaskManager.start(phone);
+        TaskManager.start(phone,callback);
     }
 }

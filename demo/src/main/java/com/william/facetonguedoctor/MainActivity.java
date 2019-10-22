@@ -15,9 +15,10 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.william.ftd_core.FtdClient;
+import com.william.ftd_core.entity.User;
 import com.william.ftd_core.exception.FtdException;
+import com.william.ftd_core.runnable.LoginRunnable;
 import com.william.ftd_hybrid.FtdHybrid;
-import com.william.ftdui.FtdUILoginCallback;
 import com.william.ftdui.FtdUi;
 import com.william.ftdui.widget.dialog.ConfirmationDialogFragment;
 
@@ -77,20 +78,27 @@ public class MainActivity extends AppCompatActivity {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            pb.setVisibility(View.VISIBLE);
-            pb.setEnabled(true);
-            FtdUi.login(mobile, this, new FtdUILoginCallback() {
+            togglePb(true);
+            FtdUi.login(mobile, this, new LoginRunnable.LoginCallback() {
                 @Override
-                public void onSuccess() {
-                    pb.setEnabled(false);
-                    pb.setVisibility(View.GONE);
+                public void onSuccess(User user) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            togglePb(false);
+                        }
+                    });
                 }
 
                 @Override
-                public void onError(FtdException e) {
-                    pb.setEnabled(false);
-                    pb.setVisibility(View.GONE);
-                    Toast.makeText(MainActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
+                public void onFail(FtdException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            togglePb(false);
+                            Toast.makeText(MainActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             });
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)
@@ -105,6 +113,17 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA,
                     Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
         }
+    }
+
+    private void togglePb(boolean b){
+        int visibility;
+        if (b){
+            visibility = View.VISIBLE;
+        } else {
+            visibility = View.GONE;
+        }
+        pb.setEnabled(b);
+        pb.setVisibility(visibility);
     }
 
     @Override
