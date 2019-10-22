@@ -19,6 +19,7 @@ import com.william.ftd_core.entity.User;
 import com.william.ftd_core.exception.FtdException;
 import com.william.ftd_core.runnable.LoginRunnable;
 import com.william.ftd_hybrid.FtdHybrid;
+import com.william.ftdui.FtdUILoginCallback;
 import com.william.ftdui.FtdUi;
 import com.william.ftdui.widget.dialog.ConfirmationDialogFragment;
 
@@ -79,26 +80,16 @@ public class MainActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             togglePb(true);
-            FtdUi.login(mobile, this, new LoginRunnable.LoginCallback() {
+            FtdUi.login(mobile, this, new FtdUILoginCallback() {
                 @Override
-                public void onSuccess(User user) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            togglePb(false);
-                        }
-                    });
+                public void onSuccess() {
+                    togglePb(false);
                 }
 
                 @Override
-                public void onFail(FtdException e) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            togglePb(false);
-                            Toast.makeText(MainActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                public void onError(FtdException e) {
+                    togglePb(false);
+                    Toast.makeText(MainActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
                 }
             });
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)
@@ -115,15 +106,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void togglePb(boolean b){
-        int visibility;
-        if (b){
-            visibility = View.VISIBLE;
-        } else {
-            visibility = View.GONE;
-        }
-        pb.setEnabled(b);
-        pb.setVisibility(visibility);
+    private void togglePb(final boolean b) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                int visibility;
+                if (b) {
+                    visibility = View.VISIBLE;
+                } else {
+                    visibility = View.GONE;
+                }
+                pb.setEnabled(b);
+                pb.setVisibility(visibility);
+            }
+        });
     }
 
     @Override

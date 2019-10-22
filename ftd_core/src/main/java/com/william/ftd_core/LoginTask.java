@@ -6,11 +6,10 @@ import com.william.ftd_core.runnable.LoginRunnable;
 
 import java.lang.ref.WeakReference;
 
-public class LoginTask implements FtdTask, LoginRunnable.LoginCallback {
+public class LoginTask implements FtdTask {
 
     private String phone, companyCode, appId;
 
-//    private LoginRunnable.LoginCallback callback;
     private WeakReference<LoginRunnable.LoginCallback> callback;
 
     public String getPhone() {
@@ -40,15 +39,11 @@ public class LoginTask implements FtdTask, LoginRunnable.LoginCallback {
     }
 
 
-    @Override
     public void onSuccess(User user) {
-//        int i = 0;
         callback.get().onSuccess(user);
     }
 
-    @Override
     public void onFail(FtdException e) {
-//        int i = 0;
         callback.get().onFail(e);
     }
 }
