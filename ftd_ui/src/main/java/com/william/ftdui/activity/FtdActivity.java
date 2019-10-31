@@ -12,6 +12,8 @@ import com.william.ftd_base.CameraFragment;
 import com.william.ftd_base.constant.Step;
 import com.william.ftdui.R;
 
+import java.util.ArrayList;
+
 public class FtdActivity extends BaseActivity implements CameraFragment.OnCaptureCompleteListener {
 
     @Override
@@ -19,9 +21,9 @@ public class FtdActivity extends BaseActivity implements CameraFragment.OnCaptur
         return false;
     }
 
-    public static void getPicFromCamera(Context context, String[] stepIDs) {
+    public static void getPicFromCamera(Context context, ArrayList<Integer> diagnoseTagList) {
         Intent intent = new Intent(context, FtdActivity.class);
-        intent.putExtra("stepIDs", stepIDs);
+        intent.putExtra("diagnoseTagList", diagnoseTagList);
         context.startActivity(intent);
     }
 
@@ -29,8 +31,8 @@ public class FtdActivity extends BaseActivity implements CameraFragment.OnCaptur
     public void onCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏
         Intent intent = getIntent();
-        String[] stepIDs = intent.getStringArrayExtra("stepIDs");
-        CameraFragment cf = CameraFragment.newInstance(stepIDs);
+        ArrayList<Integer> diagnoseTagList = intent.getIntegerArrayListExtra("diagnoseTagList");
+        CameraFragment cf = CameraFragment.newInstance(diagnoseTagList);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.container, cf);
         ft.commit();
@@ -56,7 +58,7 @@ public class FtdActivity extends BaseActivity implements CameraFragment.OnCaptur
     public void onCaptureComplete(Step[] stepList) {
 
         for (Step step : stepList) {
-            Step.stepMap.put(step.getStepId(), step);
+            Step.stepMap.put(step.getTypeId(), step);
         }
         Intent intent = new Intent(this, FileUploadActivity.class);
         startActivity(intent);

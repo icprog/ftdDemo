@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -11,39 +12,33 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.william.ftd_base.constant.Constant;
 import com.william.ftd_base.constant.Step;
-import com.william.ftd_core.FtdClient;
-import com.william.ftd_core.callback.FtdMicroTipCallback;
-import com.william.ftd_core.callback.FtdPicUploadCallback;
-import com.william.ftd_core.entity.Conclusion;
-import com.william.ftd_core.entity.FtdResponse;
+import com.william.ftd_core.TaskManager;
+import com.william.ftd_core.call.FtdMicroTipCallback;
+import com.william.ftd_core.call.FtdPicUploadCallback;
+import com.william.ftd_core.constant.Constant1;
 import com.william.ftd_core.entity.MicroTipBean;
-import com.william.ftd_core.entity.UploadResult;
 import com.william.ftd_core.exception.FtdException;
+import com.william.ftd_core.param.DiagnoseParam;
 import com.william.ftdui.R;
 import com.william.zhibiaoview.StepView;
-
 import java.io.File;
 import java.util.ArrayList;
 
-import io.reactivex.disposables.Disposable;
-
-public class FileUploadActivity extends BaseActivity {
+public class FileUploadActivity extends BaseActivity implements FtdPicUploadCallback, FtdMicroTipCallback {
 
     private Button btnSubmit;
     private TextView tvTitle;
     private TextView tvContent;
     private ImageView ivRefresh;
 
-    private TextView tvFaceUploadResult;
-    private TextView tvTongueTopUploadResult;
-
     private NestedScrollView nsv;
 
     private StepView stepView;
 
     private ProgressBar pbSub;
+
+    private static SparseArray<DiagnoseParam> paramMap = new SparseArray<>(3);
 
 
     @Override
@@ -61,24 +56,128 @@ public class FileUploadActivity extends BaseActivity {
         tvTitle = findViewById(R.id.tv_title);
         tvContent = findViewById(R.id.tv_content);
 
-        tvFaceUploadResult = findViewById(R.id.tv_result_face);
-        tvTongueTopUploadResult = findViewById(R.id.tv_result_tongue_top);
-
         nsv = findViewById(R.id.nsv);
 
         stepView = findViewById(R.id.step);
 
-        File[] files = new File[3];
-        files[0] = loadImg(Step.stepMap.get(Constant.STEP_FACE));
-        files[1] = loadImg(Step.stepMap.get(Constant.STEP_TONGUE_TOP));
-        files[2] = loadImg(Step.stepMap.get(Constant.STEP_TONGUE_BOTTOM));
-
-
         pbSub = findViewById(R.id.pb_sub);
 
-        upload(files);
-
+        upload();
         getMicroTip();
+    }
+
+    private void upload() {
+        int size = Constant1.TYPES.size();
+        SparseArray<DiagnoseParam> diagnoseParams = new SparseArray<>();
+        for (int i = 0; i < size; i++) {
+            File file = loadImg(Step.stepMap.get(Constant1.TYPES.keyAt(i)));
+            DiagnoseParam param = new DiagnoseParam(file, Constant1.TYPES.valueAt(i));
+            diagnoseParams.put(Constant1.TYPES.keyAt(i), param);
+        }
+        TaskManager.instance.picUpload(diagnoseParams, this);
+    }
+
+
+    private synchronized void setResult(final DiagnoseParam param) {
+        paramMap.put(param.getDiagnoseTag(), param);
+        setContent(param);
+        changeBtnSubmitState();
+    }
+
+    /**
+     * 根据结果设置描述和图标
+     *
+     * @param param
+     */
+    private void setContent(final DiagnoseParam param) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                int id;
+                switch (param.getDiagnoseTag()) {
+                    case Constant1.FACE:
+                        id = R.id.tv_result_face;
+                        break;
+                    case Constant1.TONGUE_TOP:
+                        id = R.id.tv_result_tongue_top;
+                        break;
+                    default:
+                        return;
+                }
+                TextView tv = findViewById(id);
+                FtdException e = param.getException();
+                String content;
+                int icon;
+                if (e == null) {
+                    content = "分析成功";
+                    icon = R.drawable.result_correct;
+                } else {
+                    content = e.getMsg();
+                    icon = R.drawable.result_wrong;
+                }
+                tv.setText(content);
+                tv.setCompoundDrawablesWithIntrinsicBounds(icon, 0, 0, 0);
+            }
+        });
+    }
+
+    /**
+     * 改变按钮状态
+     */
+    private void changeBtnSubmitState() {
+        runOnUiThread(new Runnable() {
+            private ArrayList<Integer> failedIdList = new ArrayList<>(paramMap.size());
+
+            @Override
+            public void run() {
+                int size = paramMap.size();
+                failedIdList.clear();
+                final ArrayList<DiagnoseParam> suceedParamList = new ArrayList<>();
+                DiagnoseParam param;
+                for (int i = 0; i < size; i++) {
+                    param = paramMap.valueAt(i);
+                    if (param.getException() != null) {
+                        failedIdList.add(param.getDiagnoseTag());
+                    } else if (param.getResult() != null) {
+                        suceedParamList.add(param);
+                    }
+                }
+                String content = "";
+                View.OnClickListener listener = null;
+                if (failedIdList.size() > 0) {
+                    content = "重新拍摄";
+                    listener = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            finish();
+                            onclick(false);
+                        }
+                    };
+                } else if (suceedParamList.size() == size) {
+                    content = "去问诊";
+                    stepView.setSelectedIndex(3);
+                    listener = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onclick(true);
+                        }
+                    };
+                }
+                btnSubmit.setText(content);
+                btnSubmit.setOnClickListener(listener);
+                btnSubmit.setEnabled(true);
+            }
+
+            private void onclick(boolean goToNext) {
+                if (goToNext) {
+                    QuestionListActivity.start(FileUploadActivity.this);
+                } else {
+                    FtdActivity.getPicFromCamera(FileUploadActivity.this, failedIdList);
+                }
+                finish();
+            }
+        });
     }
 
     @Override
@@ -97,11 +196,11 @@ public class FileUploadActivity extends BaseActivity {
             return null;
         }
         File file = new File(step.getPhotoPath());
-        String stepID = step.getStepId();
+        int stepID = step.getTypeId();
         int ivResID = 0;
-        if (stepID.equals(Constant.STEP_FACE)) {
+        if (stepID == Constant1.FACE) {
             ivResID = R.id.iv_face;
-        } else if (stepID.equals(Constant.STEP_TONGUE_TOP)) {
+        } else if (stepID == Constant1.TONGUE_TOP) {
             ivResID = R.id.iv_tongue_top;
         }
         if (ivResID != 0) {
@@ -111,79 +210,29 @@ public class FileUploadActivity extends BaseActivity {
         return file;
     }
 
-    /**
-     * 上传图片去分析
-     */
-    private void upload(File[] fileCollection) {
-        Disposable fileUploadDisposable = FtdClient.getInstance().picUpload(fileCollection, new FtdPicUploadCallback() {
+
+    @Override
+    public void onSucceed(final DiagnoseParam diagnoseParam) {
+        setResult(diagnoseParam);
+    }
+
+
+    @Override
+    public void onFailed(final DiagnoseParam diagnoseParam) {
+        setResult(diagnoseParam);
+    }
+
+    @Override
+    public void onError(final FtdException e) {
+        runOnUiThread(new Runnable() {
             @Override
-            public void onSuccess(Conclusion result) {
-                dismissProgress();
-                FtdResponse<UploadResult> faceUploadResult = result.getFaceResult();
-                FtdResponse<UploadResult> tongueUploadResult = result.getTongueTopResult();
-
-                boolean faceSuccess = changeTvDescState(tvFaceUploadResult, faceUploadResult);
-                boolean tongueTopSuccess = changeTvDescState(tvTongueTopUploadResult, tongueUploadResult);
-
-                changeBtnSubmitState(faceSuccess, tongueTopSuccess);
-            }
-
-            @Override
-            public void onError(FtdException e) {
-                dismissProgress();
-                showToast(e.getMsg());
+            public void run() {
+                pbSub.setVisibility(View.GONE);
+                tvContent.setText(e.getMsg());
             }
         });
-        addDisposable(fileUploadDisposable);
     }
 
-
-    private Boolean changeTvDescState(TextView tv, FtdResponse<UploadResult> response) {
-        boolean b = response.getCode() == 1000;
-        int drawableRes;
-        String content;
-        if (b) {
-            drawableRes = R.drawable.result_correct;
-            content = "分析成功";
-        } else {
-            drawableRes = R.drawable.result_wrong;
-            content = response.getMsg();
-        }
-        tv.setCompoundDrawablesWithIntrinsicBounds(drawableRes, 0, 0, 0);
-        tv.setText(content);
-        return b;
-    }
-
-    private void changeBtnSubmitState(final boolean face, final boolean tongueTop) {
-        final boolean b = face && tongueTop;
-        String content;
-        if (b) {
-            content = "去问诊";
-            stepView.setSelectedIndex(3);
-        } else {
-            content = "重新拍摄";
-        }
-        btnSubmit.setText(content);
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (b) {
-                    QuestionListActivity.start(FileUploadActivity.this);
-                } else {
-                    ArrayList<String> stepList = new ArrayList<>();
-                    if (!face) {
-                        stepList.add(Constant.STEP_FACE);
-                    }
-                    if (!tongueTop) {
-                        stepList.add(Constant.STEP_TONGUE_TOP);
-                    }
-                    FtdActivity.getPicFromCamera(FileUploadActivity.this, stepList.toArray(new String[stepList.size()]));
-                }
-                finish();
-            }
-        });
-        btnSubmit.setEnabled(true);
-    }
 
     /**
      * 获取健康微语
@@ -191,20 +240,18 @@ public class FileUploadActivity extends BaseActivity {
     private void getMicroTip() {
         pbSub.setVisibility(View.VISIBLE);
         nsv.setScrollY(0);
-        Disposable tipDisposable = FtdClient.getInstance().getMicroTip(new FtdMicroTipCallback() {
+        TaskManager.instance.getMicroTip(this);
+    }
+
+    @Override
+    public void onSuccess(final MicroTipBean bean) {
+        runOnUiThread(new Runnable() {
             @Override
-            public void onSuccess(MicroTipBean bean) {
+            public void run() {
                 tvTitle.setText(bean.getName());
                 tvContent.setText(bean.getAnalysis());
                 pbSub.setVisibility(View.GONE);
             }
-
-            @Override
-            public void onError(FtdException e) {
-                pbSub.setVisibility(View.GONE);
-                tvContent.setText(e.getMsg());
-            }
         });
-        addDisposable(tipDisposable);
     }
 }

@@ -9,7 +9,7 @@ android {
         targetSdkVersion "${SDK}" as int
         versionCode "${VERSION_CODE}" as int
         versionName "${VERSION_NAME}"
-        testInstrumentationRunner "android.support.onSuccess.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "android.support.onSucceed.runner.AndroidJUnitRunner"
     }
 
     buildTypes {

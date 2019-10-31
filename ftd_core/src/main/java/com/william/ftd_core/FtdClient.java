@@ -9,15 +9,13 @@ import com.william.ftd_core.callback.BaseCallback;
 import com.william.ftd_core.callback.FtdGetAnaylzerCallback;
 import com.william.ftd_core.callback.FtdLastReportCallback;
 import com.william.ftd_core.callback.FtdLoginCallback;
-import com.william.ftd_core.callback.FtdMicroTipCallback;
-import com.william.ftd_core.callback.FtdPicUploadCallback;
+import com.william.ftd_core.call.FtdMicroTipCallback;
 import com.william.ftd_core.callback.FtdQuestionListCallback;
 import com.william.ftd_core.callback.FtdSubmitCallback;
 import com.william.ftd_core.callback.FtdTendencyCallback;
 import com.william.ftd_core.constant.ServiceApi;
 import com.william.ftd_core.entity.AnalyzeResultBean;
 import com.william.ftd_core.entity.AskBean;
-import com.william.ftd_core.entity.Conclusion;
 import com.william.ftd_core.entity.FtdResponse;
 import com.william.ftd_core.entity.MicroTipBean;
 import com.william.ftd_core.entity.QuestionBean;
@@ -37,7 +35,6 @@ import com.william.ftd_core.param.SubmitAnswerParam;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -47,7 +44,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
@@ -259,68 +255,68 @@ public class FtdClient {
     }
 
 
-    public Disposable picUpload(File file1, File file2, File file3, final FtdPicUploadCallback callback) {
-        schemeId = Util.getUUID();
-        return Single.zip(picUpload(file1, ServiceApi.FACE), picUpload(file2, ServiceApi.TONGUE_TOP), picUpload(file3, ServiceApi.TONGUE_BOTTOM), new Function3<FtdResponse<UploadResult>, FtdResponse<UploadResult>, FtdResponse<UploadResult>, Conclusion>() {
-            @Override
-            public Conclusion apply(FtdResponse<UploadResult> faceResult, FtdResponse<UploadResult> tongueTopResult, FtdResponse<UploadResult> tongueBottomResult) throws Exception {
-                Conclusion conclusion = new Conclusion();
-                conclusion.setFaceResult(faceResult);
-                conclusion.setTongueTopResult(tongueTopResult);
-                return conclusion;
-            }
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(new Function<Conclusion, Conclusion>() {
-                    @Override
-                    public Conclusion apply(Conclusion conclusion) throws Exception {
-                        return conclusion;
-                    }
-                })
-                .subscribe(new Consumer<Conclusion>() {
-                    @Override
-                    public void accept(Conclusion result) throws Exception {
-                        if (callback != null) {
-                            callback.onSuccess(result);
-                        }
-                    }
-                }, new ErrorConsumer(callback));
-    }
+//    public Disposable picUpload(File file1, File file2, File file3, final FtdPicUploadCallback callback) {
+//        schemeId = Util.getUUID();
+//        return Single.zip(picUpload(file1, ServiceApi.FACE), picUpload(file2, ServiceApi.TONGUE_TOP), picUpload(file3, ServiceApi.TONGUE_BOTTOM), new Function3<FtdResponse<UploadResult>, FtdResponse<UploadResult>, FtdResponse<UploadResult>, Conclusion>() {
+//            @Override
+//            public Conclusion apply(FtdResponse<UploadResult> faceResult, FtdResponse<UploadResult> tongueTopResult, FtdResponse<UploadResult> tongueBottomResult) throws Exception {
+//                Conclusion conclusion = new Conclusion();
+//                conclusion.setFaceResult(faceResult);
+//                conclusion.setTongueTopResult(tongueTopResult);
+//                return conclusion;
+//            }
+//        })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .map(new Function<Conclusion, Conclusion>() {
+//                    @Override
+//                    public Conclusion apply(Conclusion conclusion) throws Exception {
+//                        return conclusion;
+//                    }
+//                })
+//                .subscribe(new Consumer<Conclusion>() {
+//                    @Override
+//                    public void accept(Conclusion result) throws Exception {
+//                        if (callback != null) {
+//                            callback.onSucceed(result);
+//                        }
+//                    }
+//                }, new ErrorConsumer(callback));
+//    }
 
-    public Disposable picUpload(File[] fileList, final FtdPicUploadCallback callback) {
-        schemeId = Util.getUUID();
-        LinkedList<Single<FtdResponse<UploadResult>>> disposableLinkedList = new LinkedList<>();
-        for (int i = 0; i < fileList.length; i++) {
-            disposableLinkedList.add( picUpload(fileList[i],i));
-        }
-         return Single.zip(disposableLinkedList, new Function< Object[], Conclusion>() {
-
-             @Override
-             public Conclusion apply(Object[] objects) throws Exception {
-                 Conclusion conclusion = new Conclusion();
-                 conclusion.setFaceResult((FtdResponse<UploadResult>)objects[0]);
-                 conclusion.setTongueTopResult((FtdResponse<UploadResult>)objects[1]);
-                 return conclusion;
-             }
-         })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(new Function<Conclusion, Conclusion>() {
-                    @Override
-                    public Conclusion apply(Conclusion conclusion) throws Exception {
-                        return conclusion;
-                    }
-                })
-                .subscribe(new Consumer<Conclusion>() {
-                    @Override
-                    public void accept(Conclusion result) throws Exception {
-                        if (callback != null) {
-                            callback.onSuccess(result);
-                        }
-                    }
-                }, new ErrorConsumer(callback));
-    }
+//    public Disposable picUpload(File[] fileList, final FtdPicUploadCallback callback) {
+//        schemeId = Util.getUUID();
+//        LinkedList<Single<FtdResponse<UploadResult>>> disposableLinkedList = new LinkedList<>();
+//        for (int i = 0; i < fileList.length; i++) {
+//            disposableLinkedList.add( picUpload(fileList[i],i));
+//        }
+//         return Single.zip(disposableLinkedList, new Function< Object[], Conclusion>() {
+//
+//             @Override
+//             public Conclusion apply(Object[] objects) throws Exception {
+//                 Conclusion conclusion = new Conclusion();
+//                 conclusion.setFaceResult((FtdResponse<UploadResult>)objects[0]);
+//                 conclusion.setTongueTopResult((FtdResponse<UploadResult>)objects[1]);
+//                 return conclusion;
+//             }
+//         })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .map(new Function<Conclusion, Conclusion>() {
+//                    @Override
+//                    public Conclusion apply(Conclusion conclusion) throws Exception {
+//                        return conclusion;
+//                    }
+//                })
+//                .subscribe(new Consumer<Conclusion>() {
+//                    @Override
+//                    public void accept(Conclusion result) throws Exception {
+//                        if (callback != null) {
+//                            callback.onSucceed(result);
+//                        }
+//                    }
+//                }, new ErrorConsumer(callback));
+//    }
 
     /**
      * 获取问诊题目
@@ -429,7 +425,6 @@ public class FtdClient {
      * @param urList
      * @param callback
      */
-
     public Disposable getAnalyzer(List<ReportBean.UrBean> urList, final FtdGetAnaylzerCallback callback) {
         if (urList == null) {
             return null;

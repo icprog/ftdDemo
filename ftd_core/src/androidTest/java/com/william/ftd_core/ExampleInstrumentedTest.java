@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
 /**
- * Instrumented onSuccess, which will execute on an Android device.
+ * Instrumented onSucceed, which will execute on an Android device.
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
@@ -18,9 +18,9 @@ import static org.junit.Assert.*;
 public class ExampleInstrumentedTest {
     @Test
     public void useAppContext() {
-        // Context of the app under onSuccess.
+        // Context of the app under onSucceed.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.william.ftd_core.onSuccess", appContext.getPackageName());
+        assertEquals("com.william.ftd_core.onSucceed", appContext.getPackageName());
     }
 }

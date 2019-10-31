@@ -47,11 +47,11 @@ public class FtdActivity extends AppCompatActivity implements CameraFragment.OnC
         });
 
         Intent intent = getIntent();
-        String[] stepIDs = intent.getStringArrayExtra("stepIDs");
-        CameraFragment cf = CameraFragment.newInstance(stepIDs);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.container,cf);
-        ft.commit();
+        int[] stepIDs = intent.getIntArrayExtra("stepIDs");
+//        CameraFragment cf = CameraFragment.newInstance(stepIDs);
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        ft.add(R.id.container,cf);
+//        ft.commit();
     }
 
     @Override

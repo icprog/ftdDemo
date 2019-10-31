@@ -2,6 +2,8 @@ package com.william.ftd_core.constant;
 
 //import android.support.annotation.IntDef;
 
+import android.util.SparseArray;
+
 import com.william.ftd_core.BuildConfig;
 
 public interface ServiceApi {
@@ -31,9 +33,14 @@ public interface ServiceApi {
 
     String JSON_MEDIA = "application/json";
 
-    int FACE = 0;
-    int TONGUE_TOP = 1;
-    int TONGUE_BOTTOM = 2;
+//    int FACE = 0;
+//    int TONGUE_TOP = 1;
+//    int TONGUE_BOTTOM = 2;
+//
+//    SparseArray<Integer> types = new SparseArray<>();
+//    {
+//        types.put(FACE,FACE);
+//    }
 
     String MAC = "02:00:00:00:00:00";
 

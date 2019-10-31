@@ -89,7 +89,12 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onError(FtdException e) {
                     togglePb(false);
-                    Toast.makeText(MainActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MainActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             });
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)

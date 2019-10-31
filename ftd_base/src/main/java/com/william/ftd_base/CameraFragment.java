@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import com.laikang.jtcameraview.CameraStateListener;
 import com.laikang.jtcameraview.JTCameraView;
-import com.william.ftd_base.constant.Constant;
 import com.william.ftd_base.constant.Step;
 import com.william.zhibiaoview.StepView;
 
@@ -31,11 +30,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.laikang.jtcameraview.Constants.CAMERA_FACING_BACK;
 import static com.laikang.jtcameraview.Constants.CAMERA_FACING_FRONT;
-
 
 public class CameraFragment extends Fragment implements CameraStateListener, View.OnClickListener {
 
@@ -60,17 +59,16 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
 
     private OnCaptureCompleteListener listener;
 
-    private String[] stepIDs;
-    //    private ArrayList<Step> stepList = new ArrayList<>(10);
+    private ArrayList<Integer> diagnoseTagList;
     private Step[] stepList;
     private AtomicInteger currentStepIndex = new AtomicInteger();
 
     private int mFacing = CAMERA_FACING_FRONT;
 
-    public static CameraFragment newInstance(String[] stepIDs) {
+    public static CameraFragment newInstance(ArrayList<Integer> diagnoseTagList) {
         CameraFragment fragment = new CameraFragment();
         Bundle args = new Bundle();
-        args.putStringArray("stepIDs", stepIDs);
+        args.putIntegerArrayList("diagnoseTagList", diagnoseTagList);
         fragment.setArguments(args);
         return fragment;
     }
@@ -94,13 +92,13 @@ public class CameraFragment extends Fragment implements CameraStateListener, Vie
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            this.stepIDs = args.getStringArray("stepIDs");
+            this.diagnoseTagList = args.getIntegerArrayList("diagnoseTagList");
 
             // 空判断
-            if (stepIDs != null) {
-                this.stepList = new Step[stepIDs.length];
-                for (int i = 0; i < stepIDs.length; i++) {
-                    this.stepList[i] = Constant.steps.get(stepIDs[i]);
+            if (diagnoseTagList != null) {
+                this.stepList = new Step[diagnoseTagList.size()];
+                for (int i = 0; i < diagnoseTagList.size(); i++) {
+                    this.stepList[i] = Step.stepMap.get(diagnoseTagList.get(i));
                 }
             }
         }

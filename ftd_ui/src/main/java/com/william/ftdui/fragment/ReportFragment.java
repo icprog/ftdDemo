@@ -10,8 +10,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-
 import com.william.ftd_core.FtdClient;
+import com.william.ftd_core.TaskManager;
 import com.william.ftd_core.callback.FtdGetAnaylzerCallback;
 import com.william.ftd_core.callback.FtdLastReportCallback;
 import com.william.ftd_core.callback.FtdTendencyCallback;
@@ -24,8 +24,6 @@ import com.william.ftdui.activity.WebActivity;
 import com.william.ftdui.widget.aboutRV.adapter.FiveAdapter;
 import com.william.ftdui.widget.aboutRV.adapter.ReportAdapter;
 import com.william.ftdui.widget.aboutRV.decoration.SpaceDecoration;
-
-import io.reactivex.disposables.Disposable;
 
 public class ReportFragment extends BaseFragment
         implements FtdLastReportCallback, FtdGetAnaylzerCallback, FtdTendencyCallback, ReportAdapter.OnWuYangSelectListener {
@@ -133,8 +131,7 @@ public class ReportFragment extends BaseFragment
         RecyclerView rv = view.findViewById(R.id.rv);
         rv.addItemDecoration(new SpaceDecoration());
         rv.setAdapter(adapter);
-        Disposable disposable = FtdClient.getInstance().getRecordBySeqNo(seqNo, this);
-        addDisposable(disposable);
+        TaskManager.instance.getRecord(seqNo,this);
     }
 
     @Override

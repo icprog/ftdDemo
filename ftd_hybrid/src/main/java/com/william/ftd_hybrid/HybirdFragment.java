@@ -29,6 +29,7 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.william.ftd_base.constant.Constant;
+import com.william.ftd_base.constant.Step;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -163,7 +164,7 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
                     fileChooserParams) {
                 uploadMessageAboveL = filePathCallback;
 
-                getPicFromCamera(new String[]{Constant.STEP_FACE, Constant.STEP_TONGUE_TOP, Constant.STEP_TONGUE_BOTTOM});
+//                getPicFromCamera(new int[]{Step.STEP_FACE, Step.STEP_TONGUE_TOP, Step.STEP_TONGUE_BOTTOM});
 
                 return true;
             }
@@ -250,7 +251,7 @@ public class HybirdFragment extends Fragment implements FileChooser.OnFileChoose
 //                    for (int i = 0; i < results.length; i++) {
 //                        results[i].setImgRes(trans(files[i]));
 //                        jsonObject = new JSONObject();
-//                        jsonObject.put("stepId", results[i].getStepId());
+//                        jsonObject.put("stepId", results[i].getTypeId());
 //                        jsonObject.put("imgRes", results[i].getImgRes());
 //                        jsonArray.put(jsonObject);
 //                    }

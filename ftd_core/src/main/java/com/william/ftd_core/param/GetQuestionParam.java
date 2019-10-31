@@ -4,6 +4,8 @@ import com.william.ftd_core.Util;
 import com.william.ftd_core.constant.ServiceApi;
 import com.william.ftd_core.entity.User;
 
+import io.reactivex.annotations.NonNull;
+
 public class GetQuestionParam {
     private int userType = 1;
     private String userCode;
@@ -16,9 +18,8 @@ public class GetQuestionParam {
     private String space = "FACE_TONGUE_LK";
     private String constitutionSpace = "PD";
 
-    public GetQuestionParam(User user, String schemeId) {
+    public GetQuestionParam(@NonNull User user, String schemeId) {
         this.userId = user.getPhrId();
-        this.schemeId = Util.getUUID();
         this.userCode = user.getUserName();
         this.schemeId = schemeId;
     }
@@ -57,5 +58,13 @@ public class GetQuestionParam {
 
     public String getSpace() {
         return space;
+    }
+
+    public String getConstitutionSpace() {
+        return constitutionSpace;
+    }
+
+    public void setConstitutionSpace(String constitutionSpace) {
+        this.constitutionSpace = constitutionSpace;
     }
 }

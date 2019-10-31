@@ -3,21 +3,34 @@ package com.william.ftd_base.constant;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.util.ArrayMap;
+import android.util.SparseArray;
 
 import com.william.ftd_base.R;
+import com.william.ftd_core.constant.Constant1;
 
 public class Step implements Parcelable {
 
-//    public static Step[] steps = new Step[3];
-    public static ArrayMap<String,Step> stepMap = new ArrayMap<>();
+    public volatile static SparseArray< Step> stepMap = new SparseArray<>();
+//    public static final String STEP_FACE = "STEP_FACE";
+//    public static final String STEP_TONGUE_TOP = "STEP_TONGUE_TOP";
+//    public static final String STEP_TONGUE_BOTTOM = "STEP_TONGUE_BOTTOM";
+
+//    @StringDef({STEP_FACE, STEP_TONGUE_TOP, STEP_TONGUE_BOTTOM})
+//    public @interface StepId {
+//    }
+
     static {
-        stepMap.put(Constant.STEP_FACE,null);
-        stepMap.put(Constant.STEP_TONGUE_TOP,null);
-        stepMap.put(Constant.STEP_TONGUE_BOTTOM,null);
+//        stepMap.put(STEP_FACE, new Step(STEP_FACE));
+//        stepMap.put(STEP_TONGUE_TOP, new Step(STEP_TONGUE_TOP));
+//        stepMap.put(STEP_TONGUE_BOTTOM, new Step(STEP_TONGUE_BOTTOM));
+        int size = Constant1.TYPES.size();
+        for (int i = 0; i < size; i++) {
+            int typeId = Constant1.TYPES.keyAt(i);
+            stepMap.put(typeId,new Step(typeId));
+        }
     }
 
-    private String stepId;
+    private int typeId;
     private String tipText;
     private String title;
     private int dashedResID;
@@ -25,25 +38,25 @@ public class Step implements Parcelable {
     private String fileName;
     private String photoPath;
 
-    public Step(@Constant.StepId String stepId) {
+    public Step(int typeId) {
 
-        this.stepId = stepId;
-        switch (stepId) {
-            case Constant.STEP_FACE:
+        this.typeId = typeId;
+        switch (this.typeId) {
+            case Constant1.FACE:
                 dashedResID = R.drawable.xuxian_mian;
                 tipResID = 0;
                 fileName = Constant.FILE_NAME_FACE;
                 tipText = "拍照在虚线内，识别更精准";
                 title = "面诊";
                 break;
-            case Constant.STEP_TONGUE_TOP:
+            case Constant1.TONGUE_TOP:
                 dashedResID = R.drawable.xuxian_she;
                 tipResID = R.drawable.tip_tongue_top;
                 fileName = Constant.FILE_NAME_TONGUE_TOP;
                 tipText = "正对白光，张大嘴巴，放松伸出舌头";
                 title = "舌诊";
                 break;
-            case Constant.STEP_TONGUE_BOTTOM:
+            case Constant1.TONGUE_BOTTOM:
                 dashedResID = R.drawable.xuxian_shedi;
                 tipResID = R.drawable.tip_tongue_bottom;
                 fileName = Constant.FILE_NAME_TONGUE_BOTTOM;
@@ -55,7 +68,7 @@ public class Step implements Parcelable {
     }
 
     protected Step(Parcel in) {
-        stepId = in.readString();
+        typeId = in.readInt();
         tipText = in.readString();
         title = in.readString();
         dashedResID = in.readInt();
@@ -84,12 +97,12 @@ public class Step implements Parcelable {
         return fileName;
     }
 
-    public String getStepId() {
-        return stepId;
+    public int getTypeId() {
+        return typeId;
     }
 
-    public void setStepId(String stepId) {
-        this.stepId = stepId;
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
     }
 
     public String getPhotoPath() {
@@ -131,7 +144,7 @@ public class Step implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(stepId);
+        dest.writeInt(typeId);
         dest.writeString(tipText);
         dest.writeString(title);
         dest.writeInt(dashedResID);

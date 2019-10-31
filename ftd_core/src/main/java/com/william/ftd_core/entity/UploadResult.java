@@ -38,6 +38,7 @@ public class UploadResult {
     private String downloadUrl;
     private String luster;
 
+
     public String getLusterValue() {
         return lusterValue;
     }
