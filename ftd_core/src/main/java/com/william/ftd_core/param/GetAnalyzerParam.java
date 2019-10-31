@@ -7,11 +7,11 @@ public class GetAnalyzerParam {
         this.data = data;
     }
 
-    public String getdata() {
+    public String getData() {
         return data;
     }
 
-    public void setdata(String data) {
+    public void setData(String data) {
         this.data = data;
     }
 }

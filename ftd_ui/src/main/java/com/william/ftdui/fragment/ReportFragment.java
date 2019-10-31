@@ -4,12 +4,15 @@ package com.william.ftdui.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+
 import com.william.ftd_core.FtdClient;
 import com.william.ftd_core.TaskManager;
 import com.william.ftd_core.callback.FtdGetAnaylzerCallback;
@@ -26,7 +29,7 @@ import com.william.ftdui.widget.aboutRV.adapter.ReportAdapter;
 import com.william.ftdui.widget.aboutRV.decoration.SpaceDecoration;
 
 public class ReportFragment extends BaseFragment
-        implements FtdLastReportCallback, FtdGetAnaylzerCallback, FtdTendencyCallback, ReportAdapter.OnWuYangSelectListener {
+        implements ReportAdapter.OnWuYangSelectListener {
 
     public static final int REPORT_CARD = 0;
     public static final int REPORT_CONSTITUTION = 1;
@@ -87,6 +90,31 @@ public class ReportFragment extends BaseFragment
 
     private ReportAdapter adapter;
 
+    private Handler mainHandler = new Handler(Looper.getMainLooper());
+
+    private FtdLastReportCallback reportCallback = new FtdLastReportCallback() {
+
+        @Override
+        public void onError(FtdException e) {
+//            hideProgress();
+            int i = 0;
+        }
+
+        @Override
+        public void onSuccess(final ReportBean bean) {
+            ReportFragment.this.bean = bean;
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    hideProgress();
+                    adapter.setData(bean);
+                    mListener.onGetScore(bean.getScore());
+                }
+            });
+
+        }
+    };
+
     public ReportFragment() {
         // Required empty public constructor
     }
@@ -131,7 +159,7 @@ public class ReportFragment extends BaseFragment
         RecyclerView rv = view.findViewById(R.id.rv);
         rv.addItemDecoration(new SpaceDecoration());
         rv.setAdapter(adapter);
-        TaskManager.instance.getRecord(seqNo,this);
+        TaskManager.instance.getRecord(seqNo, reportCallback);
     }
 
     @Override
@@ -152,43 +180,6 @@ public class ReportFragment extends BaseFragment
         if (adapter != null) {
             adapter.setScore(score);
         }
-    }
-
-    @Override
-    public void onSuccess(ReportBean bean) {
-        this.bean = bean;
-        addDisposable(
-                FtdClient.getInstance().getAnalyzer(bean.getUr(), this)
-        );
-        addDisposable(
-                FtdClient.getInstance().getTendency(this)
-        );
-
-//        if (reportType == REPORT_CARD){
-//            bean.setScore(1.1d);
-//        }
-        adapter.setData(this.bean);
-        mListener.onGetScore(this.bean.getScore());
-    }
-
-    @Override
-    public void onError(FtdException e) {
-        showToast(e.getMsg());
-    }
-
-    @Override
-    public void onSuccess(AnalyzeResultBean bean) {
-        hideProgress();
-        this.bean.setAnalyzeResultBean(bean);
-        this.adapter.notifyItem(PROFESSOR);
-        this.adapter.notifyItem(HEATH);
-    }
-
-    @Override
-    public void onSuccess(TendencyResult result) {
-        hideProgress();
-        this.bean.setTendencyResult(result);
-        this.adapter.notifyItem(TENDENCY);
     }
 
     @Override

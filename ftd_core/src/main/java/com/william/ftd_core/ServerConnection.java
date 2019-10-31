@@ -2,15 +2,17 @@ package com.william.ftd_core;
 
 import com.lk.mogaijson.JSON;
 import com.lk.mogaijson.JSONObject;
-import com.william.ftd_core.callback.FtdLastReportCallback;
 import com.william.ftd_core.constant.ServiceApi;
 import com.william.ftd_core.entity.FtdResponse;
 import com.william.ftd_core.entity.QuestionBean;
+import com.william.ftd_core.entity.ReportBean;
 import com.william.ftd_core.entity.User;
 import com.william.ftd_core.exception.FtdException;
 import com.william.ftd_core.param.DiagnoseParam;
+import com.william.ftd_core.param.GetAnalyzerParam;
 import com.william.ftd_core.param.GetQuestionParam;
 import com.william.ftd_core.param.GetReportParam;
+import com.william.ftd_core.param.GetTendencyParam;
 import com.william.ftd_core.param.HeaderParam;
 import com.william.ftd_core.param.LoginParam;
 import com.william.ftd_core.param.SubmitAnswerParam;
@@ -256,6 +258,7 @@ public class ServerConnection {
 
     /**
      * 获取检测记录
+     *
      * @param user
      * @param seqNO
      * @return
@@ -266,6 +269,53 @@ public class ServerConnection {
         String json = JSON.toJSONString(param);
         RequestBody requestBody = createRequestBody(json);
         Request request = createRequestBuilder(ServiceApi.GET_LAST_REPORT, requestBody);
+        try {
+            return serviceClient.newCall(request).execute();
+        } catch (IOException e) {
+            throw new FtdException();
+        }
+    }
+
+    /**
+     * 获取分析结果
+     *
+     * @param urList
+     * @return
+     * @throws FtdException
+     */
+    public Response getAnalyzer(List<ReportBean.UrBean> urList) throws FtdException {
+        if (urList == null && urList.size() == 0) {
+            return null;
+        }
+        StringBuffer diseaseIds = new StringBuffer();
+        int size = urList.size();
+        for (int i = 0; i < size; i++) {
+            diseaseIds.append(urList.get(i).getDiseaseId());
+            if (i < size - 1) {
+                diseaseIds.append(",");
+            }
+        }
+        GetAnalyzerParam param = new GetAnalyzerParam(diseaseIds.toString());
+        String json = JSON.toJSONString(param);
+        RequestBody requestBody = createRequestBody(json);
+        Request request = createRequestBuilder(ServiceApi.GET_HEALTH_ANALYZER, requestBody);
+        try {
+            return serviceClient.newCall(request).execute();
+        } catch (IOException e) {
+            throw new FtdException();
+        }
+    }
+
+    /**
+     * 获取趋势分析
+     * @return
+     * @throws FtdException
+     */
+    public Response getTendency() throws FtdException {
+        GetTendencyParam param = new GetTendencyParam();
+        String json = JSON.toJSONString(param);
+        RequestBody requestBody = createRequestBody(json);
+        Request request = createRequestBuilder(ServiceApi.GET_TENDENCY, requestBody);
         try {
             return serviceClient.newCall(request).execute();
         } catch (IOException e) {

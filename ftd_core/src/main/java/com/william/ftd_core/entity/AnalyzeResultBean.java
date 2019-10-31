@@ -18,11 +18,11 @@ public class AnalyzeResultBean {
         return opinion;
     }
 
-    public ArrayList<Data> getDataList() {
+    public ArrayList<Data> getList() {
         return list;
     }
 
-    public void setDataList(ArrayList<Data> dataList) {
+    public void setList(ArrayList<Data> dataList) {
         this.list = dataList;
     }
 

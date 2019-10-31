@@ -26,8 +26,8 @@ public class ReportHeathAnalyzeVH extends ReportBaseVH {
     @Override
     public void bind(@ReportFragment.ReportType int reportType, ReportBean bean) {
         AnalyzeResultBean analyzeResultBean = bean.getAnalyzeResultBean();
-        if (analyzeResultBean != null && analyzeResultBean.getDataList() != null) {
-            adapter.update(analyzeResultBean.getDataList());
+        if (analyzeResultBean != null && analyzeResultBean.getList() != null) {
+            adapter.update(analyzeResultBean.getList());
         }
     }
 }
