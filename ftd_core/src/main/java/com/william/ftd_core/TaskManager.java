@@ -14,7 +14,6 @@ import com.william.ftd_core.callback.FtdQuestionListCallback;
 import com.william.ftd_core.callback.FtdSubmitCallback;
 import com.william.ftd_core.entity.QuestionBean;
 import com.william.ftd_core.entity.User;
-import com.william.ftd_core.exception.FtdException;
 import com.william.ftd_core.param.DiagnoseParam;
 import com.william.ftd_core.task.AnswerTask;
 import com.william.ftd_core.task.FtdTask;
@@ -48,7 +47,7 @@ public class TaskManager {
     private static final int CORE_POOL_SIZE = 8;
     private static final int MAXIMUM_POOL_SIZE = 8;
     private final BlockingQueue<Runnable> workQueue;
-    private final Queue<FtdTask> taskQueue;
+    private final Queue<TipTask> taskQueue;
 
 
     public ThreadPoolExecutor threadPool;
@@ -90,7 +89,7 @@ public class TaskManager {
                 case TASK_CANCELED:
                     break;
                 default://TASK_COMPLETED
-                    FtdTask task = (FtdTask) msg.obj;
+                    TipTask task = (TipTask) msg.obj;
                     recycleTask(task);
             }
         }
@@ -134,7 +133,12 @@ public class TaskManager {
      * 获取健康微语
      */
     public void getMicroTip(FtdMicroTipCallback callback) {
-        TipTask task = new TipTask(user, callback);
+//        TipTask task = new TipTask(user, callback);
+//        task.getTip();
+        TipTask task = taskQueue.poll();
+        if (task == null){
+            task = new TipTask(user, callback);
+        }
         task.getTip();
     }
 
@@ -223,11 +227,11 @@ public class TaskManager {
     }
 
     /**
-     * 清空任务回收内存
+     * 回收并缓存任务
      *
      * @param task
      */
-    private void recycleTask(FtdTask task) {
+    private void recycleTask(TipTask task) {
         task.recycle();
         taskQueue.offer(task);
     }

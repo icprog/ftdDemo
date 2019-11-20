@@ -13,18 +13,11 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.william.ftd_core.FtdClient;
-import com.william.ftd_core.entity.User;
 import com.william.ftd_core.exception.FtdException;
-import com.william.ftd_core.runnable.LoginRunnable;
 import com.william.ftd_hybrid.FtdHybrid;
 import com.william.ftdui.FtdUILoginCallback;
 import com.william.ftdui.FtdUi;
 import com.william.ftdui.widget.dialog.ConfirmationDialogFragment;
-
-import retrofit2.Converter;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,17 +34,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         this.pb = findViewById(R.id.pb);
-
-        Converter.Factory fratory = GsonConverterFactory.create();
-
-        final Gson gson = new Gson();
-
-        FtdUi.init(getApplicationContext(), fratory, new FtdClient.JsonConverter() {
-            @Override
-            public String toJson(Object o) {
-                return gson.toJson(o);
-            }
-        });
     }
 
     public void goToFTD(View v) {

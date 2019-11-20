@@ -20,7 +20,7 @@ import io.reactivex.annotations.NonNull;
 /**
  * 处理图片上传分析
  */
-public class UploadTask extends FtdTask {
+public class UploadTask extends FtdTask<FtdPicUploadCallback> {
 
     private String TAG = "UploadTask";
 
@@ -28,7 +28,7 @@ public class UploadTask extends FtdTask {
 
     private SparseArray<DiagnoseParam> diagnoseParams;
 
-    private WeakReference<FtdPicUploadCallback> weakCallback;
+//    private WeakReference<FtdPicUploadCallback> weakCallback;
 
     public void setUser(User user) {
         this.user = user;
@@ -91,32 +91,4 @@ public class UploadTask extends FtdTask {
     public Runnable getRunnable() {
         return runnable;
     }
-
-
-//    @Override
-//    public void recycle() {
-////        if (null != weakCallback) {
-////            weakCallback.clear();
-////            weakCallback = null;
-////        }
-////        for (WeakReference weakReference : uiList) {
-////            if (null != weakReference){
-////                weakReference.clear();
-////                weakReference = null;
-////            }
-////        }
-//    }
-//
-//    /**
-//     * 一次性回收所有UI引用（慎用）
-//     */
-//    public void recycleAll() {
-//        for (WeakReference weakReference : uiList) {
-//            if (null != weakReference) {
-//                weakReference.clear();
-//                weakReference = null;
-//            }
-//        }
-//        uiList.clear();
-//    }
 }

@@ -90,60 +90,60 @@ public class FtdClient {
      *
      * @param param
      */
-    public void init(final InitParam param, Converter.Factory factory, JsonConverter jsonConverter) {
-        this.jsonConverter = jsonConverter;
-        this.appId = param.getAppId();
-        this.appKey = param.getAppKey();
-        this.appSecret = param.getAppSecret();
-        this.companyCode = param.getCompanyCode();
-        this.companyId = param.getCompanyId();
-        this.companyPid = param.getCompanyPid();
-        this.phrAppKey = param.getPhrAppKey();
-        this.phrAppSecret = param.getPhrAppSecret();
-
-        initWebService(factory);
-    }
+//    public void init(final InitParam param, Converter.Factory factory, JsonConverter jsonConverter) {
+//        this.jsonConverter = jsonConverter;
+//        this.appId = param.getAppId();
+//        this.appKey = param.getAppKey();
+//        this.appSecret = param.getAppSecret();
+//        this.companyCode = param.getCompanyCode();
+//        this.companyId = param.getCompanyId();
+//        this.companyPid = param.getCompanyPid();
+//        this.phrAppKey = param.getPhrAppKey();
+//        this.phrAppSecret = param.getPhrAppSecret();
+//
+//        initWebService(factory);
+//    }
 
     private JsonConverter jsonConverter;
 
     /**
      * 初始化方法二（推荐）
      *
-     * @param context
+//     * @param context
      */
-    public void init(Context context, Converter.Factory retrofitFactory, JsonConverter jsonConverter) {
-        this.jsonConverter = jsonConverter;
-        ApplicationInfo appInfo = null;
-        try {
-            appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, "init: ", e);
-            return;
-        }
-
-        appId = String.valueOf(appInfo.metaData.getInt("laiKang.appId"));
-        appCode = String.valueOf(appInfo.metaData.getInt("laiKang.appCode"));
-        appKey = appInfo.metaData.getString("laiKang.appKey");
-        appSecret = appInfo.metaData.getString("laiKang.appSecret");
-        companyId = String.valueOf(appInfo.metaData.getInt("laiKang.companyId"));
-        companyPid = String.valueOf(appInfo.metaData.getInt("laiKang.companyPid"));
-        companyCode = appInfo.metaData.getString("laiKang.companyCode");
-        phrAppKey = appInfo.metaData.getString("laiKang.phrAppKey");
-        phrAppSecret = appInfo.metaData.getString("laiKang.phrAppSecret");
-
-//        initWebService(retrofitFactory);
-        HeaderParam param = new HeaderParam();
-        param.appId = appId;
-        param.appCode = appCode;
-        param.appKey = appKey;
-        param.appSecret = appSecret;
-        param.companyId = companyId;
-        param.companyPid = companyPid;
-        param.companyCode = companyCode;
-        param.phrAppKey = phrAppKey;
-        param.phrAppSecret = phrAppSecret;
-        ServerConnection.getInstance().init(param);
-    }
+//    public void init(Context context, Converter.Factory retrofitFactory, JsonConverter jsonConverter) {
+//        this.jsonConverter = jsonConverter;
+//        ApplicationInfo appInfo = null;
+//        try {
+//            appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+//        } catch (PackageManager.NameNotFoundException e) {
+//            Log.e(TAG, "init: ", e);
+//            return;
+//        }
+//
+//        appId = String.valueOf(appInfo.metaData.getInt("laiKang.appId"));
+//        appCode = String.valueOf(appInfo.metaData.getInt("laiKang.appCode"));
+//        appKey = appInfo.metaData.getString("laiKang.appKey");
+//        appSecret = appInfo.metaData.getString("laiKang.appSecret");
+//        companyId = String.valueOf(appInfo.metaData.getInt("laiKang.companyId"));
+//        companyPid = String.valueOf(appInfo.metaData.getInt("laiKang.companyPid"));
+//        companyCode = appInfo.metaData.getString("laiKang.companyCode");
+//        phrAppKey = appInfo.metaData.getString("laiKang.phrAppKey");
+//        phrAppSecret = appInfo.metaData.getString("laiKang.phrAppSecret");
+//
+////        initWebService(retrofitFactory);
+//        HeaderParam param = new HeaderParam();
+//        param.appId = appId;
+//        param.appCode = appCode;
+//        param.appKey = appKey;
+//        param.appSecret = appSecret;
+//        param.companyId = companyId;
+//        param.companyPid = companyPid;
+//        param.companyCode = companyCode;
+//        param.phrAppKey = phrAppKey;
+//        param.phrAppSecret = phrAppSecret;
+//        ServerConnection.getInstance().init(param);
+//    }
 
     private void initWebService(Converter.Factory factory) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()

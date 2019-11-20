@@ -3,17 +3,17 @@ package com.william.ftd_core.task;
 import com.william.ftd_core.TaskManager;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
-public abstract class FtdTask {
+public abstract class FtdTask<T> {
 
     private String flag;
 
     private static TaskManager taskManager;
     protected Thread mCurrentThread;
     protected Runnable runnable;
+    protected WeakReference<T> weakCallback;
 
-    private ArrayList<WeakReference> uiList = new ArrayList<>(10);
+//    private ArrayList<WeakReference> uiList = new ArrayList<>(10);
 
 
     public String getFlag() {
@@ -50,16 +50,10 @@ public abstract class FtdTask {
 
 //    @Override
     public void recycle() {
-//        if (null != weakCallback) {
-//            weakCallback.clear();
-//            weakCallback = null;
-//        }
-//        for (WeakReference weakReference : uiList) {
-//            if (null != weakReference){
-//                weakReference.clear();
-//                weakReference = null;
-//            }
-//        }
+        if (null != weakCallback) {
+            weakCallback.clear();
+            weakCallback = null;
+        }
     }
 
     /**

@@ -12,15 +12,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-
-import com.william.ftd_core.FtdClient;
 import com.william.ftd_core.TaskManager;
-import com.william.ftd_core.callback.FtdGetAnaylzerCallback;
 import com.william.ftd_core.callback.FtdLastReportCallback;
-import com.william.ftd_core.callback.FtdTendencyCallback;
-import com.william.ftd_core.entity.AnalyzeResultBean;
 import com.william.ftd_core.entity.ReportBean;
-import com.william.ftd_core.entity.TendencyResult;
 import com.william.ftd_core.exception.FtdException;
 import com.william.ftdui.R;
 import com.william.ftdui.activity.WebActivity;
@@ -171,7 +165,7 @@ public class ReportFragment extends BaseFragment
         if (!TextUtils.isEmpty(diseaseId)) {
             Intent intent = new Intent(getContext(), WebActivity.class);
             intent.putExtra("title", fiveBean.getTitle());
-            intent.putExtra("url", fiveBean.getUrl(diseaseId, FtdClient.getInstance().getAppKey()));
+//            intent.putExtra("url", fiveBean.getUrl(diseaseId, FtdClient.getInstance().getAppKey()));
             startActivity(intent);
         }
     }

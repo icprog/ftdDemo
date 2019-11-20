@@ -9,11 +9,10 @@ import com.william.ftd_core.runnable.RecordRunnable;
 
 import java.lang.ref.WeakReference;
 
-public class RecordTask extends FtdTask implements RecordRunnable.Listener {
+public class RecordTask extends FtdTask<FtdLastReportCallback> implements RecordRunnable.Listener {
 
     private User user;
     private long seqNO;
-    private WeakReference<FtdLastReportCallback> weakCallback;
 
     public RecordTask(User user, long seqNO,FtdLastReportCallback callback) {
         this.user = user;
@@ -44,13 +43,17 @@ public class RecordTask extends FtdTask implements RecordRunnable.Listener {
     @Override
     public void onSuccess(ReportBean reportBean) {
         FtdLastReportCallback callback = weakCallback.get();
-        callback.onSuccess(reportBean);
+        if (null != callback) {
+            callback.onSuccess(reportBean);
+        }
     }
 
     @Override
     public void onFail(FtdException e) {
         FtdLastReportCallback callback = weakCallback.get();
-        callback.onError(e);
+        if (null != callback) {
+            callback.onError(e);
+        }
     }
 
     @Override

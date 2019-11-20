@@ -9,7 +9,7 @@ import com.william.ftd_core.runnable.QuestionRunnable;
 
 import java.lang.ref.WeakReference;
 
-public class QuestionTask extends FtdTask implements QuestionRunnable.Listener {
+public class QuestionTask extends FtdTask<FtdQuestionListCallback> implements QuestionRunnable.Listener {
 
 
     private User user;
@@ -45,13 +45,17 @@ public class QuestionTask extends FtdTask implements QuestionRunnable.Listener {
     @Override
     public void onSuccess(AskBean askBean) {
         FtdQuestionListCallback callback = weakCallback.get();
-        callback.onSuccess(askBean);
+        if (callback != null) {
+            callback.onSuccess(askBean);
+        }
     }
 
     @Override
     public void onFail(FtdException e) {
         FtdQuestionListCallback callback = weakCallback.get();
-        callback.onError(e);
+        if (null != callback) {
+            callback.onError(e);
+        }
     }
 
     @Override

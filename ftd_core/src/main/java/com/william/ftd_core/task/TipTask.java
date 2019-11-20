@@ -9,10 +9,9 @@ import com.william.ftd_core.runnable.TipRunnable;
 
 import java.lang.ref.WeakReference;
 
-public class TipTask extends FtdTask implements TipRunnable.Listener {
+public class TipTask extends FtdTask<FtdMicroTipCallback> implements TipRunnable.Listener {
 
     private User user;
-    private WeakReference<FtdMicroTipCallback> weakCallback;
 
     public TipTask(User user,FtdMicroTipCallback callback) {
         this.user = user;
@@ -38,19 +37,22 @@ public class TipTask extends FtdTask implements TipRunnable.Listener {
     @Override
     public void onSuccess(MicroTipBean microTipBean) {
         FtdMicroTipCallback callback = weakCallback.get();
-        callback.onSuccess(microTipBean);
-
+        if (null != callback) {
+            callback.onSuccess(microTipBean);
+        }
     }
 
     @Override
     public void onFail(FtdException e) {
         FtdMicroTipCallback callback = weakCallback.get();
-        callback.onError(e);
+        if (null != callback) {
+            callback.onError(e);
+        }
     }
 
     @Override
     public void onComplete() {
-        FtdMicroTipCallback callback = weakCallback.get();
+//        FtdMicroTipCallback callback = weakCallback.get();
 //        callback.onComplete();
     }
 }

@@ -9,7 +9,7 @@ import com.william.ftd_core.runnable.LoginRunnable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class LoginTask extends FtdTask {
+public class LoginTask extends FtdTask<LoginCallback> {
 
     private String phone, companyCode, appId;
 
@@ -25,7 +25,6 @@ public class LoginTask extends FtdTask {
         return appId;
     }
 
-    private WeakReference<LoginCallback> weakCallback;
 
     public void setUser(User user) {
         TaskManager.instance.setUser(user);
@@ -56,31 +55,4 @@ public class LoginTask extends FtdTask {
         return runnable;
     }
 
-
-//    @Override
-//    public void recycle() {
-////        if (null != weakCallback) {
-////            weakCallback.clear();
-////            weakCallback = null;
-////        }
-////        for (WeakReference weakReference : uiList) {
-////            if (null != weakReference){
-////                weakReference.clear();
-////                weakReference = null;
-////            }
-////        }
-//    }
-
-    /**
-     * 一次性回收所有UI引用（慎用）
-     */
-//    public void recycleAll() {
-//        for (WeakReference weakReference : uiList) {
-//            if (null != weakReference) {
-//                weakReference.clear();
-//                weakReference = null;
-//            }
-//        }
-//        uiList.clear();
-//    }
 }
