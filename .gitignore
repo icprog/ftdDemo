@@ -1,6 +1,7 @@
 *.iml
 .gradle
 /local.properties
+/.idea
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
@@ -12,3 +13,10 @@
 /captures
 .externalNativeBuild
 *.apk
+*.jks
+
+
+/ftd_core
+/demo/build
+/ftd_ui/build
+ftd_hybrid/build

@@ -3,9 +3,6 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <compositeConfiguration>
-          <compositeBuild compositeDefinitionSource="SCRIPT" />
-        </compositeConfiguration>
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleHome" value="$USER_HOME$/Library/gradle" />
@@ -14,8 +11,10 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/JTCameraView" />
             <option value="$PROJECT_DIR$/demo" />
+            <option value="$PROJECT_DIR$/ftd_base" />
             <option value="$PROJECT_DIR$/ftd_core" />
-            <option value="$PROJECT_DIR$/ftdui" />
+            <option value="$PROJECT_DIR$/ftd_hybrid" />
+            <option value="$PROJECT_DIR$/ftd_ui" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
