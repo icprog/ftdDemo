@@ -1,0 +1,203 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:2:1-22:12
+INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:2:1-22:12
+INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:2:1-22:12
+INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:2:1-22:12
+MERGED from [:ftdui] /Users/william/Projects/Android/FaceTongueDoctor/ftdui/build/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-24:12
+MERGED from [:JTCameraView] /Users/william/Projects/Android/FaceTongueDoctor/JTCameraView/build/intermediates/library_manifest/debug/AndroidManifest.xml:2:1-17:12
+MERGED from [com.android.support:appcompat-v7:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/1e325ea3ea5c0cdfe933543804e1cf06/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] /Users/william/.gradle/caches/transforms-2/files-2.1/7d491f7a801e41db59af186bd7cc949d/AndroidManifest.xml:2:1-11:12
+MERGED from [com.android.support:support-v4:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/b2ca2888db48b461aecbfbafc2d610cd/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-fragment:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/c62fe7caf1c5d0eb9101f9700b0d92ca/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/0003e5491bc3b54c181333667112dcd1/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-ui:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/ea5e36c9d6d4c2efb48795766ed528a8/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-utils:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/401141b14efc12e642e4b9464edb7183/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-vector-drawable:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/83d79bc95a1b7b0973bd5997b3446d61/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:loader:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/2b801c5f64c443389e5e5025e80509d3/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-media-compat:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/12b47b618e756ea841b9aae25cb7152e/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:viewpager:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/b796f6865348c11e9d8bae7e87a1e876/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:coordinatorlayout:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/250b36fbc876601c337085ac72240ab6/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:drawerlayout:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/856da1996cbd264be7498edb4b04512d/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:slidingpanelayout:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/a0fd73ca9b1113d5d85445e7b8fd7e7f/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:customview:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/90ed7a8e72ae508aae08a4a6fcb78f70/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/ebc30530b17f4452b12094464d9a4138/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/983a6e2bc2f7b8bb6f28ad50fd99c3a2/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-compat:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/23295db85143bb1f07c74a8f9675ea16/AndroidManifest.xml:17:1-24:12
+MERGED from [com.android.support:versionedparcelable:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/9e04fb65435657979d511fd6794322d9/AndroidManifest.xml:17:1-25:12
+MERGED from [com.android.support:cursoradapter:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/1cd2b163ccbd6824ed4d4057e46280c2/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:runtime:1.1.1] /Users/william/.gradle/caches/transforms-2/files-2.1/1061c4fe3dca3036198dc8eae86d0705/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:documentfile:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/2978bde2d68f7fc6c28dcf718145cc2a/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/8286ae780b6b8f862f690231a2a405c8/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:print:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/37002e972b1e70740861c978d36e01af/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] /Users/william/.gradle/caches/transforms-2/files-2.1/77ad321fef4dbf871b315b39c0edbe57/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata:1.1.1] /Users/william/.gradle/caches/transforms-2/files-2.1/0cef91284cd7ce5ef39a320a206a3a00/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] /Users/william/.gradle/caches/transforms-2/files-2.1/d5e70524c3b65315037a7093c720fd75/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.core:runtime:1.1.1] /Users/william/.gradle/caches/transforms-2/files-2.1/55bb52a1cff42cca4fc6a6443bae6245/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:interpolator:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/93b6f79cd61fdc70f3aa88a6da685cbb/AndroidManifest.xml:17:1-22:12
+MERGED from [com.shuhart.stepview:stepview:1.5.0] /Users/william/.gradle/caches/transforms-2/files-2.1/46c4f225555db69832632c05ae8dc140/AndroidManifest.xml:2:1-11:12
+INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:2:1-22:12
+INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:2:1-22:12
+INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:2:1-22:12
+	package
+		ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:3:5-43
+		INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml
+		ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:2:1-22:12
+		INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml
+	android:versionCode
+		INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml
+		ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:2:1-22:12
+		INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:2:11-69
+application
+ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:6:5-20:19
+MERGED from [:ftdui] /Users/william/Projects/Android/FaceTongueDoctor/ftdui/build/intermediates/library_manifest/debug/AndroidManifest.xml:18:5-22:19
+MERGED from [:ftdui] /Users/william/Projects/Android/FaceTongueDoctor/ftdui/build/intermediates/library_manifest/debug/AndroidManifest.xml:18:5-22:19
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] /Users/william/.gradle/caches/transforms-2/files-2.1/7d491f7a801e41db59af186bd7cc949d/AndroidManifest.xml:9:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] /Users/william/.gradle/caches/transforms-2/files-2.1/7d491f7a801e41db59af186bd7cc949d/AndroidManifest.xml:9:5-20
+MERGED from [com.android.support:support-compat:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/23295db85143bb1f07c74a8f9675ea16/AndroidManifest.xml:22:5-94
+MERGED from [com.android.support:support-compat:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/23295db85143bb1f07c74a8f9675ea16/AndroidManifest.xml:22:5-94
+MERGED from [com.android.support:versionedparcelable:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/9e04fb65435657979d511fd6794322d9/AndroidManifest.xml:22:5-23:19
+MERGED from [com.android.support:versionedparcelable:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/9e04fb65435657979d511fd6794322d9/AndroidManifest.xml:22:5-23:19
+	android:appComponentFactory
+		ADDED from [com.android.support:support-compat:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/23295db85143bb1f07c74a8f9675ea16/AndroidManifest.xml:22:18-91
+	android:supportsRtl
+		ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:11:9-35
+	android:label
+		ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:9:9-41
+	android:roundIcon
+		ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:10:9-54
+	android:icon
+		ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:8:9-43
+	android:allowBackup
+		ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:7:9-35
+	android:theme
+		ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:12:9-40
+activity#com.william.facetonguedoctor.MainActivity
+ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:13:9-19:20
+	android:name
+		ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:13:19-47
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:14:13-18:29
+action#android.intent.action.MAIN
+ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:15:17-69
+	android:name
+		ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:15:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:17:17-77
+	android:name
+		ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml:17:27-74
+uses-sdk
+INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml
+INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml
+MERGED from [:ftdui] /Users/william/Projects/Android/FaceTongueDoctor/ftdui/build/intermediates/library_manifest/debug/AndroidManifest.xml:7:5-9:41
+MERGED from [:ftdui] /Users/william/Projects/Android/FaceTongueDoctor/ftdui/build/intermediates/library_manifest/debug/AndroidManifest.xml:7:5-9:41
+MERGED from [:JTCameraView] /Users/william/Projects/Android/FaceTongueDoctor/JTCameraView/build/intermediates/library_manifest/debug/AndroidManifest.xml:7:5-9:41
+MERGED from [:JTCameraView] /Users/william/Projects/Android/FaceTongueDoctor/JTCameraView/build/intermediates/library_manifest/debug/AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support:appcompat-v7:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/1e325ea3ea5c0cdfe933543804e1cf06/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/1e325ea3ea5c0cdfe933543804e1cf06/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] /Users/william/.gradle/caches/transforms-2/files-2.1/7d491f7a801e41db59af186bd7cc949d/AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support.constraint:constraint-layout:1.1.3] /Users/william/.gradle/caches/transforms-2/files-2.1/7d491f7a801e41db59af186bd7cc949d/AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support:support-v4:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/b2ca2888db48b461aecbfbafc2d610cd/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/b2ca2888db48b461aecbfbafc2d610cd/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/c62fe7caf1c5d0eb9101f9700b0d92ca/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/c62fe7caf1c5d0eb9101f9700b0d92ca/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/0003e5491bc3b54c181333667112dcd1/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/0003e5491bc3b54c181333667112dcd1/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/ea5e36c9d6d4c2efb48795766ed528a8/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/ea5e36c9d6d4c2efb48795766ed528a8/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/401141b14efc12e642e4b9464edb7183/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/401141b14efc12e642e4b9464edb7183/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/83d79bc95a1b7b0973bd5997b3446d61/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/83d79bc95a1b7b0973bd5997b3446d61/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:loader:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/2b801c5f64c443389e5e5025e80509d3/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:loader:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/2b801c5f64c443389e5e5025e80509d3/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/12b47b618e756ea841b9aae25cb7152e/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/12b47b618e756ea841b9aae25cb7152e/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:viewpager:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/b796f6865348c11e9d8bae7e87a1e876/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:viewpager:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/b796f6865348c11e9d8bae7e87a1e876/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:coordinatorlayout:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/250b36fbc876601c337085ac72240ab6/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:coordinatorlayout:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/250b36fbc876601c337085ac72240ab6/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:drawerlayout:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/856da1996cbd264be7498edb4b04512d/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:drawerlayout:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/856da1996cbd264be7498edb4b04512d/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:slidingpanelayout:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/a0fd73ca9b1113d5d85445e7b8fd7e7f/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:slidingpanelayout:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/a0fd73ca9b1113d5d85445e7b8fd7e7f/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:customview:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/90ed7a8e72ae508aae08a4a6fcb78f70/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:customview:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/90ed7a8e72ae508aae08a4a6fcb78f70/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/ebc30530b17f4452b12094464d9a4138/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:swiperefreshlayout:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/ebc30530b17f4452b12094464d9a4138/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/983a6e2bc2f7b8bb6f28ad50fd99c3a2/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:asynclayoutinflater:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/983a6e2bc2f7b8bb6f28ad50fd99c3a2/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/23295db85143bb1f07c74a8f9675ea16/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/23295db85143bb1f07c74a8f9675ea16/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:versionedparcelable:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/9e04fb65435657979d511fd6794322d9/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:versionedparcelable:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/9e04fb65435657979d511fd6794322d9/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cursoradapter:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/1cd2b163ccbd6824ed4d4057e46280c2/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:cursoradapter:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/1cd2b163ccbd6824ed4d4057e46280c2/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.1] /Users/william/.gradle/caches/transforms-2/files-2.1/1061c4fe3dca3036198dc8eae86d0705/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.1] /Users/william/.gradle/caches/transforms-2/files-2.1/1061c4fe3dca3036198dc8eae86d0705/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:documentfile:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/2978bde2d68f7fc6c28dcf718145cc2a/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:documentfile:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/2978bde2d68f7fc6c28dcf718145cc2a/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/8286ae780b6b8f862f690231a2a405c8/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:localbroadcastmanager:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/8286ae780b6b8f862f690231a2a405c8/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:print:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/37002e972b1e70740861c978d36e01af/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:print:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/37002e972b1e70740861c978d36e01af/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] /Users/william/.gradle/caches/transforms-2/files-2.1/77ad321fef4dbf871b315b39c0edbe57/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.1] /Users/william/.gradle/caches/transforms-2/files-2.1/77ad321fef4dbf871b315b39c0edbe57/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata:1.1.1] /Users/william/.gradle/caches/transforms-2/files-2.1/0cef91284cd7ce5ef39a320a206a3a00/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata:1.1.1] /Users/william/.gradle/caches/transforms-2/files-2.1/0cef91284cd7ce5ef39a320a206a3a00/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] /Users/william/.gradle/caches/transforms-2/files-2.1/d5e70524c3b65315037a7093c720fd75/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.1] /Users/william/.gradle/caches/transforms-2/files-2.1/d5e70524c3b65315037a7093c720fd75/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.1] /Users/william/.gradle/caches/transforms-2/files-2.1/55bb52a1cff42cca4fc6a6443bae6245/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.1] /Users/william/.gradle/caches/transforms-2/files-2.1/55bb52a1cff42cca4fc6a6443bae6245/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:interpolator:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/93b6f79cd61fdc70f3aa88a6da685cbb/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:interpolator:28.0.0] /Users/william/.gradle/caches/transforms-2/files-2.1/93b6f79cd61fdc70f3aa88a6da685cbb/AndroidManifest.xml:20:5-44
+MERGED from [com.shuhart.stepview:stepview:1.5.0] /Users/william/.gradle/caches/transforms-2/files-2.1/46c4f225555db69832632c05ae8dc140/AndroidManifest.xml:7:5-9:41
+MERGED from [com.shuhart.stepview:stepview:1.5.0] /Users/william/.gradle/caches/transforms-2/files-2.1/46c4f225555db69832632c05ae8dc140/AndroidManifest.xml:7:5-9:41
+INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml
+INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml
+		ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml
+		ADDED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/william/Projects/Android/FaceTongueDoctor/app/src/main/AndroidManifest.xml
+uses-permission#android.permission.INTERNET
+ADDED from [:ftdui] /Users/william/Projects/Android/FaceTongueDoctor/ftdui/build/intermediates/library_manifest/debug/AndroidManifest.xml:11:5-67
+	android:name
+		ADDED from [:ftdui] /Users/william/Projects/Android/FaceTongueDoctor/ftdui/build/intermediates/library_manifest/debug/AndroidManifest.xml:11:22-64
+uses-permission#android.permission.CAMERA
+ADDED from [:ftdui] /Users/william/Projects/Android/FaceTongueDoctor/ftdui/build/intermediates/library_manifest/debug/AndroidManifest.xml:12:5-65
+MERGED from [:JTCameraView] /Users/william/Projects/Android/FaceTongueDoctor/JTCameraView/build/intermediates/library_manifest/debug/AndroidManifest.xml:11:5-65
+MERGED from [:JTCameraView] /Users/william/Projects/Android/FaceTongueDoctor/JTCameraView/build/intermediates/library_manifest/debug/AndroidManifest.xml:11:5-65
+	android:name
+		ADDED from [:ftdui] /Users/william/Projects/Android/FaceTongueDoctor/ftdui/build/intermediates/library_manifest/debug/AndroidManifest.xml:12:22-62
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from [:ftdui] /Users/william/Projects/Android/FaceTongueDoctor/ftdui/build/intermediates/library_manifest/debug/AndroidManifest.xml:13:5-81
+MERGED from [:JTCameraView] /Users/william/Projects/Android/FaceTongueDoctor/JTCameraView/build/intermediates/library_manifest/debug/AndroidManifest.xml:12:5-81
+MERGED from [:JTCameraView] /Users/william/Projects/Android/FaceTongueDoctor/JTCameraView/build/intermediates/library_manifest/debug/AndroidManifest.xml:12:5-81
+	android:name
+		ADDED from [:ftdui] /Users/william/Projects/Android/FaceTongueDoctor/ftdui/build/intermediates/library_manifest/debug/AndroidManifest.xml:13:22-78
+uses-feature#android.hardware.camera
+ADDED from [:ftdui] /Users/william/Projects/Android/FaceTongueDoctor/ftdui/build/intermediates/library_manifest/debug/AndroidManifest.xml:15:5-60
+MERGED from [:JTCameraView] /Users/william/Projects/Android/FaceTongueDoctor/JTCameraView/build/intermediates/library_manifest/debug/AndroidManifest.xml:14:5-60
+MERGED from [:JTCameraView] /Users/william/Projects/Android/FaceTongueDoctor/JTCameraView/build/intermediates/library_manifest/debug/AndroidManifest.xml:14:5-60
+	android:name
+		ADDED from [:ftdui] /Users/william/Projects/Android/FaceTongueDoctor/ftdui/build/intermediates/library_manifest/debug/AndroidManifest.xml:15:19-57
+uses-feature#android.hardware.camera.autofocus
+ADDED from [:ftdui] /Users/william/Projects/Android/FaceTongueDoctor/ftdui/build/intermediates/library_manifest/debug/AndroidManifest.xml:16:5-70
+MERGED from [:JTCameraView] /Users/william/Projects/Android/FaceTongueDoctor/JTCameraView/build/intermediates/library_manifest/debug/AndroidManifest.xml:15:5-70
+MERGED from [:JTCameraView] /Users/william/Projects/Android/FaceTongueDoctor/JTCameraView/build/intermediates/library_manifest/debug/AndroidManifest.xml:15:5-70
+	android:name
+		ADDED from [:ftdui] /Users/william/Projects/Android/FaceTongueDoctor/ftdui/build/intermediates/library_manifest/debug/AndroidManifest.xml:16:19-67
+activity#com.william.ftdui.FtdActivity
+ADDED from [:ftdui] /Users/william/Projects/Android/FaceTongueDoctor/ftdui/build/intermediates/library_manifest/debug/AndroidManifest.xml:21:9-66
+	android:name
+		ADDED from [:ftdui] /Users/william/Projects/Android/FaceTongueDoctor/ftdui/build/intermediates/library_manifest/debug/AndroidManifest.xml:21:19-63
