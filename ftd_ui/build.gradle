@@ -43,13 +43,12 @@ dependencies {
 
     api 'org.xclcharts:lib:2.4'//图表库
 
-//    api project(':ftd_core')
     api 'com.lk:ftd_core:1.0.0'
     compileOnly 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     compileOnly 'com.google.code.gson:gson:2.8.5'
 
-    compileOnly 'io.reactivex.rxjava2:rxjava:2.2.10'
+    compileOnly 'io.reactivex.rxjava2:rxjava:2.2.15'
     compileOnly 'io.reactivex.rxjava2:rxandroid:2.1.1'
     compileOnly 'com.squareup.retrofit2:converter-gson:2.6.0'
 
