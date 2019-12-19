@@ -37,13 +37,13 @@ dependencies {
     implementation "com.android.support.constraint:constraint-layout:$CONSTRAIT"
     implementation "com.android.support:support-v4:$V4"
 
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     testImplementation "junit:junit:$JUNIT"
     androidTestImplementation "com.android.support.test:runner:$RUNNER"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$ESPRESSO"
 
     api 'org.xclcharts:lib:2.4'//图表库
 
-    api 'com.lk:ftd_core:1.0.0'
     compileOnly 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     compileOnly 'com.google.code.gson:gson:2.8.5'
@@ -57,4 +57,7 @@ dependencies {
     implementation("com.william:statusBarUtil:1.0.0")
     implementation 'com.android.support:design:28.0.0'
     implementation project(path: ':ftd_base')
+
+//    api 'com.lk:ftd_core:1.0.0'
+    implementation project(path: ':ftd_core')
 }
