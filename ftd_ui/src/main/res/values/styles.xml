@@ -10,4 +10,24 @@
 
     </style>
 
+    <!--医生详情item样式-->
+    <style name="doctorDetailItemTheme">
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
+    </style>
+    <!--    医生详情的item标题样式1-->
+    <style name="DoctorDetailItemTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:background">@drawable/border_bottom</item>
+    </style>
+
+<!--    医生详情的item标题样式2-->
+    <style name="DoctorDetailItemThemeDrawable" parent="DoctorDetailItemTheme">
+        <item name="android:drawableStart">@drawable/item_doctor_detail_title_decoration</item>
+        <item name="android:drawablePadding">4dp</item>
+    </style>
+
 </resources>

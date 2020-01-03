@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.william.facetonguedoctor">
+    package="com.lk.facetonguedoctor">
 
 
     <application
@@ -16,15 +16,17 @@
 
 
 
-        <meta-data android:name="laiKang.appId" android:value="1561015389" />
-        <meta-data android:name="laiKang.appCode" android:value="9000037" />
-        <meta-data android:name="laiKang.appKey" android:value="${APP_KEY}" />
-        <meta-data android:name="laiKang.appSecret" android:value="${APP_SECRET}" />
-        <meta-data android:name="laiKang.companyCode" android:value="LKde25dbbdacb442a3" />
-        <meta-data android:name="laiKang.companyId" android:value="1" />
-        <meta-data android:name="laiKang.companyPid" android:value="1" />
-        <meta-data android:name="laiKang.phrAppKey" android:value="5c93d6f90b635ebd" />
-        <meta-data android:name="laiKang.phrAppSecret" android:value="ddcba9615c93d6f90b635ebdfd59ce48" />
+<!--        <meta-data android:name="laiKang.appId" android:value="1561015389" />-->
+<!--        <meta-data android:name="laiKang.appCode" android:value="9000037" />-->
+<!--        <meta-data android:name="laiKang.appKey" android:value="${APP_KEY}" />-->
+<!--        <meta-data android:name="laiKang.appSecret" android:value="${APP_SECRET}" />-->
+<!--        <meta-data android:name="laiKang.companyCode" android:value="LKde25dbbdacb442a3" />-->
+        <meta-data android:name="laiKang.companyCode" android:value="LK55caf1dfbadd4a16" />
+
+<!--        <meta-data android:name="laiKang.companyId" android:value="1" />-->
+<!--        <meta-data android:name="laiKang.companyPid" android:value="1" />-->
+<!--        <meta-data android:name="laiKang.phrAppKey" android:value="5c93d6f90b635ebd" />-->
+<!--        <meta-data android:name="laiKang.phrAppSecret" android:value="ddcba9615c93d6f90b635ebdfd59ce48" />-->
 
 
         <activity android:name=".MainActivity">
@@ -36,7 +38,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.example.hxd.pictest.fileprovider"
+            android:authorities="com.lk.facetonguedoctor.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

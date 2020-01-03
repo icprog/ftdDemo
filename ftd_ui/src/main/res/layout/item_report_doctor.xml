@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_bottom"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/iv"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentStart="true"
+            tools:src="@drawable/photo_place" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@id/iv"
+            android:textSize="15sp"
+            tools:text="来康师 吴欣丽" />
+
+        <TextView
+            android:id="@+id/tv_date_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/tv_name"
+            android:layout_alignBottom="@id/iv"
+            android:layout_alignParentEnd="true"
+            android:textSize="12sp"
+            tools:text="评估时间  2019.07.24  16:24:56" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:layout_margin="8dp"
+        tools:text="来康师建议：寒证，是因为感受寒邪所导致，也有
+部分是因为自身阳气虚弱，导致怕冷喜暖，手脚发
+冷，或身体部位疼痛，例如关节、腰腹等部位，遇
+寒冷加重。日常应尤其注意保暖，多食易消化的温
+暖食物；牛肉、羊肉、糯米、韭菜、香菜、桂圆、
+红枣、荔枝、核桃、牛肉、羊肉、糯米、韭菜、香
+菜、桂圆、红枣、荔枝、核桃、巧克力等，少食生
+冷瓜果及清凉饮料……" />
+
+</LinearLayout>

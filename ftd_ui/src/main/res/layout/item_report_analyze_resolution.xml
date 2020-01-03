@@ -20,7 +20,7 @@
         android:layout_marginTop="10dp"
         android:background="@color/colorGrey" />
 
-    <com.william.ftdui.widget.view.BarChartView
+    <com.lk.ftdui.widget.view.BarChartView
         android:id="@+id/bv"
         android:layout_width="match_parent"
         android:layout_height="300dp"

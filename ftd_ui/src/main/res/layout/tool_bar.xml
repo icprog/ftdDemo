@@ -9,7 +9,10 @@
     android:background="@drawable/border_full"
     android:minHeight="?attr/actionBarSize"
     app:contentInsetEnd="10dp"
-    app:contentInsetStart="10dp">
+    app:contentInsetStart="10dp"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -33,6 +36,16 @@
             android:layout_centerInParent="true"
             android:gravity="center"
             android:text="拍照"
+            android:textColor="@color/textColor"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tb_tv_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            tools:text="跳过"
+            android:layout_alignParentEnd="true"
             android:textColor="@color/textColor"
             android:textSize="20sp" />
 

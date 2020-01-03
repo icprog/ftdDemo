@@ -11,4 +11,6 @@
     <color name="colorCorrect">#34c083</color>
 
     <color name="textColor">#333333</color>
+
+    <color name="itemSpace">#ededed</color>
 </resources>

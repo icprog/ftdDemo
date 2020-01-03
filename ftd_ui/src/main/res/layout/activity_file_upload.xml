@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    tools:context=".activity.FileUploadActivity">
+    tools:context="com.lk.ftdui.activity.FileUploadActivity">
 
     <include
         layout="@layout/tool_bar"

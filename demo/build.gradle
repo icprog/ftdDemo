@@ -11,7 +11,7 @@ android {
     }
     compileSdkVersion "${SDK}" as int
     defaultConfig {
-        applicationId "com.william.facetonguedoctor"
+        applicationId "com.lk.facetonguedoctor"
         minSdkVersion "${MIN_SDK}" as int
         targetSdkVersion "${SDK}" as int
         versionCode "${VERSION_CODE}" as int
