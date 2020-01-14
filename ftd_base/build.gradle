@@ -23,15 +23,13 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation "com.android.support:appcompat-v7:$V7"
     testImplementation "junit:junit:$JUNIT"
     androidTestImplementation "com.android.support.test:runner:$RUNNER"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$ESPRESSO"
 
     api project(':JTCameraView')
-//    implementation 'com.shuhart.stepview:stepview:1.5.0'
-    api 'com.william:zhibiaoview:1.2.4'
+    api 'com.william:zhibiaoview:1.2.7'
     implementation "com.android.support.constraint:constraint-layout:$CONSTRAIT"
 
     compileOnly project(':ftd_core')

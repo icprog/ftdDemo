@@ -1,11 +1,9 @@
 <resources>
     <string name="app_name">ftdui</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
-
     <string name="camera_permission_confirmation">这个应用程序演示了CameraView的用法。为了做到这一点，它需要获得访问摄像头和内存空间的许可.</string>
     <string name="camera_permission_not_granted">Camera app cannot do anything without camera permission.</string>
     <string name="list_bottom">中国中医科学院和北京中医药大学合作指导开发\n——来康提供技术支持——</string>
+
+    <string name="shang_mean">依据评估所采集的数据综合计算得出，指数越高越健康。</string>
 </resources>

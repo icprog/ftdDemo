@@ -3,13 +3,11 @@ package com.lk.ftdui;
 import android.content.Context;
 import android.util.Log;
 
-import com.lk.ftd_core.TaskManager;
-import com.lk.ftd_core.call.LoginCallback;
+import com.lk.ftd_core.task.FtdCore;
+import com.lk.ftd_core.callback.FtdLoginCallback;
 import com.lk.ftd_core.entity.User;
 import com.lk.ftd_core.exception.FtdException;
 import com.lk.ftdui.activity.DoctorListActivity;
-
-import io.reactivex.annotations.Nullable;
 
 public class FtdUi {
 
@@ -21,8 +19,8 @@ public class FtdUi {
      * @param phone
      * @param context
      */
-    public static void login(final String phone, final Context context, final @Nullable FtdUILoginCallback callback) {
-        TaskManager.instance.start(phone, new LoginCallback() {
+    public static void login(final String phone, final Context context, final FtdUILoginCallback callback) {
+        FtdCore.instance.start(phone, true, new FtdLoginCallback() {
             @Override
             public void onSuccess(User user) {
                 if (callback != null) {
@@ -32,7 +30,7 @@ public class FtdUi {
             }
 
             @Override
-            public void onFail(FtdException e) {
+            public void onError(FtdException e) {
                 Log.e(TAG, "onFailed:登录面舌诊服务失败： ", e);
                 if (callback != null) {
                     callback.onError(e);

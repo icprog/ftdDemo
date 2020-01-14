@@ -11,13 +11,24 @@ import android.view.WindowManager;
 
 import com.lk.ftd_base.CameraFragment;
 import com.lk.ftd_base.constant.Step;
-import com.lk.ftd_core.constant.Constant1;
+import com.lk.ftd_core.constant.Constant;
 import com.lk.ftdui.R;
+import com.lk.ftdui.activity.config.ErrorDisplay;
 import com.lk.ftdui.activity.param.DoctorInfo;
 
 import java.util.ArrayList;
 
 public class FtdActivity extends BaseActivity implements CameraFragment.OnCaptureCompleteListener {
+
+//    @Override
+//    protected View setDataErrorView() {
+//        return createErrorView(ErrorDisplay.ERROR);
+//    }
+//
+//    @Override
+//    protected View setDataEmptyView() {
+//        return createErrorView(ErrorDisplay.EMPTY);
+//    }
 
     @Override
     protected boolean setPBDefault() {
@@ -35,9 +46,9 @@ public class FtdActivity extends BaseActivity implements CameraFragment.OnCaptur
 
     public static void startWithThreePhoto(Context context, DoctorInfo... doctorInfo) {
         ArrayList<Integer> diagnoseTagList = new ArrayList<>(3);
-        diagnoseTagList.add(Constant1.FACE);
-        diagnoseTagList.add(Constant1.TONGUE_TOP);
-        diagnoseTagList.add(Constant1.TONGUE_BOTTOM);
+        diagnoseTagList.add(Constant.FACE);
+        diagnoseTagList.add(Constant.TONGUE_TOP);
+        diagnoseTagList.add(Constant.TONGUE_BOTTOM);
         FtdActivity.start(context, diagnoseTagList, doctorInfo);
     }
 

@@ -13,64 +13,33 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.lk.ftd_core.callback.FtdLastReportCallback;
 import com.lk.ftd_core.constant.ReportType;
+import com.lk.ftd_core.entity.ReportBean;
+import com.lk.ftd_core.exception.FtdException;
+import com.lk.ftd_core.task.FtdCore;
+import com.lk.ftdui.BuildConfig;
+import com.lk.ftdui.R;
 import com.lk.ftdui.activity.WebActivity;
 import com.lk.ftdui.activity.param.DoctorInfo;
 import com.lk.ftdui.widget.aboutRV.adapter.FiveAdapter;
 import com.lk.ftdui.widget.aboutRV.adapter.ReportAdapter;
 import com.lk.ftdui.widget.aboutRV.decoration.SpaceDecoration;
-import com.lk.ftd_core.TaskManager;
-import com.lk.ftd_core.callback.FtdLastReportCallback;
-import com.lk.ftd_core.entity.ReportBean;
-import com.lk.ftd_core.exception.FtdException;
-import com.lk.ftdui.R;
+import com.lk.ftdui.widget.dialog.ShangDialog;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.william.zhibiaoview.DashBoardView;
 
-public class ReportFragment extends BaseFragment implements ReportAdapter.OnWuYangSelectListener {
+public class ReportFragment extends BaseFragment implements ReportAdapter.OnWuYangSelectListener, DashBoardView.OnQuestionMarkClickListener,FtdLastReportCallback {
 
     private ReportType reportType;
 
-    /**
-     * 八纲图key
-     */
-    public static final int EIGHT = 0;//八纲图
-    /**
-     * 总得分key
-     */
-    public static final int SCORE = 1;//八纲图
-    /**
-     * 专家点评key
-     */
-    public static final int PROFESSOR = 2;//专家点评
-    /**
-     * 指数分析key
-     */
-    public static final int RESOLUTION = 3;
-    /**
-     * 指标结果key
-     */
-    public static final int RESULT = 4;
-    /**
-     * 趋势分析
-     */
-    public static final int TENDENCY = 5;
-    /**
-     * 健康分析key
-     */
-    public static final int HEATH = 6;
-    /**
-     * 指标分析
-     */
-    public static final int INDEX = 7;
-    /**
-     * 五养key
-     */
-    public static final int FIVE = 8;
+
 
     private Listener mListener;
 
-    @IntDef({EIGHT, SCORE, PROFESSOR, RESOLUTION, RESULT, TENDENCY, HEATH, INDEX, FIVE})
-    public @interface Plate {
-    }
+    private ShangDialog shangDialog = new ShangDialog();
 
     private String seqNo;
 
@@ -80,34 +49,40 @@ public class ReportFragment extends BaseFragment implements ReportAdapter.OnWuYa
 
     private ReportAdapter adapter;
 
-    private Handler mainHandler = new Handler(Looper.getMainLooper());
+    private SmartRefreshLayout refresh;
 
-    private FtdLastReportCallback reportCallback = new FtdLastReportCallback() {
+    @Override
+    public void onError(FtdException e) {
+        hideProgress();
+        refresh.finishRefresh();
+    }
 
-        @Override
-        public void onError(FtdException e) {
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    hideProgress();
-                }
-            });
-        }
+    @Override
+    public void onSuccess(final ReportBean bean) {
+        ReportFragment.this.bean = bean;
+        hideProgress();
+        refresh.finishRefresh();
+        adapter.setData(bean);
+        mListener.onGetScore(bean.getScore());
+    }
 
-        @Override
-        public void onSuccess(final ReportBean bean) {
-            ReportFragment.this.bean = bean;
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    hideProgress();
-                    adapter.setData(bean);
-                    mListener.onGetScore(bean.getScore());
-                }
-            });
-
-        }
-    };
+//    private FtdLastReportCallback reportCallback = new FtdLastReportCallback() {
+//
+//        @Override
+//        public void onError(FtdException e) {
+//            hideProgress();
+//            refresh.finishRefresh();
+//        }
+//
+//        @Override
+//        public void onSuccess(final ReportBean bean) {
+//            ReportFragment.this.bean = bean;
+//            hideProgress();
+//            refresh.finishRefresh();
+//            adapter.setData(bean);
+//            mListener.onGetScore(bean.getScore());
+//        }
+//    };
 
     public ReportFragment() {
         // Required empty public constructor
@@ -133,7 +108,6 @@ public class ReportFragment extends BaseFragment implements ReportAdapter.OnWuYa
             this.reportType = reportType;
             this.seqNo = seqNo;
             this.doctorInfo = doctorInfo;
-
         }
     }
 
@@ -144,7 +118,7 @@ public class ReportFragment extends BaseFragment implements ReportAdapter.OnWuYa
             reportType = ReportType.values()[getArguments().getInt("reportType")];
             seqNo = getArguments().getString("seqNo");
             doctorInfo = getArguments().getParcelable("doctorInfo");
-            adapter = new ReportAdapter(reportType, this);
+            adapter = new ReportAdapter(reportType, this, this);
         }
     }
 
@@ -155,16 +129,24 @@ public class ReportFragment extends BaseFragment implements ReportAdapter.OnWuYa
 
     @Override
     public void onCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+        refresh = view.findViewById(R.id.refreshLayout);
+        refresh.autoRefresh();
+        refresh.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                String doctorID = null;
+                String doctorMemberCode = null;
+                if (doctorInfo != null) {
+                    doctorID = doctorInfo.getDoctorID();
+                    doctorMemberCode = doctorInfo.getDoctorMemberCode();
+                }
+                addTask(FtdCore.instance.getRecord(seqNo, doctorID, doctorMemberCode, reportType, true, ReportFragment.this));
+            }
+        });
         RecyclerView rv = view.findViewById(R.id.rv);
         rv.addItemDecoration(new SpaceDecoration());
         rv.setAdapter(adapter);
-        String doctorID = null;
-        String doctorMemberCode = null;
-        if (doctorInfo != null) {
-            doctorID = doctorInfo.getDoctorID();
-            doctorMemberCode = doctorInfo.getDoctorMemberCode();
-        }
-        TaskManager.instance.getRecord(seqNo, doctorID, doctorMemberCode, reportType, reportCallback);
     }
 
     @Override
@@ -176,7 +158,7 @@ public class ReportFragment extends BaseFragment implements ReportAdapter.OnWuYa
         if (!TextUtils.isEmpty(diseaseId)) {
             Intent intent = new Intent(getContext(), WebActivity.class);
             intent.putExtra("title", fiveBean.getTitle());
-//            intent.putExtra("url", fiveBean.getUrl(diseaseId, FtdClient.getInstance().getAppKey()));
+            intent.putExtra("url", BuildConfig.BRAIN_WEB);
             startActivity(intent);
         }
     }
@@ -185,6 +167,12 @@ public class ReportFragment extends BaseFragment implements ReportAdapter.OnWuYa
         if (adapter != null) {
             adapter.setScore(score);
         }
+    }
+
+
+    @Override
+    public void OnQuestionMarkClicked() {
+        shangDialog.show(getChildFragmentManager(), "dialog");
     }
 
     @Override

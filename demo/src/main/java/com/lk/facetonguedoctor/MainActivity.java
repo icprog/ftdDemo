@@ -17,11 +17,12 @@ import com.lk.ftd_core.exception.FtdException;
 import com.lk.ftdui.FtdUILoginCallback;
 import com.lk.ftdui.FtdUi;
 import com.lk.ftdui.activity.RecordListActivity;
+import com.lk.ftdui.util.ViewReplaceUtil;
 import com.lk.ftdui.widget.dialog.ConfirmationDialogFragment;
 
 import java.util.UUID;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FtdUILoginCallback {
 
     private static final int REQUEST_CAMERA_PERMISSION = 100;
     private static final String FRAGMENT_DIALOG = "dialog";
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar pb;
     private String mobile;
 
+    protected ViewReplaceUtil util = new ViewReplaceUtil();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         this.pb = findViewById(R.id.pb);
+
+        util.init(findViewById(R.id.tv_title), R.layout.holder_empty, R.layout.holder_error);
     }
 
     public void goToFTD(View v) {
@@ -48,33 +52,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void goToFTDHybird(View v) {
-        RecordListActivity.start(this);
-    }
-
 
     private void start(String mobile) {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             togglePb(true);
-            FtdUi.login(mobile, this, new FtdUILoginCallback() {
-                @Override
-                public void onSuccess() {
-                    togglePb(false);
-                }
-
-                @Override
-                public void onError(FtdException e) {
-                    togglePb(false);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(MainActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            });
+            FtdUi.login(mobile, this, this);
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)
                 && ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             ConfirmationDialogFragment
@@ -117,5 +101,21 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         start(mobile);
+    }
+
+    @Override
+    public void onSuccess() {
+        togglePb(false);
+    }
+
+    @Override
+    public void onError(FtdException e) {
+        togglePb(false);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

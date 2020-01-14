@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.lk.ftd_core.entity.DoctorDetailBean;
 import com.lk.ftd_core.entity.DoctorListBean;
 import com.lk.ftd_core.entity.DoctorTag;
 import com.lk.ftdui.R;
@@ -35,10 +36,32 @@ public class ChooseDoctorVH extends RecyclerView.ViewHolder {
         this.btn = itemView.findViewById(R.id.btn);
     }
 
-    public void bind(final DoctorListBean.DoctorBean bean, final DoctorListAdapter.OnSelectedListener listener) {
+//    public void bind(final DoctorListBean.DoctorBean bean, final DoctorListAdapter.OnSelectedListener listener) {
+//        tvTitle.setText(bean.getMemberDTO().getTrueName());
+//        tvContent.setText(bean.getDomain());
+//        List<DoctorTag> tagList = JSONObject.parseArray(bean.getTags(),DoctorTag.class);
+//        if (tagList != null && !tagList.isEmpty()) {
+//            StringBuilder sb = new StringBuilder();
+//            for (DoctorTag tag : tagList) {
+//                sb.append(tag.getTagName());
+//                sb.append("\t");
+//            }
+//            tvTags.setText(sb.toString());
+//        }
+//        Glide.with(iv).load(bean.getMemberDTO().getMemberHeadUrl()).into(iv);
+//        this.btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                listener.onDoctorChoosed(bean);
+//            }
+//        });
+//    }
+
+    public void bind(final DoctorDetailBean bean, final DoctorListAdapter.OnSelectedListener listener) {
         tvTitle.setText(bean.getMemberDTO().getTrueName());
         tvContent.setText(bean.getDomain());
-        List<DoctorTag> tagList = JSONObject.parseArray(bean.getTags(),DoctorTag.class);
+//        List<DoctorTag> tagList = JSONObject.parseArray(bean.getTags(),DoctorTag.class);
+        List<DoctorTag> tagList = bean.getTags();
         if (tagList != null && !tagList.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             for (DoctorTag tag : tagList) {

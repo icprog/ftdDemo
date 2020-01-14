@@ -9,13 +9,14 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.lk.ftd_core.constant.ReportType;
 import com.lk.ftdui.widget.view.ChartEightPrincipalView;
 import com.lk.ftd_core.entity.ReportBean;
 import com.lk.ftd_core.entity.SixDiseaseBean;
 import com.lk.ftdui.R;
 import com.lk.ftdui.fragment.ReportFragment;
+import com.lk.mogaijson.JSON;
+import com.lk.mogaijson.JSONObject;
 
 /**
  * 八纲图板块
@@ -41,18 +42,17 @@ public class ReportEightVH extends ReportBaseVH {
      * 初始化八纲图
      */
     public void bind(ReportType reportType, ReportBean bean) {
-        String text = "健康得分"+bean.getScore()+"分";
+        String text = "健康得分" + bean.getScore() + "分";
         SpannableString ss = new SpannableString(text);
         ForegroundColorSpan fcs = new ForegroundColorSpan(context.getResources().getColor(R.color.colorPrimary));
-        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(26,true);
-        ss.setSpan(fcs,4,text.length()-1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ss.setSpan(ass,4,text.length()-1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(26, true);
+        ss.setSpan(fcs, 4, text.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(ass, 4, text.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvScore.setText(ss);
 
         if (bean.getEight() != null && bean.getEight().getSixDiseaseList() != null) {
             String sixDiseaseStr = bean.getEight().getSixDiseaseList();
-            Gson gson = new Gson();
-            SixDiseaseBean[] diseaseBeans = gson.fromJson(sixDiseaseStr, SixDiseaseBean[].class);
+            SixDiseaseBean[] diseaseBeans = JSONObject.parseObject(sixDiseaseStr, SixDiseaseBean[].class);
             view.setData(diseaseBeans);
         }
 
@@ -60,6 +60,6 @@ public class ReportEightVH extends ReportBaseVH {
             tvDisease.setText("您疑似：" + bean.getUr().get(0).getDiseaseName());
         }
 
-        tvDate.setText(bean.getCreateTime()+"检测");
+        tvDate.setText(bean.getCreateTime() + "检测");
     }
 }

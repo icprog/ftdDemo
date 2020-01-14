@@ -1,5 +1,6 @@
 package com.lk.ftdui.widget.aboutRV.adapter;
 
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,18 +11,19 @@ import android.view.ViewGroup;
 import com.lk.ftd_core.constant.ReportType;
 import com.lk.ftd_core.entity.ReportBean;
 import com.lk.ftdui.R;
-import com.lk.ftdui.fragment.ReportFragment;
 import com.lk.ftdui.widget.aboutRV.viewHolder.report.ReportAnalysisResolutionVH;
 import com.lk.ftdui.widget.aboutRV.viewHolder.report.ReportAnalysisResultVH;
 import com.lk.ftdui.widget.aboutRV.viewHolder.report.ReportBaseVH;
 import com.lk.ftdui.widget.aboutRV.viewHolder.report.ReportDoctorVH;
-import com.lk.ftdui.widget.aboutRV.viewHolder.report.ReportEightVH;
 import com.lk.ftdui.widget.aboutRV.viewHolder.report.ReportFiveVH;
 import com.lk.ftdui.widget.aboutRV.viewHolder.report.ReportHeathAnalyzeVH;
 import com.lk.ftdui.widget.aboutRV.viewHolder.report.ReportIndexAnalyzeVH;
 import com.lk.ftdui.widget.aboutRV.viewHolder.report.ReportProfessorVH;
+import com.lk.ftdui.widget.aboutRV.viewHolder.report.ReportQuestionnaire;
 import com.lk.ftdui.widget.aboutRV.viewHolder.report.ReportScoreVH;
+import com.lk.ftdui.widget.aboutRV.viewHolder.report.ReportShangVH;
 import com.lk.ftdui.widget.aboutRV.viewHolder.report.ReportTendencyVH;
+import com.william.zhibiaoview.DashBoardView;
 
 import java.util.ArrayList;
 
@@ -30,22 +32,24 @@ import static com.lk.ftd_core.constant.ReportType.REPORT_CARD;
 
 public class ReportAdapter extends RecyclerView.Adapter<ReportBaseVH> {
 
+
     private static final String TAG = "ReportAdapter";
 
     private ReportBean bean;
 
     private ReportType reportType;
 
-    private ArrayList<Pair> vhList = new ArrayList<>();
+    private ArrayList<Plate> vhList = new ArrayList<>();
 
-    private OnWuYangSelectListener listener;
+    private OnWuYangSelectListener onWuYangSelectListener;
+    private DashBoardView.OnQuestionMarkClickListener onQuestionMarkClickListener;
 
     private double constitutionScore;
 
-    public ReportAdapter(ReportType reportType, OnWuYangSelectListener listener) {
+    public ReportAdapter(ReportType reportType, OnWuYangSelectListener onWuYangSelectListener, DashBoardView.OnQuestionMarkClickListener onQuestionMarkClickListener) {
         this.reportType = reportType;
-        this.listener = listener;
-
+        this.onWuYangSelectListener = onWuYangSelectListener;
+        this.onQuestionMarkClickListener = onQuestionMarkClickListener;
         if (reportType == REPORT_CARD) {
             loadCard();
         } else {
@@ -53,27 +57,49 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportBaseVH> {
         }
     }
 
+    private enum Plate {
+        DASH_BOARD(R.layout.item_report_entropy_dashboard, ReportShangVH.class),
+        SCORE(R.layout.item_report_score, ReportScoreVH.class),
+        PHOTOS(R.layout.item_report_photos, ReportProfessorVH.class),
+        QUESTIONNAIRE(R.layout.item_report_questionnaire, ReportQuestionnaire.class),
+        DOCTOR(R.layout.item_report_doctor, ReportDoctorVH.class),
+        RESOLUTION(R.layout.item_report_analyze_resolution, ReportAnalysisResolutionVH.class),
+        RESULT(R.layout.item_report_analyze_result, ReportAnalysisResultVH.class),
+//        TENDENCY(R.layout.item_report_tendency, ReportTendencyVH.class),
+        HEATH(R.layout.item_report_heath_analyze, ReportHeathAnalyzeVH.class),
+        INDEX(R.layout.item_report_index_analyze, ReportIndexAnalyzeVH.class),
+        FIVE(R.layout.item_report_five, ReportFiveVH.class);
+        @LayoutRes
+        int layoutResID;
+        Class<? extends ReportBaseVH> clazz;
+
+        Plate(int layoutResID, Class<? extends ReportBaseVH> clazz) {
+            this.layoutResID = layoutResID;
+            this.clazz = clazz;
+        }
+    }
 
     private void loadCard() {
-        vhList.add(new Pair(ReportFragment.EIGHT, R.layout.item_report_eight, ReportEightVH.class));
-//        vhList.add(new Pair(ReportFragment.PROFESSOR, R.layout.item_report_professor, ReportProfessorVH.class));
-        vhList.add(new Pair(ReportFragment.PROFESSOR, R.layout.item_report_doctor, ReportDoctorVH.class));
-        vhList.add(new Pair(ReportFragment.RESOLUTION, R.layout.item_report_analyze_resolution, ReportAnalysisResolutionVH.class));
-        vhList.add(new Pair(ReportFragment.RESULT, R.layout.item_report_analyze_result, ReportAnalysisResultVH.class));
-        vhList.add(new Pair(ReportFragment.TENDENCY, R.layout.item_report_tendency, ReportTendencyVH.class));
-        vhList.add(new Pair(ReportFragment.HEATH, R.layout.item_report_heath_analyze, ReportHeathAnalyzeVH.class));
-        vhList.add(new Pair(ReportFragment.INDEX, R.layout.item_report_index_analyze, ReportIndexAnalyzeVH.class));
-        vhList.add(new Pair(ReportFragment.FIVE, R.layout.item_report_five, ReportFiveVH.class));
+        vhList.add(Plate.DASH_BOARD);
+        vhList.add(Plate.PHOTOS);
+        vhList.add(Plate.DOCTOR);
+        vhList.add(Plate.QUESTIONNAIRE);
+        vhList.add(Plate.RESOLUTION);
+        vhList.add(Plate.RESULT);
+//        vhList.add(Plate.TENDENCY);
+        vhList.add(Plate.HEATH);
+        vhList.add(Plate.INDEX);
+        vhList.add(Plate.FIVE);
     }
 
     private void loadConstitution() {
-        vhList.add(new Pair(ReportFragment.SCORE, R.layout.item_report_score, ReportScoreVH.class));
-        vhList.add(new Pair(ReportFragment.RESOLUTION, R.layout.item_report_analyze_resolution, ReportAnalysisResolutionVH.class));
-        vhList.add(new Pair(ReportFragment.RESULT, R.layout.item_report_analyze_result, ReportAnalysisResultVH.class));
-        vhList.add(new Pair(ReportFragment.TENDENCY, R.layout.item_report_doctor, ReportDoctorVH.class));
-        vhList.add(new Pair(ReportFragment.HEATH, R.layout.item_report_heath_analyze, ReportHeathAnalyzeVH.class));
-        vhList.add(new Pair(ReportFragment.INDEX, R.layout.item_report_index_analyze, ReportIndexAnalyzeVH.class));
-        vhList.add(new Pair(ReportFragment.FIVE, R.layout.item_report_five, ReportFiveVH.class));
+        vhList.add(Plate.SCORE);
+        vhList.add(Plate.RESOLUTION);
+        vhList.add(Plate.RESULT);
+//        vhList.add(Plate.TENDENCY);
+        vhList.add(Plate.HEATH);
+        vhList.add(Plate.INDEX);
+        vhList.add(Plate.FIVE);
     }
 
     public void setData(ReportBean bean) {
@@ -81,14 +107,9 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportBaseVH> {
         notifyDataSetChanged();
     }
 
-    public void notifyItem(@ReportFragment.Plate int plate) {
-        int size = vhList.size();
-        for (int i = 0; i < size; i++) {
-            if (vhList.get(i).plate == plate) {
-                notifyItemChanged(i);
-                break;
-            }
-        }
+    public void notifyItem(Plate plate) {
+        int plateIndex = vhList.indexOf(plate);
+        notifyItemChanged(plateIndex);
     }
 
     /**
@@ -98,7 +119,7 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportBaseVH> {
      */
     public void setScore(double score) {
         this.constitutionScore = score;
-        notifyItem(ReportFragment.SCORE);
+        notifyItem(Plate.SCORE);
     }
 
     @Override
@@ -111,11 +132,10 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportBaseVH> {
     @Override
     public ReportBaseVH onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         ReportBaseVH vh = null;
-        Pair pair = vhList.get(i);
+        Plate plate = vhList.get(i);
         try {
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(pair.layoutResId, viewGroup, false);
-            Class<ReportBaseVH> clazz = (Class<ReportBaseVH>) pair.clazz;
-            vh = clazz.getConstructor(View.class).newInstance(v);
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(plate.layoutResID, viewGroup, false);
+            vh = plate.clazz.getConstructor(View.class).newInstance(v);
         } catch (Exception e) {
             Log.e(TAG, "onCreateViewHolder: ", e);
         }
@@ -127,14 +147,19 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportBaseVH> {
         if (bean == null) {
             return;
         }
+
         viewHolder.bind(this.reportType, bean);
 
-        if (vhList.get(i).plate == ReportFragment.SCORE){
+        if (vhList.get(i) == Plate.DASH_BOARD) {
+            ((ReportShangVH) viewHolder).setListener(onQuestionMarkClickListener);
+        }
+
+        if (vhList.get(i) == Plate.SCORE) {
             ((ReportScoreVH) viewHolder).setScore(constitutionScore);
         }
 
-        if (vhList.get(i).plate == ReportFragment.FIVE) {
-            ((ReportFiveVH) viewHolder).setListener(listener);
+        if (vhList.get(i) == Plate.FIVE) {
+            ((ReportFiveVH) viewHolder).setListener(onWuYangSelectListener);
         }
 
     }
@@ -142,18 +167,6 @@ public class ReportAdapter extends RecyclerView.Adapter<ReportBaseVH> {
     @Override
     public int getItemCount() {
         return vhList.size();
-    }
-
-    private static class Pair {
-        int plate;
-        int layoutResId;
-        Class clazz;
-
-        public Pair(@ReportFragment.Plate int plate, int layoutResId, Class clazz) {
-            this.plate = plate;
-            this.layoutResId = layoutResId;
-            this.clazz = clazz;
-        }
     }
 
     public interface OnWuYangSelectListener {

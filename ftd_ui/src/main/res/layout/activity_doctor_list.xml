@@ -7,7 +7,7 @@
     tools:context="com.lk.ftdui.activity.DoctorListActivity">
 
     <include
-        layout="@layout/tool_bar"
+        layout="@layout/tool_bar_dul"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -35,8 +35,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
-    <include layout="@layout/error" />
 
 
 </android.support.constraint.ConstraintLayout>

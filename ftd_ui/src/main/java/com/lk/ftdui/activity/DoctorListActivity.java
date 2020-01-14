@@ -9,22 +9,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.lk.ftd_core.TaskManager;
 import com.lk.ftd_core.callback.FtdDoctorListCallback;
+import com.lk.ftd_core.entity.DoctorDetailBean;
 import com.lk.ftd_core.entity.DoctorListBean;
 import com.lk.ftd_core.exception.FtdException;
+import com.lk.ftd_core.task.FtdCore;
 import com.lk.ftdui.R;
 import com.lk.ftdui.activity.param.DoctorInfo;
 import com.lk.ftdui.widget.aboutRV.adapter.DoctorListAdapter;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 public class DoctorListActivity extends BaseActivity {
 
-    private SmartRefreshLayout refresh;
+    private int pageCount;
     private int pageIndex = 1;//页数从1开始
-    private View ivError;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, DoctorListActivity.class);
@@ -33,46 +32,36 @@ public class DoctorListActivity extends BaseActivity {
 
     private DoctorListAdapter adapter = new DoctorListAdapter(new DoctorListAdapter.OnSelectedListener() {
         @Override
-        public void onDoctorSelected(DoctorListBean.DoctorBean item) {
+        public void onDoctorSelected(DoctorDetailBean item) {
             DoctorDetailActivity.start(DoctorListActivity.this, item.getMemberDTO().getMemberCode());
         }
 
         @Override
-        public void onDoctorChoosed(DoctorListBean.DoctorBean item) {
+        public void onDoctorChoosed(DoctorDetailBean item) {
             DoctorInfo info = new DoctorInfo(item.getMemberDTO().getMemberId(), item.getMemberDTO().getMemberCode());
             FtdActivity.startWithThreePhoto(DoctorListActivity.this, info);
         }
     });
 
-    private int pageCount;
+
     private FtdDoctorListCallback callback = new FtdDoctorListCallback() {
 
         @Override
         public void onError(final FtdException e) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    hideProgress();
-                    refresh.finishLoadMore();
-                    refresh.finishRefresh();
-                    showToast(e.getMsg());
-                }
-            });
+            hideProgress();
+            refresh.finishLoadMore();
+            refresh.finishRefresh();
+            showToast(e.getMsg());
         }
 
         @Override
         public void onSuccess(final DoctorListBean bean) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    pageIndex = bean.getCurrentPage();
-                    pageCount = bean.getTotalPage();
-                    hideProgress();
-                    refresh.finishLoadMore();
-                    refresh.finishRefresh();
-                    adapter.submitList(bean.getList());
-                }
-            });
+            pageIndex = bean.getCurrentPage();
+            pageCount = bean.getTotalPage();
+            hideProgress();
+            refresh.finishLoadMore();
+            refresh.finishRefresh();
+            adapter.submitList(bean.getList());
         }
     };
 
@@ -84,6 +73,13 @@ public class DoctorListActivity extends BaseActivity {
 
     @Override
     public void onCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        View v = findViewById(R.id.tb_tv_record);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecordListActivity.start(DoctorListActivity.this);
+            }
+        });
         RecyclerView rv = findViewById(R.id.rv);
         rv.setAdapter(this.adapter);
         refresh = findViewById(R.id.refreshLayout);
@@ -92,7 +88,7 @@ public class DoctorListActivity extends BaseActivity {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
                 if (pageIndex < pageCount) {
-                    TaskManager.instance.getDoctorList(pageIndex + 1, callback);
+                    addTask(FtdCore.instance.getDoctorList(pageIndex + 1, true, callback));
                 } else {
                     refreshLayout.finishLoadMore();
                 }
@@ -100,7 +96,7 @@ public class DoctorListActivity extends BaseActivity {
 
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                TaskManager.instance.getDoctorList(pageIndex, callback);
+                addTask(FtdCore.instance.getDoctorList(pageIndex, true, callback));
             }
         });
         TextView title = findViewById(R.id.tb_tv_title);
@@ -113,6 +109,6 @@ public class DoctorListActivity extends BaseActivity {
                 FtdActivity.startWithThreePhoto(DoctorListActivity.this);
             }
         });
-        ivError = findViewById(R.id.iv_error);
+        viewReplaceUtil.setTargetView(refresh);
     }
 }

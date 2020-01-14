@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.lk.ftd_base.constant.Constant;
-import com.lk.ftd_core.TaskManager;
+import com.lk.ftd_core.task.FtdCore;
 import com.lk.ftd_core.callback.FtdQuestionListCallback;
 import com.lk.ftd_core.callback.FtdSubmitCallback;
 import com.lk.ftd_core.entity.AskBean;
@@ -41,9 +41,9 @@ public class QuestionListActivity extends BaseActivity implements
     private FtdQuestionListCallback questionCallback = new FtdQuestionListCallback() {
         @Override
         public void onSuccess(final AskBean bean) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
                     hideProgress();
                     CardInfoBean bean1 = bean.getCardInfo();
                     CardInfoBean bean2 = bean.getConstitutionInfo();
@@ -53,27 +53,27 @@ public class QuestionListActivity extends BaseActivity implements
                     adapter2.addData(bean2, Constant.TRACE_ZHI);
                     hideProgress();
                     btnSubmit.setEnabled(true);
-                }
-            });
+//                }
+//            });
         }
 
         @Override
         public void onError(final FtdException e) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
                     hideProgress();
                     showToast(e.getMsg());
-                }
-            });
+//                }
+//            });
         }
     };
     private FtdSubmitCallback answerCallback = new FtdSubmitCallback() {
         @Override
         public void onSuccess(final AskBean bean) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
                     hideProgress();
 //                    ReportActivity.start(QuestionListActivity.this, bean.getCardInfo().getSeqNo(), bean.getConstitutionInfo().getSeqNo());
                     Intent intent = getIntent();
@@ -82,19 +82,19 @@ public class QuestionListActivity extends BaseActivity implements
                     intent.putExtra("constitutionSeqNo", bean.getConstitutionInfo().getSeqNo());
                     startActivity(intent);
                     finish();
-                }
-            });
+//                }
+//            });
         }
 
         @Override
         public void onError(final FtdException e) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
                     hideProgress();
                     showToast(e.getMsg());
-                }
-            });
+//                }
+//            });
         }
     };
 
@@ -119,7 +119,7 @@ public class QuestionListActivity extends BaseActivity implements
         this.rv2 = findViewById(R.id.rv2);
         this.rv2.setAdapter(adapter2);
 
-        TaskManager.instance.getQuestionList(questionCallback);
+        addTask(FtdCore.instance.getQuestionList(true,questionCallback));
     }
 
     private void submit() {
@@ -132,10 +132,10 @@ public class QuestionListActivity extends BaseActivity implements
             return;
         }
         showProgress();
-        TaskManager.instance.submitAnswer(questionList1, questionList2, traceId1, traceId2, answerCallback);
-//        Disposable disposable = FtdClient.getInstance().submitAnswer(questionList1, questionList2, traceId1, traceId2, QuestionListActivity.this);
-//        addDisposable(disposable);
+        addTask(FtdCore.instance.submitAnswer(true,questionList1, questionList2, traceId1, traceId2, answerCallback));
     }
+
+
 
     @Override
     protected String setTitle() {
@@ -164,40 +164,4 @@ public class QuestionListActivity extends BaseActivity implements
             }
         }
     }
-
-//    @Override
-//    public void onSuccess(final AskBean bean) {
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                hideProgress();
-//                CardInfoBean bean1 = bean.getCardInfo();
-//                CardInfoBean bean2 = bean.getConstitutionInfo();
-//                traceId1 = bean1.getTraceId();
-//                traceId2 = bean2.getTraceId();
-//                adapter1.addData(bean1, Constant.TRACE_ZHENG);
-//                adapter2.addData(bean2, Constant.TRACE_ZHI);
-//                hideProgress();
-//                btnSubmit.setEnabled(true);
-////                Intent intent = new Intent(QuestionListActivity.this, ReportActivity.class);
-////                long cardSeqNo = bean.getCardInfo().getSeqNo();
-////                long constitutionSeqNo = bean.getConstitutionInfo().getSeqNo();
-////                intent.putExtra("cardSeqNo", cardSeqNo);
-////                intent.putExtra("constitutionSeqNo",constitutionSeqNo);
-////                startActivity(intent);
-////                finish();
-//            }
-//        });
-//    }
-//
-//    @Override
-//    public void onError(final FtdException e) {
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                hideProgress();
-//                showToast(e.getMsg());
-//            }
-//        });
-//    }
 }

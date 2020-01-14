@@ -11,20 +11,23 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.lk.ftd_core.task.FtdTask;
+import com.lk.ftd_core.task.FtdCore;
 import com.lk.ftdui.BasePage;
 import com.lk.ftdui.R;
+
 import java.util.LinkedList;
-import io.reactivex.disposables.Disposable;
 
 abstract class BaseFragment extends Fragment implements BasePage {
 
     private ProgressBar pb;
 
-    private LinkedList<Disposable> dosposableList = new LinkedList<>();
+    private LinkedList<FtdTask> tasks = new LinkedList<>();
 
-    protected void addDisposable(Disposable disposable) {
-        dosposableList.add(disposable);
+    protected void addTask(FtdTask task) {
+        tasks.add(task);
     }
+
 
     @CallSuper
     @Nullable
@@ -44,20 +47,6 @@ abstract class BaseFragment extends Fragment implements BasePage {
     /**
      * 释放订阅，避免内存泄露
      */
-    private void dispose() {
-        for (Disposable disposable : dosposableList) {
-            if (disposable != null && !disposable.isDisposed()) {
-                disposable.dispose();
-            }
-        }
-    }
-
-    @CallSuper
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        dispose();
-    }
 
     /**
      * 展示吐司消息
@@ -96,6 +85,15 @@ abstract class BaseFragment extends Fragment implements BasePage {
             pb.setVisibility(View.INVISIBLE);
             pb.setEnabled(false);
         }
+    }
+
+    @Override
+    public void onStop() {
+        int size = tasks.size();
+        for (int i = 0; i < size; i++) {
+            FtdCore.cancel(tasks.removeFirst());
+        }
+        super.onStop();
     }
 
     /**

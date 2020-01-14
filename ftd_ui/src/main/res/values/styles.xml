@@ -15,7 +15,7 @@
         <item name="android:paddingStart">8dp</item>
         <item name="android:paddingEnd">8dp</item>
     </style>
-    <!--    医生详情的item标题样式1-->
+    <!--医生详情的item标题样式1-->
     <style name="DoctorDetailItemTheme">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -24,10 +24,16 @@
         <item name="android:background">@drawable/border_bottom</item>
     </style>
 
-<!--    医生详情的item标题样式2-->
+    <!--医生详情的item标题样式2-->
     <style name="DoctorDetailItemThemeDrawable" parent="DoctorDetailItemTheme">
         <item name="android:drawableStart">@drawable/item_doctor_detail_title_decoration</item>
         <item name="android:drawablePadding">4dp</item>
+    </style>
+
+    <!--底部弹框动画-->
+    <style name="bottomDialog">
+        <item name="android:windowEnterAnimation">@anim/bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/bottom_out</item>
     </style>
 
 </resources>

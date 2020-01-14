@@ -9,13 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.lk.ftd_core.TaskManager;
+import com.lk.ftd_core.task.FtdCore;
 import com.lk.ftd_core.callback.FtdRecordListCallback;
 import com.lk.ftd_core.entity.RecordListBean;
 import com.lk.ftd_core.exception.FtdException;
 import com.lk.ftdui.R;
 import com.lk.ftdui.widget.aboutRV.adapter.RecordAdapter;
-import com.lk.ftdui.widget.aboutRV.decoration.SpaceDecoration;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
@@ -26,6 +25,12 @@ public class RecordListActivity extends BaseActivity {
     private int pageIndex = 1;//页数从1开始
     private int pageCount;
     private View ivError;
+
+
+    @Override
+    protected String setTitle() {
+        return "检测记录";
+    }
 
     public static void start(Context context) {
         context.startActivity(new Intent(context, RecordListActivity.class));
@@ -42,30 +47,30 @@ public class RecordListActivity extends BaseActivity {
     private FtdRecordListCallback callback = new FtdRecordListCallback() {
         @Override
         public void onSuccess(final RecordListBean bean) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
                     pageIndex = bean.getPageNum();
                     pageCount = bean.getPages();
                     hideProgress();
                     refresh.finishLoadMore();
                     refresh.finishRefresh();
                     adapter.submitList(bean.getList());
-                }
-            });
+//                }
+//            });
         }
 
         @Override
         public void onError(final FtdException e) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
                     hideProgress();
                     refresh.finishLoadMore();
                     refresh.finishRefresh();
                     showToast(e.getMsg());
-                }
-            });
+//                }
+//            });
         }
     };
 
@@ -83,16 +88,24 @@ public class RecordListActivity extends BaseActivity {
         refresh.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                TaskManager.instance.listRecord(pageIndex, callback);
+                addTask(FtdCore.instance.listRecord(pageIndex, true, callback));
             }
 
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                TaskManager.instance.listRecord(pageIndex, callback);
+                addTask(FtdCore.instance.listRecord(pageIndex, true, callback));
             }
         });
-        TextView title = findViewById(R.id.tb_tv_title);
-        title.setText("选择来康师");
         refresh.autoRefresh();
     }
+
+//    @Override
+//    protected View setDataErrorView() {
+//        return null;
+//    }
+//
+//    @Override
+//    protected View setDataEmptyView() {
+//        return null;
+//    }
 }

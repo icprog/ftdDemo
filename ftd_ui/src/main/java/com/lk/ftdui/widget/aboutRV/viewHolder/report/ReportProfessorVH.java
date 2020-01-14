@@ -18,24 +18,21 @@ import com.lk.ftdui.fragment.ReportFragment;
  */
 public class ReportProfessorVH extends ReportBaseVH {
 
-    private TextView tv;
     private ImageView ivFace;
     private ImageView ivTongueTop;
+    private ImageView ivTongueBottom;
 
     public ReportProfessorVH(@NonNull View itemView) {
         super(itemView);
-        tv = itemView.findViewById(R.id.tv_content);
         ivFace = itemView.findViewById(R.id.iv_face);
         ivTongueTop = itemView.findViewById(R.id.iv_tongue_top);
+        ivTongueBottom = itemView.findViewById(R.id.iv_tongue_bottom);
     }
 
     @Override
     public void bind(ReportType reportType, ReportBean bean) {
-        AnalyzeResultBean analyzeResult = bean.getAnalyzeResultBean();
-        if (analyzeResult != null && !TextUtils.isEmpty(analyzeResult.getOpinion())) {
-            tv.setText(analyzeResult.getOpinion());
-        }
         Glide.with(ivFace).load(bean.getFaceImg()).into(ivFace);
         Glide.with(ivTongueTop).load(bean.getTongueImg()).into(ivTongueTop);
+        Glide.with(ivTongueBottom).load(bean.getBaseOfTongueUrl()).into(ivTongueBottom);
     }
 }

@@ -8,13 +8,13 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.TextView;
-import com.google.gson.Gson;
+
 import com.lk.ftd_core.constant.ReportType;
-import com.lk.ftdui.widget.view.ChartEightPrincipalView;
 import com.lk.ftd_core.entity.ReportBean;
 import com.lk.ftd_core.entity.SixDiseaseBean;
 import com.lk.ftdui.R;
-import com.lk.ftdui.fragment.ReportFragment;
+import com.lk.ftdui.widget.view.ChartEightPrincipalView;
+import com.lk.mogaijson.JSONObject;
 
 /**
  * 体质仪表盘板块
@@ -43,8 +43,7 @@ public class ReportScoreVH extends ReportBaseVH {
 
         if (bean.getEight() != null && bean.getEight().getSixDiseaseList() != null) {
             String sixDiseaseStr = bean.getEight().getSixDiseaseList();
-            Gson gson = new Gson();
-            SixDiseaseBean[] diseaseBeans = gson.fromJson(sixDiseaseStr, SixDiseaseBean[].class);
+            SixDiseaseBean[] diseaseBeans = JSONObject.parseObject(sixDiseaseStr, SixDiseaseBean[].class);
 //            view.setData(diseaseBeans);
         }
 
@@ -55,7 +54,7 @@ public class ReportScoreVH extends ReportBaseVH {
         tvDate.setText(bean.getCreateTime() + "检测");
     }
 
-    public void setScore(double score){
+    public void setScore(double score) {
         tvScoreMain.setText(String.valueOf(score));
         String text = "健康得分" + score + "分";
         SpannableString ss = new SpannableString(text);

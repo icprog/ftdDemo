@@ -8,16 +8,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lk.ftd_core.task.FtdCore;
+import com.lk.ftd_core.task.FtdTask;
 import com.lk.ftdui.BasePage;
 import com.lk.ftdui.R;
+import com.lk.ftdui.activity.config.ErrorDisplay;
+import com.lk.ftdui.util.ViewReplaceUtil;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
+import java.util.Collection;
 import java.util.LinkedList;
 
-import io.reactivex.disposables.Disposable;
 
 abstract class BaseActivity extends AppCompatActivity implements BasePage {
 
@@ -25,19 +32,26 @@ abstract class BaseActivity extends AppCompatActivity implements BasePage {
     protected TextView tbTvStart;
     protected TextView tbTvTitle;
     private TextView tbTvEnd;
+    protected SmartRefreshLayout refresh;
+    protected ViewReplaceUtil viewReplaceUtil = new ViewReplaceUtil();
 
-    private LinkedList<Disposable> dosposableList = new LinkedList<>();
+    private LinkedList<FtdTask> tasks = new LinkedList<>();
 
-    protected void addDisposable(Disposable disposable) {
-        dosposableList.add(disposable);
+    protected void addTask(FtdTask task) {
+        tasks.add(task);
     }
+
+    protected void addTask(Collection<FtdTask> tasks) {
+        this.tasks.addAll(tasks);
+    }
+
 
     @CallSuper
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        View view = LayoutInflater.from(this).inflate(setContentViewResId(),null);
+        View view = LayoutInflater.from(this).inflate(setContentViewResId(), null);
         setContentView(view);
         Toolbar toolBar = findViewById(R.id.tool_bar);
         setSupportActionBar(toolBar);
@@ -50,41 +64,30 @@ abstract class BaseActivity extends AppCompatActivity implements BasePage {
         });
         this.tbTvTitle = findViewById(R.id.tb_tv_title);
         this.tbTvTitle.setText(setTitle());
-//        this.tbTvEnd = findViewById(R.id.tb_tv_end);
-//        setEndTv(this.tbTvEnd);
         pb = findViewById(R.id.pb);
         if (pb != null) {
             pb.setVisibility(setPBDefault() ? View.VISIBLE : View.GONE);
         }
-        setTitle("");
+        viewReplaceUtil.setErrorView(setDataEmptyView(), setDataErrorView());
+        onCreated(view, savedInstanceState);
+    }
 
-        onCreated(view,savedInstanceState);
+
+    protected View setDataErrorView() {
+        return createErrorView(ErrorDisplay.ERROR);
+    }
+
+    protected View setDataEmptyView() {
+        return createErrorView(ErrorDisplay.EMPTY);
     }
 
     /**
      * 点击后退按钮时调用
      */
-    protected void onBack(){
+    protected void onBack() {
         finish();
     }
 
-    /**
-     * 释放订阅，避免内存泄露
-     */
-    private void dispose() {
-        for (Disposable disposable : dosposableList) {
-            if (disposable != null && !disposable.isDisposed()) {
-                disposable.dispose();
-            }
-        }
-    }
-
-    @CallSuper
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        dispose();
-    }
 
     /**
      * 展示吐司消息
@@ -134,10 +137,36 @@ abstract class BaseActivity extends AppCompatActivity implements BasePage {
         return true;
     }
 
-    protected String setTitle(){
+    protected String setTitle() {
         return "";
     }
 
-    protected void setEndTv(TextView tv){ }
+    protected void setEndTv(TextView tv) {
+    }
 
+    @Override
+    protected void onStop() {
+        int size = tasks.size();
+        for (int i = 0; i < size; i++) {
+            FtdCore.cancel(tasks.removeFirst());
+        }
+        super.onStop();
+    }
+
+    protected View createErrorView(ErrorDisplay error) {
+        View errorView = LayoutInflater.from(this).inflate(R.layout.holder_empty, null);
+        ImageView ivError = errorView.findViewById(R.id.iv);
+        ivError.setImageResource(error.getErrorImg());
+        TextView tvError = errorView.findViewById(R.id.tv);
+        tvError.setText(error.getContent());
+        Button btnRetry = errorView.findViewById(R.id.btn);
+        btnRetry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewReplaceUtil.restore();
+                refresh.autoRefresh();
+            }
+        });
+        return errorView;
+    }
 }

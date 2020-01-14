@@ -55,9 +55,9 @@
         android:id="@+id/btn2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="goToFTDHybird"
         android:layout_marginTop="20dp"
         android:text="启动面舌诊Hybird"
+        android:visibility="gone"
         android:background="@drawable/btn_login_enabled1"
         app:layout_constraintTop_toBottomOf="@id/btn1"/>
 
@@ -72,6 +72,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_title" />
-
 
 </android.support.constraint.ConstraintLayout>
